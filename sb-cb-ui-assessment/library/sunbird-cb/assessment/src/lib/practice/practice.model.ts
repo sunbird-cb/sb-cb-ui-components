@@ -19,7 +19,8 @@ export namespace NSPractice {
     timeTaken: String
     questionType?: TQuizQuestionType
     rhsChoices?: string[],
-    marks?: number
+    marks?: number,
+    choices?: IChoiceOptions
 
   }
 
@@ -400,5 +401,8 @@ export namespace NSPractice {
   export interface IRetakeAssessment {
     attemptsMade: number,
     attemptsAllowed: number
+  }
+  export interface IChoiceOptions {
+    options: any[]
   }
 }

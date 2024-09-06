@@ -19,8 +19,12 @@ export class CommonAssessmentViewerComponent implements OnInit {
   quizJson: any
   fromCreation = true
   collectionId = ''
+  questionPreview = false
   ngOnInit() {
     if (this.data) {
+      // tslint:disable-next-line
+      console.log('this.data', this.data)
+      this.questionPreview = this.data.questionPreview
       this.isFetchingDataComplete = this.data.isFetchingDataComplete
       this.testData = this.data.testData
       this.isErrorOccured = this.data.isErrorOccured

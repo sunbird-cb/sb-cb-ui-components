@@ -393,20 +393,20 @@
 
 .custombgsection {
     background: url('/assets/icons/microsite/side_banner.png');
-    width: 40%;
-    position: absolute;
+    width: 100%;
+    // position: absolute;
     z-index: 99;
-    left: 0;
-    height: 21.3em;
-    background-repeat: no-repeat;
-    background-size: cover;
+    // height: 21.3em;
+    background-size: contain;
+    background-repeat: round;
 }
 
 @media screen and (min-width: 768px) and (max-width: 1023px){
     .custombgsection {
-        height: 16em !important;
-        width: 22%;
-        padding: 0.75rem 1rem !important;
+        // height: 16em !important;
+        // width: 98%;
+        // padding: 0.75rem 1rem !important;
+        // background-size: cover;
     }
 }
 @media screen and (max-width: 768px) {
@@ -419,8 +419,9 @@
 }
 @media screen and (min-width: 1023px) { 
     .custombgsection {
-        width: 38%;
-        height: 15em;
+        // width: 98%;
+        // background-size: cover;
+        // height: 15em;
     }
 }
 @media screen and (min-width: 1014px) { 
@@ -430,12 +431,21 @@
 }
 @media screen and (min-width: 1280px) { 
     .custombgsection {
-        width: 42%;
-        height: 21.3em;
+        // width: 99%;
+        // height: 21.3em;
     }
     .infobanner {
         &.banner-container {
           width: 1014px !important;
         }
+    }
+}
+
+@media screen and (min-width: 1234px) {
+    .custombgsection {
+        // height: 16em !important;
+        // width: 98%;
+        // padding: 0.75rem 1rem !important;
+        background-size: cover;
     }
 }

@@ -44,6 +44,7 @@ import { AssessmentQuestionCountContainerComponent } from './components/assessme
 import { AssessmentPerformanceSummaryComponent } from './components/assessment-performance-summary/assessment-performance-summary.component'
 import { AssessmentPerformanceInsightSummaryComponent } from './components/assessment-performance-insight-summary/assessment-performance-insight-summary.component'
 import { FinalAssessmentPopupComponent } from './components/final-assessment-popup/final-assessment-popup.component'
+import { QuestionSafeUrlPipe } from './question-safe-pipe.pipe'
 @NgModule({
   declarations: [
     FillInTheBlankComponent,
@@ -63,6 +64,7 @@ import { FinalAssessmentPopupComponent } from './components/final-assessment-pop
     AssessmentPerformanceSummaryComponent,
     AssessmentPerformanceInsightSummaryComponent,
     FinalAssessmentPopupComponent,
+    QuestionSafeUrlPipe,
   ],
   entryComponents: [
     SubmitQuizDialogComponent,
@@ -103,6 +105,13 @@ import { FinalAssessmentPopupComponent } from './components/final-assessment-pop
     AssessmentPerformanceSummaryComponent,
     AssessmentPerformanceInsightSummaryComponent,
     SkeletonLoaderModule,
+    FillInTheBlankComponent,
+    MatchTheFollowingQuesComponent,
+    MultipleChoiseQuesComponent,
+    OverviewComponent,
+    PracticeComponent,
+    QuestionComponent,
+    ResultComponent,
   ],
 })
 export class PracticePlModule { }

@@ -5,7 +5,7 @@
         [src]="widgetData?.content?.posterImage || widgetData?.content?.appIcon  | pipePublicURL" [wsUtilsDefaultThumbnail]="defaultThumbnail"
         [alt]="widgetData?.content?.name">
         <div class="source-div" [hidden]="true">
-          <img [src]="widgetData?.content?.creatorLogo" class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
+          <img [src]="widgetData?.content?.creatorLogo | pipePublicURL" class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
             [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
         </div>
         <div class="duration-box right-corner" *ngIf="widgetData?.content?.duration > 0">

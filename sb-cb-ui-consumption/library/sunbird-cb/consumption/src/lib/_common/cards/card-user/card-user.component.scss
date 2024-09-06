@@ -73,8 +73,8 @@
       width: 282px;
       height: 158px;
       display: block;
-      -o-object-fit: cover;
-      object-fit: cover;
+      -o-object-fit: contain;
+      object-fit: contain;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
     }

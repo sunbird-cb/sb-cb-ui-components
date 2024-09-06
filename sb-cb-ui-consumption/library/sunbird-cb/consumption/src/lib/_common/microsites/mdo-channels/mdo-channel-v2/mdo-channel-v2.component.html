@@ -235,14 +235,22 @@
                             <ng-container *ngIf="column?.enabled" [ngSwitch]="column?.key">
                                 <ng-container *ngSwitchCase="'competency'" [ngTemplateOutlet]="competency"
                                 [ngTemplateOutletContext]="{competency: column}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentRecommendedProgramStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentRecommendedCoursesStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentFeaturedStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentcertificationsOfWeekStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
+                                <ng-container *ngSwitchCase="'contentRecommendedProgramStrip'" [ngTemplateOutlet]="contentStripTemplate"
+                                [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                <ng-container *ngSwitchCase="'contentRecommendedCoursesStrip'" [ngTemplateOutlet]="contentStripTemplate"
+                                [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                <ng-container *ngSwitchCase="'contentFeaturedStrip'" [ngTemplateOutlet]="contentStripTemplate"
+                                [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                <ng-container *ngSwitchCase="'contentcertificationsOfWeekStrip'" [ngTemplateOutlet]="contentStripTemplate"
+                                [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
                             </ng-container>
                         </div>
                     </ng-container>
@@ -275,18 +283,18 @@
     </div>
 </ng-template>
 <!-- End Competencies -->
-
-<ng-template #contentStrip let-contentStrip="contentStrip">
-    <ng-container *ngIf="!contentStrip?.hideSection">
+{{contentTabEmptyResponseCount}}hiiii
+<ng-template #contentStripTemplate let-data="data">
+    <ng-container *ngIf="!data?.contentStrip?.hideSection">
         <div class="flex mb-8">
             <div class="w-full">
                 <sb-uic-content-strip-with-tabs
                     [emitViewAll]="true"
-                    (viewAllResponse)="showAllContent($event, contentStrip)"
+                    (viewAllResponse)="showAllContent($event, data)"
                     (telemtryResponse)="raiseTelemetryInteratEvent($event)"
-                    (emptyResponse)="hideContentStrip($event, contentStrip)"
+                    (emptyResponse)="hideContentStrip($event, data)"
                     [providerId]="orgId"
-                    [widgetData]="contentStrip"
+                    [widgetData]="data?.contentStrip"
                     [channnelName]="channnelName"
                     >
                 </sb-uic-content-strip-with-tabs>

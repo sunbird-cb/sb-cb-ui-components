@@ -91,18 +91,32 @@ export class CompetencyPassbookComponent implements OnInit {
       }
     
     try {
+      this.competencyStrength =  0
       const response = await this.callCompetencySearch(request);
       if (response && response.results) {
         if(response.results.result.facets){
-          this.competencyArea = response.results.result.facets[0].values
-          this.competencyStrength = this.competencyArea.reduce((partialSum: any, data: any) => partialSum +  data.count, 0) 
+          response.results.result.facets.forEach((fact: any) => {
+            if(fact.name === 'competencies_v5.competencyArea') {
+              this.competencyArea = fact.values
+            }
+          });
           this.selectedValue  = this.competencyArea[0].name.toLowerCase()
-          let addFilter = {
-            "createdFor": [
-              this.providerId
-           ]
-          }
-          this.getcompetencyTheme(this.competencyArea[0].name, addFilter)
+          this.competencyArea.forEach(async (area: any, indexValue: any)=> {
+            let addFilter = {
+              "createdFor": [
+                this.providerId
+             ]
+            }
+            let data = await this.getcompetencyThemeCount(area, addFilter)
+            area['themeData'] = data
+            area['count'] = data.length
+
+            this.competencyStrength = this.competencyStrength + data.length
+            if(indexValue === 0) {
+              
+              this.getThemeDataByArea(area)
+            }
+          })
           this.loadCompetencyArea = false
         }
       }
@@ -140,7 +154,7 @@ export class CompetencyPassbookComponent implements OnInit {
 
     this.temeletryResponse.emit(e.name)
     
-    this.getcompetencyTheme(e.name, addfilter)
+    this.getThemeDataByArea(e)
     this.selectedValue = e.name
   }
   getAllCompetencies(){
@@ -214,6 +228,79 @@ export class CompetencyPassbookComponent implements OnInit {
   }
   }
 
+  getThemeDataByArea(areaData: any){
+    let competencyThemeData : any = areaData.themeData
+        this.originalCompetencyArray.forEach((element: any) => {
+          if(element.name.toLowerCase() === areaData.name) {
+           this.competencyTheme = competencyThemeData.filter((ele1: any) => {
+              return  element.children.find((ele2: any) => ele2.name.toLowerCase() === ele1.name.toLowerCase())
+            })
+            this.showAllTheme = [{name:'Show all', showAll: false}]
+            this.competencyThemeLength = 6
+          }
+        });
+        let addfilter: any = {}
+        if(this.providerId) {
+          addfilter = {
+            "createdFor": [
+              this.providerId
+           ],
+          }
+        }
+        this.getcompetencySubTheme(areaData,addfilter)
+  }
+
+  async getcompetencyThemeCount(area: any,addFilter?: any) {
+    let request = {
+      "request": {
+          "query": "",
+          "filters": {
+              "contentType":"Course",
+              ...addFilter,
+              "competencies_v5.competencyArea" : area.name,
+              "status": [
+                  "Live"
+              ]
+          },
+          "sort_by": {
+              "lastUpdatedOn": "desc"
+          },
+          "facets": [
+              "competencies_v5.competencyTheme"
+          ],
+          "limit": 0,
+          "offset": 0,
+          "fields": [
+          ]
+      }
+    }
+  
+  try {
+    let returnedData : any = 
+    this.loadCometency = true
+    const response = await this.callCompetencySearch(request);
+    if (response && response.results) {
+      if(response.results.result.facets){
+        let competencyThemeData : any = response.results.result.facets[0].values 
+        this.originalCompetencyArray.forEach((element: any) => {
+          if(element.name.toLowerCase() === area.name) {
+           returnedData = competencyThemeData.filter((ele1: any) => {
+              return  element.children.find((ele2: any) => ele2.name.toLowerCase() === ele1.name.toLowerCase())
+            })
+            this.showAllTheme = [{name:'Show all', showAll: false}]
+            this.competencyThemeLength = 6
+          }
+        });
+      }
+      this.loadCometency = false
+      return returnedData
+    }
+  } catch (error) {
+    // Handle errors
+    // console.error('Error:', error);
+  }
+  }
+
   resetViewMore(){
     Object.keys(this.allcompetencyTheme).forEach((comp: any) => {
       this.allcompetencyTheme[comp]['viewMore'] = false
@@ -231,6 +318,64 @@ export class CompetencyPassbookComponent implements OnInit {
   }
 
   navigateToCompetency(compData: any){
-    this.router.navigateByUrl(`app/learn/browse-by/competency/${compData.name}`)
+    this.router.navigateByUrl(`/app/learn/browse-by/competency/${compData.name}`)
+  }
+
+
+  async getcompetencySubTheme(compArea: any,addFilter?: any) {
+    let request = {
+      "request": {
+          "query": "",
+          "filters": {
+              "contentType":"Course",
+              ...addFilter,
+              "competencies_v5.competencyArea" : compArea.name,
+              "status": [
+                  "Live"
+              ]
+          },
+          "sort_by": {
+              "lastUpdatedOn": "desc"
+          },
+          "facets": [
+              "competencies_v5.competencySubThemeId"
+          ],
+          "limit": 0,
+          "offset": 0,
+          "fields": [
+          ]
+      }
+    }
+  
+  try {
+    this.loadCometency = true
+    const response = await this.callCompetencySearch(request);
+    if (response && response.results) {
+      if(response.results.result.facets){
+        let competencySubThemeData : any = response.results.result.facets[0].values 
+        this.competencyArea.forEach((areaEle: any) => {
+          if(areaEle.name === compArea.name) {
+            areaEle.themeData.forEach((themeEle) => {
+              if(this.allcompetencyTheme[themeEle.name.toLowerCase()] &&
+              this.allcompetencyTheme[themeEle.name.toLowerCase()].children && 
+              this.allcompetencyTheme[themeEle.name.toLowerCase()].children.length) {
+                let data = this.allcompetencyTheme[themeEle.name.toLowerCase()].children.filter(obj1 => 
+                  competencySubThemeData.some(obj2 => 
+                    Object.keys(obj1).every(key => obj1['id'] === Number(obj2['name']))
+                  )
+                );
+                
+                this.allcompetencyTheme[themeEle.name.toLowerCase()]['children'] = data
+              }
+            });
+          }
+        })
+      }
+      this.loadCometency = false
+    }
+  } catch (error) {
+    // Handle errors
+    // console.error('Error:', error);
+  }
   }
 }

@@ -3,6 +3,11 @@
   overflow: visible
 }
 
+::ng-deep .assessment-preview-dialog-question-preview  .mat-dialog-container {
+  padding: 10px !important;
+  overflow: visible
+}
+
 ::ng-deep .assessment-preview-dialog {
   position: relative;
 
@@ -33,4 +38,38 @@
     }
   }
 
+}
+
+::ng-deep .assessment-preview-dialog-question-preview {
+    height: 98%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-top: 15px;
+
+  .close-button {
+    border-radius: 50%;
+    border: 0.5px solid #6a6868;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 19%;
+    right: 19%;
+    background-color: white;
+
+    .close-icon {
+      font-size: 20px;
+      // margin-bottom: 12px;
+      // margin-left: 1px;
+      color: #7c7b7b;
+    }
+
+    .mat-icon {
+      height: 16px;
+      width: 16px;
+    }
+
+    .cursor-pointer {
+      cursor: pointer;
+    }
+  }
 }

@@ -60,12 +60,13 @@
       <div class="respo flex flex-column padding-top-m">
         <div class="flex flex-column respo_inner">
           <div class="flex flex-1">
-            <h2 *ngIf="question.questionType !== 'ftb'" class="mat-h2" [innerHTML]="question?.question"
-              class="quiz-question">
+            <h2 *ngIf="question.questionType !== 'ftb'" class="mat-h2"
+              [innerHTML]="question?.question | QuestionSafeUrl" class="quiz-question">
             </h2>
             <ng-container *ngIf="question.questionType === 'ftb'">
-              <viewer-fitb-question [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
-                (update)="update($event)"></viewer-fitb-question>
+              <viewer-fitb-question [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel"
+                [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
+                [questionPreview]="questionPreview" (update)="update($event)"></viewer-fitb-question>
             </ng-container>
           </div>
           <div class="flex flex-1">
@@ -182,6 +183,24 @@
       </div>
       <div class="respo flex flex-column padding-top-m">
         <div class="flex flex-1- flex-column respo_inner">
+          <div class="flex flex-1 flex-center flex-column">
+            <ng-container *ngIf="question.questionType !== 'ftb'">
+              <h2 [innerHTML]="question?.question | QuestionSafeUrl" class="m-auto quiz-question mat-h2">
+              </h2>
+              <span *ngIf="question?.instructions" class="mat-subheading-2" i18n>
+                {{ question?.instructions}}
+              </span>
+              <span class="mat-subheading-2" i18n>
+                Drag and drop numbers on the left to the corresponding
+                circles on the right
+              </span>
+            </ng-container>
+            <ng-container *ngIf="question.questionType === 'ftb'">
+              <viewer-fitb-question [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel"
+                [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
+                [questionPreview]="questionPreview" (update)="update($event)"></viewer-fitb-question>
+            </ng-container>
+          </div>
           <div class="flex flex-1" *ngIf="question.questionType === 'mtf'">
             <div class="flex flex-1 flex-column">
               <div class="flex flex-1 viewer_quest_box">
@@ -193,23 +212,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-1 flex-center flex-column">
-            <ng-container *ngIf="question.questionType !== 'ftb'">
-              <h2 [innerHTML]="question?.question" class="m-auto quiz-question mat-h2 flex-center text-center">
-              </h2>
-              <span *ngIf="question?.instructions" class="flex-center text-center mat-subheading-2" i18n>
-                {{ question?.instructions}}
-              </span>
-              <span class="flex-center text-center mat-subheading-2" i18n>
-                Drag and drop numbers on the left to the corresponding
-                circles on the right
-              </span>
-            </ng-container>
-            <ng-container *ngIf="question.questionType === 'ftb'">
-              <viewer-fitb-question [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
-                (update)="update($event)"></viewer-fitb-question>
-            </ng-container>
-          </div>
+
         </div>
       </div>
 
@@ -222,7 +225,6 @@
   <mat-card *ngIf="!(question?.questionType === 'mtf' || question?.questionType === 'ftb')"
     class="flex flex-1 respo margin-bottom-m no-shadow standalone-assessment"
     [ngClass]="showOnlyQuestion ? 'show-only-question': 'show-only-answer'">
-    <!-- [ngClass]="mobileQuestionSetExpand ? 'mobile-responsive-question-container-expand' : 'mobile-responsive-question-container'" -->
     <div class="flex flex-column width-100">
       <div class="flex flex-row width-100 justify-between question-with-background" *ngIf="showOnlyQuestion">
         <div class="question-heading">
@@ -248,16 +250,16 @@
 
         <div class="flex flex-column respo_inner">
           <div class="flex flex-1">
-            <h2 *ngIf="question.questionType !== 'ftb'" class="mat-h2" [innerHTML]="question?.question"
-              class="quiz-question">
+            <h2 *ngIf="question.questionType !== 'ftb'" class="mat-h2"
+              [innerHTML]="question?.question | QuestionSafeUrl" class="quiz-question">
             </h2>
             <ng-container *ngIf="question.questionType === 'ftb'">
-              <viewer-fitb-question [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
-                (update)="update($event)"></viewer-fitb-question>
+              <viewer-fitb-question [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel"
+                [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
+                [questionPreview]="questionPreview" (update)="update($event)"></viewer-fitb-question>
             </ng-container>
           </div>
           <div class="flex flex-1">
-            <!-- {{log(question)}} -->
             <ng-container *ngIf="question.questionType === 'mcq-mca'">
               <viewer-mcq-mca-question [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
                 [itemSelectedList]="itemSelectedList1" [assessmentType]="assessmentType" (update)="update($event)">
@@ -303,7 +305,6 @@
     </div>
 
   </mat-card>
-  <!-- created a duplicate as design changed -->
   <mat-card *ngIf="(question?.questionType === 'mtf' || question?.questionType === 'ftb')"
     class="flex flex-1 respo margin-bottom-m no-shadow standalone-assessment"
     [ngClass]="showOnlyQuestion ? 'show-only-question': 'show-only-answer'">
@@ -329,6 +330,24 @@
       <div class="respo flex flex-column " *ngIf="!showOnlyQuestion"
         [ngClass]="mobileQuestionSetExpand ? 'mobile-responsive-question-container-expand' : 'mobile-responsive-question-container'">
         <div class="flex flex-1- flex-column respo_inner">
+          <div class="flex flex-1 flex-column">
+            <ng-container *ngIf="question.questionType !== 'ftb'">
+              <h2 [innerHTML]="question?.question | QuestionSafeUrl" class="m-auto quiz-question mat-h2">
+              </h2>
+              <span *ngIf="question?.instructions" class=" mat-subheading-2" i18n>
+                {{ question?.instructions}}
+              </span>
+              <span class="mat-subheading-2" i18n>
+                Drag and drop numbers on the left to the corresponding
+                circles on the right
+              </span>
+            </ng-container>
+            <ng-container *ngIf="question.questionType === 'ftb'">
+              <viewer-fitb-question [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel"
+                [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
+                [questionPreview]="questionPreview" (update)="update($event)"></viewer-fitb-question>
+            </ng-container>
+          </div>
           <div class="flex flex-1" *ngIf="question.questionType === 'mtf'">
             <div class="flex flex-1 flex-column">
               <div class="flex flex-1 viewer_quest_box">
@@ -339,23 +358,7 @@
               </div>
             </div>
           </div>
-          <div class="flex flex-1 flex-center flex-column">
-            <ng-container *ngIf="question.questionType !== 'ftb'">
-              <h2 [innerHTML]="question?.question" class="m-auto quiz-question mat-h2 flex-center text-center">
-              </h2>
-              <span *ngIf="question?.instructions" class="flex-center text-center mat-subheading-2" i18n>
-                {{ question?.instructions}}
-              </span>
-              <span class="flex-center text-center mat-subheading-2" i18n>
-                Drag and drop numbers on the left to the corresponding
-                circles on the right
-              </span>
-            </ng-container>
-            <ng-container *ngIf="question.questionType === 'ftb'">
-              <viewer-fitb-question [primaryCategory]="primaryCategory" class="flex-1" [question]="question"
-                (update)="update($event)"></viewer-fitb-question>
-            </ng-container>
-          </div>
+
         </div>
       </div>
 
