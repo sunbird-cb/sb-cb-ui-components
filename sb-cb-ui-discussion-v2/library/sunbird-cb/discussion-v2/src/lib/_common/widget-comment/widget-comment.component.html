@@ -1,0 +1,22 @@
+<div class="w-full">
+    <div class="flex flex-col ratings-div" id="ratingsDiv">
+        <div class="mb-5" *ngIf="widgetData?.newCommentSection?.show">
+            <d-v2-new-comment [config]="widgetData?.newCommentSection" (newComment)="refreshComments($event)"></d-v2-new-comment>
+        </div>
+        <ng-container *ngIf="commentData?.commentTree?.commentTreeData?.comments?.length && !loading; else noCommentsSection;">
+            <ng-container *ngFor="let item of commentData?.commentTree?.commentTreeData?.comments">
+                <div class="w-full mt-2">
+                    <d-v2-comment-card [cardType]="widgetData?.commentsList?.cardType" [cardConfig]="widgetData?.commentsList"
+                    [comment]="getComment(item)" [replyData]="getReplies(item)" [hierarchyPath]="getHierarchyPath"
+                    (newReply)="refreshComments($event)"></d-v2-comment-card>
+                </div>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #noCommentsSection>
+    <div class="flex flex-1 items-center justify-center ">
+        {{widgetData?.commentsList?.noCommentsSection?.text}}
+    </div>
+</ng-template>

@@ -12,8 +12,10 @@ export class DataPointsComponent implements OnInit {
   @Input() fetchDataFromApi: boolean = false
   @Input() providerId : any = ''
   @Input() pageLayout: any = ''
+  @Input() title: any
   customArray: any[][] = []
   isDataLoading: boolean = false
+  apiResults: any
   
   constructor(public insightSvc: InsiteDataService) { }
 
@@ -23,7 +25,11 @@ export class DataPointsComponent implements OnInit {
     }
     if(this.fetchDataFromApi) {
       this.isDataLoading = true
-      this.getInsiteData()
+      if (this.pageLayout === 'nlw') {
+        this.getStats()
+      } else {
+        this.getInsiteData()
+      }
     }
   }  
 
@@ -69,6 +75,18 @@ export class DataPointsComponent implements OnInit {
       this.isDataLoading = false
     })
 
+  }
+
+  getStats() {
+    this.insightSvc.fetchNwlStats().subscribe((res: any) => {
+      if(res && res.result && res.result.data) {
+        this.objectData = res.result.data
+      }
+      this.isDataLoading = false
+    }, error => {
+      console.log(error)
+      this.isDataLoading = false
+    })
   }
 
   converToIndianSystem(value: any) {

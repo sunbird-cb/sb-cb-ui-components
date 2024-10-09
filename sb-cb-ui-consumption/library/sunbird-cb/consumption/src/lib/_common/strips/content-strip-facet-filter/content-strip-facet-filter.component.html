@@ -1,0 +1,179 @@
+<ng-container *ngIf="!contentAvailable; else otherTemplate"></ng-container>
+<ng-template #otherTemplate>
+  <!-- <div *ngIf="showParentLoader" class="text-center my-2">
+    <mat-spinner class="inline-block"></mat-spinner>
+  </div> -->
+  <ng-container *ngIf="showParentError" [sbUiResolverWidget]="widgetData.errorWidget"></ng-container>
+  <ng-container *ngIf="showParentNoData" [sbUiResolverWidget]="widgetData.noDataWidget"></ng-container>
+  <ng-container *ngFor="let key of stripsKeyOrder; let i = index; trackBy: identify">
+    <ng-container *ngIf="isStripShowing(stripsResultDataMap[key])">
+      <a name="{{stripsResultDataMap[key]?.stripTitle}}" [class]="key">
+        <div *ngIf="stripsResultDataMap && (getLength(stripsResultDataMap[key]) ||
+                    stripsResultDataMap[key]?.showOnNoData ||
+                    stripsResultDataMap[key]?.showOnLoader ||
+                    stripsResultDataMap[key]?.showOnError)
+                  " [ngClass]="
+                    !widgetData?.isChannelStrip ? 'xs:px-8 sx:px-10ss' : i > 0 ? 'mt-12' : ''
+                  " [id]="key" [ngClass]="!widgetData?.isChannelStrip ? margin-bottom-custom : margin-bottom-xs">
+          <div [ngClass]="{ pad: stripsResultDataMap[key]?.stripBackground }"
+            [ngStyle]="{ 'background-color': stripsResultDataMap[key]?.stripBackground }">
+            <div class="flex flex-col pl-4 pr-4 md:pr-0 md:pl-0 " [ngClass]="
+                        !widgetData?.isChannelStrip
+                          ? ''
+                          : stripsResultDataMap[key]?.stripTitle
+                          ? 'mb-8'
+                          : ''
+                      ">
+              <div class="flex flex-1 items-center">
+                <p class="mat-subheading-1 margin-remove inline-block " *ngIf="stripsResultDataMap[key]?.stripTitle">
+                  <span class="capitalize" *ngIf="stripsResultDataMap[key]?.disableTranslate">
+                    {{stripsResultDataMap[key]?.stripTitle}}
+                  </span>
+                  <span *ngIf="!stripsResultDataMap[key]?.disableTranslate">
+                    {{ translateLabels(stripsResultDataMap[key]?.stripTitle, 'home') }}
+                  </span>
+                </p>
+
+                <button *ngIf="stripsResultDataMap[key]?.stripInfo?.icon" type="button" mat-icon-button
+                  (click)="toggleInfo(stripsResultDataMap[key])" i18n-matTooltip matTooltip="info"
+                  class="margin-left-xs">
+                  <mat-icon>{{ stripsResultDataMap[key]?.stripInfo?.icon.icon }}</mat-icon>
+                </button>
+                <a *ngIf="stripsResultDataMap[key]?.stripTitleLink?.link"
+                  [routerLink]="stripsResultDataMap[key]?.stripTitleLink?.link"
+                  [queryParams]="stripsResultDataMap[key]?.stripTitleLink?.link?.queryParams">
+                  <mat-icon class="ws-mat-primary-primary-text ws-mat-default-text" [color]="'accent'">{{
+                    stripsResultDataMap[key]?.stripTitleLink?.icon }}</mat-icon>
+                </a>
+                <span class="spacer"></span>
+                <!-- viewAll start-->
+                <div *ngIf="checkCondition(widgetData , stripsResultDataMap[key])" class="block md:hidden">
+                  <div 
+                    class="ml-4 pl-2 view-more ws-mat-default-text  ">
+                    <a class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer" 
+                      (click)="raiseTelemetry(stripsResultDataMap[key]);redirectViewAll(stripsResultDataMap[key], stripsResultDataMap[key]?.viewMoreUrl?.path, stripsResultDataMap[key]?.viewMoreUrl?.queryParams )">
+                      <span i18n class="ws-mat-default-text">{{translateLabels(widgetData.strips[0].viewMoreUrl.viewMoreText,'home')  || 'See all'}}</span>
+                      <mat-icon class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color" color="accent">navigate_next</mat-icon>
+                    </a>
+                  </div>
+                </div>
+                <!-- viewAll end-->
+              </div>
+              <button mat-icon-button (click)="setHiddenForStrip(key)" *ngIf="stripsResultDataMap[key]?.canHideStrip">
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-icon class="cursor-pointer" *ngIf="stripsResultDataMap[key]?.mode === 'accordion' && isMobile"
+                (click)="showAccordionData = !showAccordionData">{{ showAccordionData ? 'expand_less' : 'expand_more' }}
+              </mat-icon>
+            </div>
+
+            <div class="mb-4" *ngIf="checkVisible(stripsResultDataMap[key])">
+              <ng-container [sbUiResolverWidget]="getdata(stripsResultDataMap[key])">
+              </ng-container>
+            </div>
+            <ng-container *ngIf="stripsResultDataMap[key]?.showOnNoData"
+              [sbUiResolverWidget]="stripsResultDataMap[key]?.noDataWidget"></ng-container>
+            <ng-container *ngIf="stripsResultDataMap[key]?.showOnError"
+              [sbUiResolverWidget]="stripsResultDataMap[key]?.errorWidget"></ng-container>
+            <!-- IF no errors then proceed to show tabs or non tabs strip -->
+            <ng-container *ngIf="!stripsResultDataMap[key]?.showOnNoData && !stripsResultDataMap[key]?.showOnError">
+              <ng-container *ngIf="stripsResultDataMap[key].tabs && stripsResultDataMap[key].tabs.length">
+                <mat-tab-group animationDuration="0ms" [selectedIndex]="getSelectedIndex(stripsResultDataMap[key], key)"
+                class="mat-tab-labels w-full strips-tabgroup" dynamicHeight
+                  (selectedTabChange)="tabClicked($event, 0, stripsResultDataMap[key], key)">
+                  <mat-tab label="{{tab?.label}}" *ngFor="let tab of stripsResultDataMap[key].tabs; let last = last;let tabIndex = index">
+                    <ng-template mat-tab-label>
+                      <span><span *ngIf="!tab?.disableTranslate">{{ translateLabels(tab?.label, 'home') }}</span>
+                      <span class="tab-highlight" *ngIf="tab?.disableTranslate">{{tab?.label}}</span> &nbsp;</span>
+                      <span *ngIf="tab?.showTabDataCount && tab?.widgets?.length">({{tab?.widgets?.length}})</span>
+                    </ng-template>
+
+                    <div class="wfull" *ngIf="tab?.pillsData && tab?.pillsData?.length">
+                      <div class="flex justify-between item-center flex-wrap gap-4">
+                        <div class="">
+                          <ng-container *ngFor="let facet of tab?.facets">
+                            <form [formGroup]="facetForm">
+                            <div class="facets-select">
+                              <select formControlName="org" (change)="getorgData($event,  stripsResultDataMap[key], tabIndex)">
+                                <option value="0" selected disabled>Choose by organisation</option>
+                                <option value="{{d.name}}" *ngFor="let d of facet.values" >{{d.name}}</option>
+                              </select>
+                            </div>
+                          </form>
+                          </ng-container>
+                        </div>
+                        <div>
+                          <ng-container >
+                            <mat-chip-list  class="content-pill-data" aria-label="Fish selection">
+                                <ng-container *ngFor="let pill of tab?.pillsData;let p = index">
+                                    <mat-chip [selected]="pill?.selected" (click)="pillClicked($event, stripsResultDataMap[key], key, p, tabIndex)">
+                                      <span class="pill-name">{{pill?.label}}</span></mat-chip>
+                                </ng-container>
+                            </mat-chip-list>
+                          </ng-container>
+                        </div>
+                         <!-- viewAll start-->
+                          <div *ngIf="!stripsResultDataMap[key]?.hideViewMoreUrl && checkCondition(widgetData , stripsResultDataMap[key])" class=" hidden md:block">
+                            <div  class="ml-4 pl-2 view-more ws-mat-default-text">
+                              <a class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer" 
+                                (click)="raiseTelemetry(stripsResultDataMap[key]);redirectViewAll(stripsResultDataMap[key], stripsResultDataMap[key]?.viewMoreUrl?.path, stripsResultDataMap[key]?.viewMoreUrl?.queryParams )">
+                                <span i18n class="ws-mat-default-text">{{translateLabels(widgetData.strips[0].viewMoreUrl.viewMoreText,'home')  || 'See all'}}</span>
+                                <mat-icon class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color" color="accent">navigate_next</mat-icon>
+                              </a>
+                            </div>
+                          </div>
+                            
+                          <!-- viewAll end-->
+                      </div>
+                      <div *ngIf="stripsResultDataMap && stripsResultDataMap[key]?.showOnLoader ||
+                      !tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus"
+                      class="text-center my-2">
+                            <sb-uic-horizontal-scroller-v2 [sliderConfig]="stripsResultDataMap[key]?.sliderConfig" [id]="key+'-scroller'"
+                                    [loadStatus]="'fetching'" [stripConfig]="stripsResultDataMap[key]?.stripConfig">
+                                <ng-container *ngFor="let widget of stripsResultDataMap[key]?.loaderWidgets; trackBy: tracker">
+                                <ng-container [sbUiResolverWidget]="widget"></ng-container>
+                              </ng-container>
+                            </sb-uic-horizontal-scroller-v2>
+                      </div>
+                     <ng-container *ngIf="tab?.pillsData && tab?.pillsData.length && tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]">
+                      <div *ngIf="((tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus && tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus === 'done') &&
+                      (!tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets || !tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length))">
+                      <ng-container *ngIf="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.value === 'inprogress'; else msgTemp">
+                        <div class="w-full flex flex-col items-center justify-center">
+                          <img alt="" class="mt-4 mb-4" src="assets/icons/home/nodataDefault.svg">
+                          <div class="mat-subheading-1 text-center info-content">{{ 'contentstripmultiple.getReadyForLearningAdventure' | translate }} -
+                            <a class="click-here" [routerLink]="'/page/learn'">{{ 'contentstripmultiple.clickHere' | translate }}</a> {{ 'contentstripmultiple.toEnrollNextCourse' | translate }}</div>
+                        </div>
+                      </ng-container>
+                      <ng-template #msgTemp>
+                        <div class="w-full flex flex-col items-center justify-center">
+                          <img alt="" class="mt-4 mb-4" src="assets/icons/home/nodataDefault.png">
+                          <div class="mat-subheading-1 text-center">{{ translateLabels(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.nodataMsg, 'home') }}</div>
+                        </div>
+                      </ng-template>
+                      </div>
+                     </ng-container>
+                      <ng-container *ngIf="(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus === 'done' || tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length)">
+                        <ng-container  *ngIf="!tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.tabLoading">
+                          <sb-uic-horizontal-scroller-v2 [id]="key+'-scroller'" [sliderConfig]="stripsResultDataMap[key]?.sliderConfig" [widgetsLength]="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length"
+                            [loadStatus]="'done'" [defaultMaxWidgets]="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
+                            stripsResultDataMap[key]?.sliderConfig?.maxWidgets || defaultMaxWidgets" [stripConfig]="stripsResultDataMap[key]?.stripConfig">
+                            <ng-container *ngFor="let widget of tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets| slice:0:(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
+                            stripsResultDataMap[key]?.sliderConfig?.maxWidgets || defaultMaxWidgets); trackBy: tracker">
+                                <ng-container [sbUiResolverWidget]="widget"></ng-container>
+                            </ng-container>
+                          </sb-uic-horizontal-scroller-v2>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </mat-tab>
+                </mat-tab-group>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </a>
+
+    </ng-container>
+  </ng-container>
+</ng-template>

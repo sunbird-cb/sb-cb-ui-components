@@ -78,6 +78,11 @@
     font-weight: 700 !important;
   }
 }
+
+::ng-deep .mat-tab-header-pagination {
+  display: none !important;
+}
+
 .click-here {
   color: rgb(27, 76, 161);
 }

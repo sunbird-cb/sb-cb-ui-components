@@ -116,8 +116,13 @@
     margin-top: -5px;
   }
 
-  // width:98%;
-  word-wrap: break-word;
+  width:98%;
+  word-break: break-word;
+}
+
+.paragraph {
+  width: 98%;
+  word-break: break-word;
 }
 
 .mtf-flag {
@@ -357,4 +362,14 @@
     margin: 0 5px;
   }
 
+}
+
+video {
+  width: 360px !important;
+}
+
+@media only screen and (min-width : 240px) and (max-width: 767px) {
+  video {
+      width: 98% !important;
+  }
 }

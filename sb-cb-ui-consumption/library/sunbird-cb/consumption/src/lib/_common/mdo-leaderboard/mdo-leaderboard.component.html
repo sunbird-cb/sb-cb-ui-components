@@ -1,0 +1,60 @@
+<div class="mdo-leaderboard-container">
+    <div class="flex l-title gap-2 items-center justify-between px-4 md:px-0 py-4 md:py-0">
+        <div class="flex gap-2">
+            {{object?.title}} <div><img [src]="object?.infoIcon" alt="" i18n-matTooltip [matTooltip]="object?.infoText"></div>
+        </div>
+        <div class="block md:hidden">
+            <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
+        </div>
+    </div>
+    <div class="flex item-center justify-center" *ngIf="expand">
+        <div class="flex fl-div">
+            <div class="pointer">
+                <span class="dot-dot"></span>
+            </div>
+        </div>
+    </div>
+    <div class="l-content" *ngIf="expand">
+        <div class="horizontal-scroll-container">
+            <div class="scroll-content">
+                <span class="tab-title"  [ngClass]="{'active' : currentTab === 'XL' }" (click)="getTabData('XL')">Greater than 50K</span>
+                <span class="tab-title"  [ngClass]="{'active' : currentTab === 'L' }" (click)="getTabData('L')">10K-50K</span>
+                <span class="tab-title"  [ngClass]="{'active' : currentTab === 'M' }" (click)="getTabData('M')">1K-10K</span>
+                <span class="tab-title"  [ngClass]="{'active' : currentTab === 'S' }" (click)="getTabData('S')">500-1K</span>
+                <span class="tab-title"  [ngClass]="{'active' : currentTab === 'XS' }" (click)="getTabData('XS')">Less than 500</span>
+            </div>
+        </div>
+        <div class="relative search-wrapper margin-top-m mb-5">
+            <mat-icon matPrefix class="flex absolute items-center justify-center mr-2 icon-search">search
+            </mat-icon>
+            <input type="search" name="searchKey" class="search-field" i18-aria-label
+                aria-label="Search" i18n-placeholder="search"  [(ngModel)]="searchTerm"
+                placeholder="Search your MDO" (keyup)="handleSearchQuery($event)" />
+        </div>
+        <div class="l-tab-data">
+            <div *ngFor="let user of filteredData; let i = index">
+                <div class="flex flex-row item mb-{{filteredData.length - 1 === i ? 0 : 5}} gap-3 {{user.row_num === 1 ? 'relative' : ''}}" >
+                    <div><img class="crown absolute" src="assets/images/national-learning/rank-crown.svg" *ngIf="user.row_num === 1"/></div>
+                    <div class="{{getRank(user.row_num)}}">{{user.row_num}}</div>
+                    <div class="w-full">
+                        <div class="flex flex-between gap-2">
+                            <div>
+                                <div class="rank-name">{{user.org_name}}</div>
+                                <div class="rank-points flex mt-1 gap-1">
+                                    <img class="nlw-kb" src="assets/icons/home/karma-badge.svg"/>
+                                    <div class="points">{{user.total_points || 0 }} points</div>
+                                </div>
+                            </div>
+                            <div class="rank-crown" *ngIf="[1,2,3].includes(user.row_num)">
+                                <img class="nlw-animation" [src]="getMedal(user.row_num)"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="no-data px-1" *ngIf="filteredData?.length === 0">
+                No data found!
+            </div>
+        </div>
+    </div>
+</div>

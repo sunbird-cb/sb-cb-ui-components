@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostBinding, Inject, EventEmitter,
 import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2';
 import { NsContentStripWithTabsAndPills } from './content-strip-with-tabs-pills.model';
 // import { HttpClient } from '@angular/common/http'
-import { WidgetContentService } from '../../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../../_services/widget-content-lib.service';
 import { NsContent } from '../../../_models/widget-content.model';
 import { MultilingualTranslationsService } from '../../../_services/multilingual-translations.service';
 import {
@@ -15,7 +15,7 @@ import {
 } from '@sunbird-cb/utils-v2';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { WidgetUserService } from '../../../_services/widget-user.service';
+import { WidgetUserServiceLib } from '../../../_services/widget-user-lib.service';
 // import { environment } from 'src/environments/environment'
 // tslint:disable-next-line
 import * as _ from 'lodash'
@@ -102,12 +102,11 @@ NsWidgetResolver.IWidgetData<NsContentStripWithTabsAndPills.IContentStripMultipl
   defaultMaxWidgets = 12;
   enrollInterval: any;
   todaysEvents: any = [];
-  enrollmentMapData: any
 
   constructor(
     // private contentStripSvc: ContentStripNewMultipleService,
     @Inject('environment') environment: any,
-    private contentSvc: WidgetContentService,
+    private contentSvc: WidgetContentLibService,
     private loggerSvc: LoggerService,
     private eventSvc: EventService,
     private configSvc: ConfigurationsService,
@@ -115,7 +114,7 @@ NsWidgetResolver.IWidgetData<NsContentStripWithTabsAndPills.IContentStripMultipl
     // private http: HttpClient,
     // private searchServSvc: SearchServService,
     public router: Router,
-    private userSvc: WidgetUserService,
+    private userSvc: WidgetUserServiceLib,
     private translate: TranslateService,
     private langtranslations: MultilingualTranslationsService
   ) {
@@ -1053,7 +1052,8 @@ NsWidgetResolver.IWidgetData<NsContentStripWithTabsAndPills.IContentStripMultipl
 
       let courses: NsContent.IContent[];
       let tabResults: any[] = [];
-      const response = await this.userSvc.fetchCbpPlanList().toPromise();
+      let userId = this.configSvc.userProfile.userId
+      const response = await this.userSvc.fetchCbpPlanList(userId).toPromise();
       if (response) {
             courses = response;
             if (strip.tabs && strip.tabs.length) {

@@ -1,0 +1,49 @@
+<ng-container *ngIf="contentdata?.length && mode === 'desktop'">
+    <div class="key-highlighs-container">
+        <sb-uic-sliders-ng-content
+            [title]="'providerName'"
+            [autoScroll]="true"
+            [currentIndex]="currentIndex" 
+            (currentIndexValue)="getCurrentIndex($event)"
+            [loadNgContentData]="true"
+            [customBanner]="true"
+            [widgetData]="contentdata" [styleData]="styleData">
+            <div sliderbody>
+                <div *ngFor="let content of contentdata; let i = index" [hidden]="i !== currentIndex">
+                    <div class="flex flex-row key-wrapper items-center justify-center">
+                        <div class="kh-description">
+                            {{content?.title | slice:0:titleMaxLength}}
+                            <span *ngIf="content?.title?.length > titleMaxLength">...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>                    
+        </sb-uic-sliders-ng-content>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="contentdata?.length && mode === 'mobile'">
+    <div class="p-5">
+        <div class="mob-key-highlighs-container">
+            <sb-uic-sliders-ng-content
+                [title]="'providerName'"
+                [autoScroll]="true"
+                [currentIndex]="currentIndex" 
+                (currentIndexValue)="getCurrentIndex($event)"
+                [loadNgContentData]="true"
+                [customBanner]="true"
+                [widgetData]="contentdata" [styleData]="styleData">
+                <div sliderbody>
+                    <div *ngFor="let content of contentdata; let i = index" [hidden]="i !== currentIndex">
+                        <div class="flex flex-row mkey-wrapper items-center justify-center">
+                            <div class="mkh-description">
+                                {{content?.title | slice:0:titleMaxLength }}
+                                <span *ngIf="content?.title?.length > titleMaxLength">...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sb-uic-sliders-ng-content>
+        </div>
+    </div>
+</ng-container>

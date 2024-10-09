@@ -1,0 +1,38 @@
+<div class="nlw-speakers-wrapper px-4 md:px-0 my-4 md:my-0">
+    <div class="flex speakers-title gap-2 justify-between pb-1" *ngIf="contentdata.length">
+        <div class="flex gap-2">
+            {{objectData?.title}}
+            <div><img [src]="objectData?.infoIcon" alt="" i18n-matTooltip [matTooltip]="objectData?.infoText"></div>
+        </div>
+        <div class="block md:hidden">
+            <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
+        </div>
+    </div>
+    <div *ngIf="expand" class="speakers-container margin-bottom-xs" >
+        <ng-container *ngIf="contentdata.length">
+            <sb-uic-sliders-ng-content
+                [title]="'providerName'"
+                [currentIndex]="currentIndex"
+                (currentIndexValue)="getCurrentIndex($event)"
+                [loadNgContentData]="true" [widgetData]="contentdata"
+                [styleData]="styleData">
+                <div sliderbody>
+                    <div *ngFor="let item of contentdata; let i = index" [hidden]="i !== currentIndex">
+                        <div class="speakers-wrapper">
+                            <div class="flex items-center justify-center pb-2">
+                                <div class="speaker-initial" *ngIf="!item.profileImage">{{item?.initial}}</div>
+                                <img class='speaker-icon' [src]="item?.profileImage" alt="" *ngIf="item.profileImage"/>
+                            </div>
+                            <div class="flex items-center justify-center pb-2">
+                                <div class="speaker-title">{{item.name}}</div>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <div class="speaker-description">{{item.description}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sb-uic-sliders-ng-content>
+        </ng-container>
+    </div>
+</div>

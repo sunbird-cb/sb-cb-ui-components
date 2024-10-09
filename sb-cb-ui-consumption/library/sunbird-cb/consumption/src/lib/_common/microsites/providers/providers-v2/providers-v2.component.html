@@ -17,10 +17,14 @@
                                         [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
                                     <ng-container *ngSwitchCase="'infra'" [ngTemplateOutlet]="infra"
                                         [ngTemplateOutletContext]="{infra: column?.data}"></ng-container>
-                                    <ng-container *ngSwitchCase="'contentFeaturedStrip'" [ngTemplateOutlet]="contentStrip"
-                                        [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                    <ng-container *ngSwitchCase="'contentTopStrip'" [ngTemplateOutlet]="contentStrip"
-                                        [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container> 
+                                    <ng-container *ngSwitchCase="'contentFeaturedStrip'" [ngTemplateOutlet]="contentStripTemplate"
+                                        [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                    <ng-container *ngSwitchCase="'contentTopStrip'" [ngTemplateOutlet]="contentStripTemplate"
+                                        [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container> 
                                     <ng-container *ngSwitchCase="'competency'" [ngTemplateOutlet]="competency"
                                         [ngTemplateOutletContext]="{competency: column}"></ng-container>   
                                         <ng-container *ngSwitchCase="'learnerReview'" [ngTemplateOutlet]="learnerReviewBlock"
@@ -48,11 +52,13 @@
 <ng-template #topSection let-data="data">
     <!-- <div class="w-full grid grid-cols-12 gap-4"> -->
         <div class="col-span-12 ">
-            <div class="grid grid-cols-12">
-                <div class="hidden md:block p-5 custombgsection">
-                    <sb-uic-data-points  [providerId]="providerId" [fetchDataFromApi]="true" [objectData]="data?.metrics?.data" [layoutType]="'multipleRows-V2'"></sb-uic-data-points>
+            <div class="grid grid-cols-12 auto-rows-max">
+                
+                <div class="col-span-3 custombgsection">
+                    <div class="hidden md:block py-5 h-full ">
+                        <sb-uic-data-points  [providerId]="providerId" [fetchDataFromApi]="true" [objectData]="data?.metrics?.data" [layoutType]="'multipleRows-V2'"></sb-uic-data-points>
+                    </div>
                 </div>
-                <div class="col-span-3"></div>
                 <div class="col-span-12 md:col-span-9">
                     <div class="slider h-full" *ngIf="data?.sliderData?.sliders">
                         <sb-uic-sliders [title]="providerName" [widgetData]="data?.sliderData?.sliders" [styleData]="data?.sliderData?.styleData" [type]="'atictitop'"></sb-uic-sliders>
@@ -90,19 +96,19 @@
     <!-- </div> -->
 </ng-template>
 
-<ng-template #contentStrip let-contentStrip="contentStrip">
-    <ng-container *ngIf="!contentStrip?.hideSection">
+<ng-template #contentStripTemplate let-data="data">
+    <ng-container *ngIf="!data?.contentStrip?.hideSection">
         <div class="flex justify-center relative">
-            <img class="absolute {{contentStrip?.sectionImagePosition}}" src="{{contentStrip?.sectionImage}}" alt="">
+            <img class="absolute {{data?.contentStrip?.sectionImagePosition}}" src="{{data?.contentStrip?.sectionImage}}" alt="">
             <div class="container ">
                 <div class="w-full">
                     <sb-uic-content-strip-with-tabs
                         [emitViewAll]="true"
-                        (viewAllResponse)="showAllContent($event,contentStrip)"
-                        (emptyResponse)="hideContentStrip($event, contentStrip)"
+                        (viewAllResponse)="showAllContent($event,data)"
+                        (emptyResponse)="hideContentStrip($event, data)"
                         (telemtryResponse)="raiseTelemetryInteratEvent($event)"
                         [providerId]="providerId"
-                        [widgetData]="contentStrip">
+                        [widgetData]="data?.contentStrip">
                     </sb-uic-content-strip-with-tabs>
                 </div>
             </div>

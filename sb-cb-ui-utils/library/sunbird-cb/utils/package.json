@@ -1,6 +1,6 @@
 {
   "name": "@sunbird-cb/utils",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "main": "./src/public-api.ts",
   "dependencies": {},
   "peerDependencies": {

@@ -32,7 +32,7 @@ const API_END_POINTS = {
 @Injectable({
   providedIn: 'root',
 })
-export class WidgetUserService {
+export class WidgetUserServiceLib {
   environment: any;
   constructor(
     @Inject('environment') environment: any,
@@ -67,10 +67,8 @@ export class WidgetUserService {
       Pragma: 'no-cache',
       Expires: '0',
     })
-    if (this.checkStorageData('enrollmentService', 'enrollmentData')) {
-      const result: any =  this.http.get(path, { headers }).pipe(catchError(this.handleError), map(
+      const result: any =  this.http.get(path, { headers }).pipe(catchError(this.handleError), map(  
           (data: any) => {
-
             const coursesData: any = []
             if (data && data.result && data.result.courses) {
               data.result.courses.forEach((content: any) => {
@@ -82,23 +80,12 @@ export class WidgetUserService {
               this.storeUserEnrollmentInfo(data.result.userCourseEnrolmentInfo,
                                            data.result.courses.length)
               data.result.courses = coursesData
-              if (data.result.courses.length < 200) {
-                localStorage.removeItem('enrollmentData')
-                this.setTime('enrollmentService')
-                localStorage.setItem('enrollmentData', JSON.stringify(data.result))
-                this.mapEnrollmentData(data.result)
-                return data.result
-              }
             }
-            this.mapEnrollmentData(data.result)
             return data.result
           }
         )
       )
       return result
-    }
-    return this.getData('enrollmentData')
-
   }
 
    // tslint:disable-next-line: max-line-length
@@ -123,19 +110,6 @@ export class WidgetUserService {
           (data: any) => data.result
         )
       )
-    // if (this.checkStorageData('enrollmentService')) {
-    //   const result: any =  this.http.get(path, { headers }).pipe(catchError(this.handleError), map(
-    //       (data: any) => {
-    //         localStorage.setItem('enrollmentData', JSON.stringify(data.result))
-    //         this.mapEnrollmentData(data.result)
-    //         return data.result
-    //       }
-    //     )
-    //   )
-    //   this.setTime('enrollmentService')
-    //   return result
-    // }
-    // return this.getData('enrollmentData')
   }
 
   checkStorageData(key: any, dataKey: any) {
@@ -187,25 +161,29 @@ export class WidgetUserService {
     }
   }
 
-  fetchCbpPlanList() {
-
-    // let data = JSON.parse(localStorage.getItem('cbpData')|| '')
-    // if(!data) {
-    //   this.http.get(API_END_POINTS.FETCH_CPB_PLANS).pipe(catchError(this.handleError), map(
-    //     (data: any) => {
-    //       const courseData = this.mapData(data.result)
-    //       return courseData
-    //     }
-    //   )
-    //   )
-    // } else {
-    //   return this.getData('cbpData')
-
-    // }
+    fetchCbpPlanList(userId: string) {
      if (this.checkStorageData('cbpService', 'cbpData')) {
         const result: any = this.http.get(API_END_POINTS.FETCH_CPB_PLANS).pipe(catchError(this.handleError), map(
           async (data: any) => {
-            return await this.mapData(data.result)
+            if(data.result && data.result.content && data.result.content.length) {
+              let cbpData: any = this.getCbpFormatedData(data.result.content)
+              let cbpDoIds = cbpData.contentIds.join(',')
+              let cbpContentData: any = cbpData.cbpContentData || []
+              const responseData =  await this.fetchEnrollmentDataByContentId(userId,cbpDoIds).toPromise().then(async (res: any) => {
+                const enrollData: any = {}
+                if (res && res.courses && res.courses.length) {
+                  res.courses.forEach((data: any) => {
+                    enrollData[data.collectionId] = data
+                  })
+                  return enrollData
+                } else {
+                  return {}
+                }
+              }).catch((_err: any) => {
+                return {}
+              });
+              return await this.mapCbpData(cbpContentData, responseData)
+            }
           }
         )
       )
@@ -215,16 +193,40 @@ export class WidgetUserService {
     return this.getData('cbpData')
   }
 
-  async mapData(data: any) {
-    const contentNew: any = []
+  storeUserEnrollmentInfo(enrollmentData: any, enrolledCourseCount: number) {
+    const userData = {
+      enrolledCourseCount,
+      userCourseEnrolmentInfo: enrollmentData,
+    }
+    localStorage.removeItem('userEnrollmentCount')
+    localStorage.setItem('userEnrollmentCount', JSON.stringify(userData))
+  }
+
+
+  fetchEnrollmentDataByContentId(userId, contentdata) {
+    let path = API_END_POINTS.FETCH_USER_ENROLLMENT_LIST(userId)
+    path = `${path}&courseIds=${contentdata}&cache=false'`
+    const headers = new HttpHeaders({
+      'Cache-Control':  'no-cache, no-store, must-revalidate, post-check=0, pre-check=0',
+      Pragma: 'no-cache',
+      Expires: '0',
+    })
+    return this.http
+      .get(path, { headers })
+      .pipe(
+        catchError(this.handleError),
+        map(
+          (data: any) => data.result
+        )
+      )
+  }
+
+  getCbpFormatedData(cbpContent: any) {
+    let cbpContentData = []
+    let contentIds = []
     const todayDate = dayjs().format('YYYY-MM-DD')
-
-    const enrollList: any = JSON.parse(localStorage.getItem('enrollmentMapData') || '{}')
-
-    if (data && data.count) {
-      data.content.forEach((c: any) => {
+    cbpContent.forEach((c: any) => {
         c.contentList.forEach((childData: any) => {
-          const childEnrollData = enrollList[childData.identifier]
           const endDate = dayjs(c.endDate).format('YYYY-MM-DD')
           const daysCount = dayjs(endDate).diff(todayDate, 'day')
           childData['planDuration'] =  daysCount < 0 ? NsCardContent.ACBPConst.OVERDUE : daysCount > 29
@@ -232,13 +234,21 @@ export class WidgetUserService {
           childData['endDate'] = c.endDate
           childData['parentId'] = c.id
           childData['planType'] = 'cbPlan'
+          childData['contentStatus'] = 0
+          contentIds.push(childData.identifier)
           if (childData.status !== NsCardContent.IGOTConst.RETIRED) {
-            contentNew.push(childData)
-          } else {
-            if (childEnrollData && childEnrollData.status === 2) {
-              contentNew.push(childData)
-            }
+            cbpContentData.push(childData)
           }
+        })
+      })
+    return {cbpContentData,contentIds}
+  }
+  async mapCbpData(cbpContent: any, enrollmentData: any){
+    let cbpFilteredContent: any = []
+    if(cbpContent && cbpContent.length) {
+      if(Object.keys(enrollmentData).length) {
+        cbpContent.forEach((cbp: any) => {
+          const childEnrollData = enrollmentData[cbp.identifier]
 
           const competencyArea: any = []
           const competencyTheme: any = []
@@ -247,12 +257,12 @@ export class WidgetUserService {
           const competencyAreaId: any = []
           const competencyThemeId: any = []
           const competencySubThemeId: any = []
-          childData['contentStatus'] = 0
+          cbp['contentStatus'] = 0
           if (childEnrollData) {
-            childData['contentStatus'] = childEnrollData.status
+            cbp['contentStatus'] = childEnrollData.status
           }
-         if (childData.competencies_v5) {
-          childData.competencies_v5.forEach((element: any) => {
+        if (cbp.competencies_v5) {
+          cbp.competencies_v5.forEach((element: any) => {
             if (!competencyArea.includes(element.competencyArea)) {
               competencyArea.push(element.competencyArea)
               competencyAreaId.push(element.competencyAreaId)
@@ -269,37 +279,45 @@ export class WidgetUserService {
               competencySubThemeId.push(element.competencySubThemeId)
             }
           })
-         }
+        }
 
-          childData['competencyArea'] = competencyArea
-          childData['competencyTheme'] = competencyTheme
-          childData['competencyThemeType'] = competencyThemeType
-          childData['competencySubTheme'] = competencySubTheme
-          childData['competencyAreaId'] = competencyAreaId
-          childData['competencyThemeId'] = competencyThemeId
-          childData['competencySubThemeId'] = competencySubThemeId
-        })
-      })
-     if (contentNew.length > 1) {
-        const sortedData: any = contentNew.sort((a: any, b: any) => {
-          const firstDate: any = new Date(a.endDate)
-          const secondDate: any = new Date(b.endDate)
+          cbp['competencyArea'] = competencyArea
+          cbp['competencyTheme'] = competencyTheme
+          cbp['competencyThemeType'] = competencyThemeType
+          cbp['competencySubTheme'] = competencySubTheme
+          cbp['competencyAreaId'] = competencyAreaId
+          cbp['competencyThemeId'] = competencyThemeId
+          cbp['competencySubThemeId'] = competencySubThemeId
+          if (cbp.status !== NsCardContent.IGOTConst.RETIRED) {
+            cbpFilteredContent.push(cbp)
+          } else {
+            if (childEnrollData && childEnrollData.status === 2) {
+              cbpFilteredContent.push(cbp)
+            }
+          }
+        });
+        if (cbpFilteredContent.length > 1) {
+          const sortedData: any = cbpFilteredContent.sort((a: any, b: any) => {
+            const firstDate: any = new Date(a.endDate)
+            const secondDate: any = new Date(b.endDate)
 
-          return  secondDate > firstDate  ? 1 : -1
-        })
-        const uniqueUsersByID = lodash.uniqBy(sortedData, 'identifier')
-        const sortedByEndDate =  lodash.orderBy(uniqueUsersByID, ['endDate'], ['asc'])
-        const sortedByStatus =  lodash.orderBy(sortedByEndDate, ['contentStatus'], ['asc'])
-        localStorage.setItem('cbpData', JSON.stringify(sortedByStatus))
-        return sortedByStatus
-     }
-     localStorage.setItem('cbpData', JSON.stringify(contentNew))
-     return contentNew
+            return  secondDate > firstDate  ? 1 : -1
+          })
+          const uniqueUsersByID = lodash.uniqBy(sortedData, 'identifier')
+          const sortedByEndDate =  lodash.orderBy(uniqueUsersByID, ['endDate'], ['asc'])
+          const sortedByStatus =  lodash.orderBy(sortedByEndDate, ['contentStatus'], ['asc'])
+          localStorage.setItem('cbpData', JSON.stringify(sortedByStatus))
+          return sortedByStatus
+      }
+      localStorage.setItem('cbpData', JSON.stringify(cbpFilteredContent))
+      return cbpFilteredContent
+      }
+      localStorage.setItem('cbpData', JSON.stringify(cbpContent))
+      return cbpContent
     }
     localStorage.setItem('cbpData', JSON.stringify([]))
     return []
   }
-
   mapEnrollmentData(courseData: any) {
     const enrollData: any = {}
     if (courseData && courseData.courses.length) {
@@ -307,15 +325,6 @@ export class WidgetUserService {
           enrollData[data.collectionId] = data
       })
     }
-    localStorage.removeItem('enrollmentMapData')
-    localStorage.setItem('enrollmentMapData', JSON.stringify(enrollData))
-  }
-  storeUserEnrollmentInfo(enrollmentData: any, enrolledCourseCount: number) {
-    const userData = {
-      enrolledCourseCount,
-      userCourseEnrolmentInfo: enrollmentData,
-    }
-    localStorage.removeItem('userEnrollmentCount')
-    localStorage.setItem('userEnrollmentCount', JSON.stringify(userData))
+    return enrollData
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, HostBinding, Inject, EventEmitter,
 import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2';
 import { NsContentStripWithTabs } from './content-strip-with-tabs-lib.model';
 // import { HttpClient } from '@angular/common/http'
-import { WidgetContentService } from '../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../_services/widget-content-lib.service';
 import { NsContent } from '../../_models/widget-content.model';
 import { MultilingualTranslationsService } from '../../_services/multilingual-translations.service';
 import {
@@ -15,7 +15,7 @@ import {
 } from '@sunbird-cb/utils-v2';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { WidgetUserService } from '../../_services/widget-user.service';
+import { WidgetUserServiceLib } from '../../_services/widget-user-lib.service';
 // import { environment } from 'src/environments/environment'
 // tslint:disable-next-line
 import * as _ from 'lodash'
@@ -100,14 +100,12 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
   environment!: any;
   changeEventSubscription: Subscription | null = null;
   defaultMaxWidgets = 12;
-  enrollInterval: any;
   todaysEvents: any = [];
-  enrollmentMapData: any
 
   constructor(
     // private contentStripSvc: ContentStripNewMultipleService,
     @Inject('environment') environment: any,
-    private contentSvc: WidgetContentService,
+    private contentSvc: WidgetContentLibService,
     private loggerSvc: LoggerService,
     private eventSvc: EventService,
     private configSvc: ConfigurationsService,
@@ -115,7 +113,7 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
     // private http: HttpClient,
     // private searchServSvc: SearchServService,
     public router: Router,
-    private userSvc: WidgetUserService,
+    private userSvc: WidgetUserServiceLib,
     private translate: TranslateService,
     private langtranslations: MultilingualTranslationsService
   ) {
@@ -345,9 +343,6 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
     this.fetchPlaylistReadData(strip, calculateParentStatus);
     this.fetchCiosContentData(strip, calculateParentStatus);
 
-    // this.enrollInterval = setInterval(() => {
-    //   this.fetchAllCbpPlans(strip, calculateParentStatus)
-    // },                                1000)
   }
 
   fetchFromEnrollmentList(strip: NsContentStripWithTabs.IContentStripUnit, calculateParentStatus = true) {
@@ -561,11 +556,22 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
             // console.log('calling  after-- ')
             if (response.results.result.content) {
               if (strip.key === 'scheduledAssessment') {
-                this.enrollInterval = setInterval(() => {
-                  this.checkInvitOnlyAssessments(response.results.result.content, strip, calculateParentStatus, response.viewMoreUrl)
-
-                  // tslint:disable-next-line
-                }, 1000)
+              
+                let result = response.results.result.content.map(a => a.identifier);
+                const responseData =  await this.userSvc.fetchEnrollmentDataByContentId(this.configSvc.userProfile.userId,result.join(',')).toPromise().then(async (res: any) => {
+                  const enrollData: any = {}
+                  if (res && res.courses && res.courses.length) {
+                    res.courses.forEach((data: any) => {
+                      enrollData[data.collectionId] = data
+                    })
+                    return enrollData
+                  } else {
+                    return {}
+                  }
+                }).catch((_err: any) => {
+                  return {}
+                });
+                this.checkInvitOnlyAssessments(response.results.result.content, strip, calculateParentStatus, response.viewMoreUrl, responseData)
 
 
               } else {
@@ -601,21 +607,21 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
     }
   }
 
-  checkInvitOnlyAssessments(content: any, strip: any, calculateParentStatus: any, viewMoreUrl: any) {
-    if (localStorage.getItem('enrollmentMapData')) {
-      this.enrollmentMapData = JSON.parse(localStorage.getItem('enrollmentMapData') || '{}')
+  checkInvitOnlyAssessments(content: any, strip: any, calculateParentStatus: any, viewMoreUrl: any, enrollmentData:any) {
+    if (Object.keys(enrollmentData).length) {
+      enrollmentData = enrollmentData
       let filteredArray: any = []
       let now = new Date().getTime()
       content.forEach((data: any) => {
-        if (this.enrollmentMapData[data.identifier]) {
-          if(this.enrollmentMapData[data.identifier].status !== 2 && this.enrollmentMapData[data.identifier].batch) {
-            const enrollData = this.enrollmentMapData[data.identifier].batch
+        if (enrollmentData[data.identifier]) {
+          if(enrollmentData[data.identifier].status !== 2 && enrollmentData[data.identifier].batch) {
+            const enrollData = enrollmentData[data.identifier].batch
             let endDate:any = new Date(enrollData.endDate).getTime()
             // let endDate:any = '2024-07-7T00:00:00.000Z'
             let timeDuration = endDate - now
             if(timeDuration > 0 ) {
-              data['batch'] = this.enrollmentMapData[data.identifier].batch
-              data['completionPercentage'] = this.enrollmentMapData[data.identifier].completionPercentage
+              data['batch'] = enrollmentData[data.identifier].batch
+              data['completionPercentage'] = enrollmentData[data.identifier].completionPercentage
               filteredArray.push(data)
             }
           }
@@ -634,7 +640,6 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
         calculateParentStatus,
         viewMoreUrl,
       );
-      clearInterval(this.enrollInterval)
     }
   }
 
@@ -1174,7 +1179,8 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
 
       let courses: NsContent.IContent[];
       let tabResults: any[] = [];
-      const response = await this.userSvc.fetchCbpPlanList().toPromise();
+      let userId = this.configSvc.userProfile.userId
+      const response = await this.userSvc.fetchCbpPlanList(userId).toPromise();
       if (response) {
         courses = response;
         if (strip.tabs && strip.tabs.length) {
@@ -1197,35 +1203,7 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
           );
         }
       }
-      // this.userSvc.fetchCbpPlanList().subscribe( async  (res: any) => {
-      //   if (res) {
-      //     console.log(res,'===============================>')
-      //     courses = res
-      //     if (strip.tabs && strip.tabs.length) {
-      //       tabResults = this.splitCbpTabsData(courses, strip)
-      //       await this.processStrip(
-      //         strip,
-      //         this.transformContentsToWidgets(courses, strip),
-      //         'done',
-      //         calculateParentStatus,
-      //         '',
-      //         tabResults
-      //       )
-      //     } else {
-      //       this.processStrip(
-      //         strip,
-      //         this.transformContentsToWidgets(courses, strip),
-      //         'done',
-      //         calculateParentStatus,
-      //         'viewMoreUrl',
-      //       )
-      //     }
-      //   }
-      // },                                        (_err: any) => {
 
-      // })
-
-      clearInterval(this.enrollInterval);
     }
   }
   splitCbpTabsData(contentNew: NsContent.IContent[], strip: NsContentStripWithTabs.IContentStripUnit) {

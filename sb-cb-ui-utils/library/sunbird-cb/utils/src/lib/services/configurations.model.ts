@@ -61,6 +61,15 @@ export namespace NsInstanceConfig {
     forgotPasswordConfig?: IForgotPassword
     hubs: IHubs[]
     courseContentPath?: string
+    competency: ICompetencyKeys
+  }
+
+  export interface ICompetencyKeys {
+    vKey: string
+    vCompetencyArea: string
+    vCompetencyAreaDescription: string
+    vCompetencyTheme: string
+    vCompetencySubTheme: string
   }
 
   export interface IForgotPassword {

@@ -1,0 +1,64 @@
+<div class="topLevel-card" [ngClass]="{'topLevel-card' : cardType=== 'topLevel',
+'reply-card' : cardType=== 'reply'}">
+    <div class="flex user-info">
+        <div>
+            <div class="mr-4">
+                <d-v2-avatar-photo [size]="'ml'" [name]="comment?.commentData?.commentSource?.userName"
+                    [photoUrl]="comment?.commentData?.commentSource?.userPic"></d-v2-avatar-photo>
+            </div>
+        </div>
+        <div class="flex flex-1 flex-col">
+            <span class="mat-body-1">{{comment?.commentData?.commentSource?.userName}} </span>
+            <span class="mat-body-2">{{comment?.createdDate | pipeRelativeTime}}</span>
+        </div>
+    </div>
+    <div class="comment mb-4">
+        {{comment?.commentData?.comment}}
+    </div>
+    <div class="actions" *ngIf="cardConfig?.showActions">
+        <div class="flex">
+            <ng-container *ngIf="cardConfig?.actions?.like?.show ">
+                <span class="mr-2 cursor-pointer">
+                    <mat-icon class="icon" aria-hidden="false" i18n-aria-label
+                        aria-label="Fail">{{cardConfig?.actions?.like?.icon}}</mat-icon>
+                </span>
+                <span class="mr-4" *ngIf="cardConfig?.actions?.like?.showCount">
+                    {{(comment?.likes && comment?.likes?.length) || 0}} {{comment?.likes && comment?.likes?.length > 1 ?
+                    'Likes' : 'Like'}}
+                </span>
+            </ng-container>
+            <ng-container *ngIf="cardConfig?.actions?.comments?.show">
+                <span class="mr-2 cursor-pointer" (click)="data.replyToggle = !data.replyToggle">
+                    <mat-icon class="icon" aria-hidden="false" i18n-aria-label
+                        aria-label="Fail">{{cardConfig?.actions?.comments?.icon}}</mat-icon>
+                </span>
+                <span class="mr-4" *ngIf="cardConfig?.actions?.comments?.showCount">
+                    {{(replyData && replyData?.length) || 0}} {{replyData && replyData?.length > 1 ? 'comments' :
+                    'comment'}}
+                </span>
+            </ng-container>
+        </div>
+    </div>
+    <ng-container *ngIf="cardConfig?.repliesSection?.show">
+        <div *ngIf="data.replyToggle" class="pl-6 mt-4 repliesSection">
+            <div class="mb-4">
+                <d-v2-new-comment [config]="cardConfig?.repliesSection?.newCommentReply"
+                    [hierarchyPath]="getHierarchyPath" (newComment)="newComment($event)">
+                </d-v2-new-comment>
+            </div>
+            <ng-container *ngIf="replyData && replyData?.length > 0; else noReplies">
+                <ng-container *ngFor="let reply of replyData">
+                    <d-v2-comment-card [cardType]="cardConfig?.repliesSection?.replyCardConfig?.cardType"
+                        [cardConfig]="cardConfig?.repliesSection?.replyCardConfig"
+                        [comment]="reply"></d-v2-comment-card>
+                </ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #noReplies>
+    <div class="flex flex-1 items-center justify-center  justify-center">
+        No comments found!
+    </div>
+</ng-template>

@@ -72,6 +72,7 @@ export class ConfigurationsService {
   activeLocaleGroup = ''
   completedActivity: string[] | null = null
   completedTour = false
+  competency: any
   profileSettings = ['profilePicture', 'learningTime', 'learningPoints']
 
   primaryNavBar: Partial<NsPage.INavBackground> = {
@@ -84,7 +85,6 @@ export class ConfigurationsService {
 
   private updateOrgReadData: BehaviorSubject<string> = new BehaviorSubject('')
   updateOrgReadDataObservable = this.updateOrgReadData.asObservable()
-
   updateOrgData(id: string) {
       this.updateOrgReadData.next(id)
   }

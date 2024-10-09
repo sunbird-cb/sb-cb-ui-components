@@ -71,6 +71,8 @@ export class MatchTheFollowingQuesComponent implements OnInit, OnChanges, AfterV
             }
         })
         this.localQuestion = this.question.question
+        // tslint:disable-next-line
+        console.log('this.question', this.question)
         this.question.options.map(option => (option.matchForView = option.match))
         // const array = this.question.options.map(elem => elem.match)
         // const arr = this.practiceSvc.shuffle(array)

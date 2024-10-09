@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as _ from "lodash";
 import { TranslateService } from '@ngx-translate/core';
 import { ConfigurationsService, EventService, MultilingualTranslationsService, NsContent } from '@sunbird-cb/utils-v2';
-import { WidgetContentService } from '../../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../../_services/widget-content-lib.service';
 import { Router } from '@angular/router';
 
 
@@ -27,7 +27,7 @@ export class CardMdoChannelV1Component implements OnInit {
     private translate: TranslateService,
     private langtranslations: MultilingualTranslationsService,
     private configSvc: ConfigurationsService,
-    private contSvc: WidgetContentService,
+    private contSvc: WidgetContentLibService,
     public router: Router) { 
       this.langtranslations.languageSelectedObservable.subscribe(() => {
         if (localStorage.getItem('websiteLanguage')) {

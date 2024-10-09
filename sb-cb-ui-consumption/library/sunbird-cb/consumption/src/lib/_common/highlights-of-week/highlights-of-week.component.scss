@@ -1,0 +1,79 @@
+.highlights-of-the-week-container {
+    ::ng-deep.banner-title {
+        display: none;
+    }
+    ::ng-deep.banner-meta {
+        bottom: -37px;
+    }
+    ::ng-deep.prev {
+        margin-left: 11px;
+    }
+    ::ng-deep.next {
+        margin-right: 16px;
+    }
+    @media screen and (min-width: 320px) and (max-width: 769px) {
+        ::ng-deep.prev {
+            display: none !important;
+        }
+        ::ng-deep.next {
+            display: none !important;
+        }
+    }
+}
+.title {
+    /* stylelint-disable */
+    font-family: Montserrat;
+    /* stylelint-enable */
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.38px;
+    text-align: left;
+    background-color: #D1DBEC;
+    padding: 16px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.wh-wrapper {
+    background-color: #D1DBEC;
+    padding: 0 16px 16px 16px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    .player {
+        height: 420px;
+    }
+    .player-title {
+        /* stylelint-disable */
+        font-family: Montserrat;
+        /* stylelint-disable */
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.5px;
+        text-align: left;
+    }
+    .player-body {
+         /* stylelint-disable */
+        font-family: Lato;
+        /* stylelint-disable */
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16.8px;
+        text-align: left;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    @media screen and (min-width: 320px) and (max-width: 769px) {
+        .player {
+            height: 215px;
+        }
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 769px) {
+    .no-radius {
+        border-radius: 0px;
+    }
+}

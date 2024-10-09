@@ -1,6 +1,6 @@
 {
   "name": "@sunbird-cb/collection",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "main": "src/public-api.ts",
   "peerDependencies": {
     "@angular/animations": "~8.2.1",

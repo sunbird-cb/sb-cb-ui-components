@@ -1,0 +1,30 @@
+.start-comment-container {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: white;
+}
+
+.new-post-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    color: #f69953;
+}
+
+.primary-button {
+    background: #1a4ca1 !important;
+    color: #fff !important;
+    height: 40px;
+}
+
+.primary-button:disabled {
+    opacity: 0.5;
+}
+
+.discuss-input {
+    border-radius: 4px;
+    height: 40px;
+    padding: 0 12px;
+}
