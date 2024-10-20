@@ -207,8 +207,13 @@ export class EventService {
   if (eventObj !== undefined) {
     this.todaysEvents = []
     const data = eventObj
+    let isEventLive : boolean = false
+    let isEventRecording : boolean = false
    // console.log('strip comp', data)
     Object.keys(data).forEach((index: any) => {
+      
+      isEventRecording = false
+      isEventLive = false
       const obj = data[index]
       const floor = Math.floor
       const hours = floor(obj.duration / 60)
@@ -229,8 +234,26 @@ export class EventService {
       const ehour = etime.substr(0, 2)
       const emin = etime.substr(2, 3)
       const endtime = `${ehour}${emin}`
-
+      const eventDate = this.customDateFormat(obj.startDate, obj.startTime)
+      const eventendDate = this.customDateFormat(obj.endDate, obj.endTime)
+      const now = new Date()
+      const today = moment(now).format('YYYY-MM-DD HH:mm')
+      if (moment(today).isBetween(eventDate, eventendDate)) {
+        isEventRecording = false
+        isEventLive = true
+        if (today >= eventendDate) {
+          if (obj.recordedLinks && obj.recordedLinks.length > 0) {
+            isEventRecording = true
+            isEventLive = false
+          }
+        }
+      } else if (today >= eventendDate) {
+        isEventRecording = true
+        isEventLive = false
+      }
       const eventDataObj = {
+        isEventLive,
+        isEventRecording,
         event: obj,
         eventName: obj.name,
         eventStartTime: starttime,
@@ -244,11 +267,15 @@ export class EventService {
           '/assets/icons/Events_default.png',
         pastevent: false,
       }
+
       const isToday = this.compareDate(obj.startDate)
-      if (isToday) {
+      if (isToday && isEventLive) {
         this.todaysEvents.push(eventDataObj)
       }
     })
+    this.todaysEvents = this.todaysEvents.sort((a:any, b:any)=> {
+      return (a.isEventLive === b.isEventLive)? 0 : b.isEventLive? -1 : 1;
+    });
   }
 }
 }

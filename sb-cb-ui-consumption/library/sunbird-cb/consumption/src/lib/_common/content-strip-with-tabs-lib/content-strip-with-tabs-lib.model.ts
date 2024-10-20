@@ -151,5 +151,7 @@ export namespace NsContentStripWithTabs {
     tabLoading?: boolean;
     stripConfig?: IStripConfig;
     customeClass?: string;
+    disableTranslate?: boolean;
+    contentShuffel?: boolean
   }
 }

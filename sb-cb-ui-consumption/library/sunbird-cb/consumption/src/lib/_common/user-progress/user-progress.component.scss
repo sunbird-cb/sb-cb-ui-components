@@ -1,0 +1,201 @@
+.user-progress-title {
+    /* stylelint-disable */
+    font-family: Montserrat;
+    /* stylelint-enable */
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.38px;
+    text-align: left;
+}
+
+.user-progress-wrapper {
+    border-radius: 12px;
+}
+.user-rank {
+    background: url('https://portal.dev.karmayogibharat.net/content-store/orgStore/0132238763297177601/1727267061524_shadow.png'), 
+        linear-gradient(124.59deg,#266eeb 51.53%,#133f8b 140.2%);
+    height: 76px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-left-color: #266EEB;
+    border-right-color: #266EEB;
+    border-top-color: #266EEB;
+    padding-left: 25%;
+}
+.current-rank {
+    padding: 3px 10px;
+    border-radius: 15px;
+    background-color: white;
+    color: #F3962F;
+    /* stylelint-disable */
+    font-family: Montserrat;
+    /* stylelint-enable */
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    text-align: center;
+}
+.user-details-wrapper {
+    padding: 0 8px;
+    border: 1px solid #e8e8e8;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-color: white;
+}
+.user-details {
+    padding: 0 8px;
+}
+.user-stats {
+    padding: 0 8px;
+}
+.user-initial {
+    /* stylelint-disable */
+    font-family: Montserrat;
+    /* stylelint-enable */
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24.38px;
+    text-align: center;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: #fff;
+    border-radius: 50px;
+    border: 3px solid white;
+    margin-top: -30px;
+}
+.user-profile {
+    width: 70px;
+    height: 70px;
+    border-radius: 50px;
+}
+.user-name {
+    /* stylelint-disable */
+    font-family: Montserrat;
+    /* stylelint-enable */
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    text-align: left;
+}
+
+.my-hours {
+    padding: 16px;
+    background-color: #F0F3F4;
+    border-radius: 12px;
+    width: 50%;
+    border: 1px solid #c3c3c3;
+}
+.my-certificates {
+    padding: 16px;
+    background-color: #F0F3F4;
+    width: 50%;
+    border-radius: 12px;
+    border: 1px solid #c3c3c3;
+}
+.k-points {
+    padding: 16px;
+    background-color: #F0F3F4;
+    width: 40%;
+    border-radius: 12px;
+    border: 1px solid #c3c3c3;
+}
+.hours-icon {
+    background: linear-gradient(143.13deg, rgba(255, 191, 26, 0.15) 5.36%, rgba(255, 64, 128, 0.15) 94.64%);
+    border-radius: 50px;
+    padding: 5px;
+}
+.counter-title {
+    /* stylelint-disable */
+    font-family: Lato;
+    /* stylelint-enable */
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14.4px;
+    text-align: left;
+}
+.counter{
+    /* stylelint-disable */
+    font-family: Montserrat;
+    /* stylelint-enable */
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 19.5px;
+    text-align: left;
+}
+.cert-icon{
+    background: linear-gradient(180deg, rgba(255, 206, 81, 0.24) 0%, rgba(254, 231, 28, 0.24) 100%);
+    border-radius: 50px;
+    padding: 5px;
+}
+.kp-point-icon {
+    background: #DBE4FF;
+    border-radius: 50px;
+    padding: 5px;
+    height: 18px;
+    width: 18px;
+}
+.insights-wrapper {
+    padding: 8px 0;
+}
+.insights-container {
+    background: #F3962F33;
+    height: 84px;
+    border-radius: 8px;
+
+    ::ng-deep .prev {
+        display: none;
+    }
+    ::ng-deep .next {
+        display: none;
+    }
+}
+.insights-item {
+    padding: 16px;
+}
+.insights-lable {
+    /* stylelint-disable */
+    font-family: Lato;
+    /* stylelint-enable */
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14.4px;
+    text-align: left;
+}
+.positive-note {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14.4px;
+}
+.positive-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+.growth-positive {
+    color: green;
+}
+.growth-negative {
+    color: red;
+}
+.negative-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+.negative-note {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14.4px;
+}
+
+@media screen and (min-width: 320px) and (max-width: 769px) {
+    .week-progress {
+        background-color: #d1dbec;
+    }
+}
+
+

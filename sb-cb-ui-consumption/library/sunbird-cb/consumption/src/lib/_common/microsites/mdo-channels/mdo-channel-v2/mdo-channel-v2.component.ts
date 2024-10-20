@@ -81,9 +81,9 @@ export class MdoChannelV2Component  implements OnInit {
   public tabClicked(tabEvent: MatTabChangeEvent) {
     this.raiseTelemetry(`${tabEvent.tab.textLabel} tab`)
   }
-  hideContentStrip(event: any, contentStripData: any) {
+  hideContentStrip(event: any, colData: any) {
     if (event) {
-      contentStripData['hideSection'] = true
+      colData.contentStripData['hideSection'] = true
       this.contentTabEmptyResponseCount = this.contentTabEmptyResponseCount + 1
       // if(this.contentTabEmptyResponseCount === 4 ) {
       //   this.selectedIndex = 1
@@ -153,18 +153,13 @@ export class MdoChannelV2Component  implements OnInit {
     }
   }
 
-  showAllContent(_stripData: any, contentStrip: any) {
-    if (contentStrip && contentStrip.strips && contentStrip.strips.length) {
-      const stripData: any = contentStrip.strips[0]
-      if (stripData && stripData.request) {
-        delete(stripData['loaderWidgets'])
+  showAllContent(_stripData: any, columnData: any) {
+    if (columnData && columnData.contentStrip && columnData.contentStrip.strips && columnData.contentStrip.strips.length) {
+      const stripData: any = _stripData
+        let tabSelected =  stripData.viewMoreUrl && stripData.viewMoreUrl.queryParams && stripData.viewMoreUrl.queryParams.tabSelected && stripData.viewMoreUrl.queryParams.tabSelected || ''
         this.router.navigate(
           [`/app/learn/mdo-channels/${this.channnelName}/${this.orgId}/all-content`],
-          { queryParams: { stripData: JSON.stringify(stripData) } })
-      }
-    } else {
-       this.router.navigate(
-        [`/app/learn/browse-by/provider/${this.channnelName}/${this.orgId}/all-CBP`])
+          { queryParams: { tabSelected, key: columnData.sectionKey  } })
     }
   }
 

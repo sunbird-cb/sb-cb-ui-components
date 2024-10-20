@@ -1215,7 +1215,7 @@
                 [currentQuestion]="current_Question" [coursePrimaryCategory]="coursePrimaryCategory"
                 [showOnlyQuestion]="false" [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel"
                 [questionAnswerHash]="questionAnswerHash" [showQuestionMarks]="showQuestionMarks"
-                [assessmentType]="assessmentType">
+                [assessmentType]="assessmentType" [questionParagraph]="questionParagraph">
               </viewer-question>
             </ng-container>
             <div class="flex flex-1">
@@ -1953,7 +1953,8 @@
               [coursePrimaryCategory]="coursePrimaryCategory" [mobileQuestionSetExpand]="!expandFalse"
               [questionAnswerHash]="questionAnswerHash" [assessmentType]="assessmentType"
               [showQuestionMarks]="showQuestionMarks"
-              [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel">
+              [selectedAssessmentCompatibilityLevel]="selectedAssessmentCompatibilityLevel"
+              [questionParagraph]="questionParagraph">
             </viewer-question>
           </ng-container>
           <!-- <div class="flex flex-1">

@@ -19,7 +19,8 @@ export namespace NSPractice {
     timeTaken: String
     questionType?: TQuizQuestionType
     rhsChoices?: string[],
-    marks?: number
+    marks?: number,
+    choices?: IChoiceOptions
 
   }
 
@@ -215,7 +216,8 @@ export namespace NSPractice {
     visibility: string
     showSolutions: 'Yes' | 'No'
     index: number,
-    expectedDuration: number
+    expectedDuration: number,
+    questionParagraph?: any
   }
   export interface IQuestionV2 {
     lastStatusChangedOn: string
@@ -400,5 +402,8 @@ export namespace NSPractice {
   export interface IRetakeAssessment {
     attemptsMade: number,
     attemptsAllowed: number
+  }
+  export interface IChoiceOptions {
+    options: any[]
   }
 }

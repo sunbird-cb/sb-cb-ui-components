@@ -150,6 +150,8 @@ export class TelemetryService {
             object: {
               ...(data) && data,
             },
+            ...(this.configSvc.userProfile && this.configSvc.userProfile.userId ?
+               null : { actor: { id: '', type: 'AnonymousUser' } }),
           }
         )
       } else {

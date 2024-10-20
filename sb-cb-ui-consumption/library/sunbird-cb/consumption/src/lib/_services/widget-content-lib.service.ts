@@ -9,6 +9,7 @@ import { NSSearch } from '../_models/widget-search.model';
 // tslint:disable
 import * as _ from 'lodash'
 import {  viewerRouteGenerator } from './viewer-route-util'
+import {WidgetUserServiceLib} from './widget-user-lib.service'
 import * as moment_ from 'moment';
 const moment = moment_;
 // tslint:enable
@@ -63,10 +64,11 @@ const API_END_POINTS = {
 @Injectable({
   providedIn: 'root',
 })
-export class WidgetContentService {
+export class WidgetContentLibService {
   constructor(
     private http: HttpClient,
     private configSvc: ConfigurationsService,
+    private userSvc: WidgetUserServiceLib
   ) {
   }
 
@@ -459,15 +461,24 @@ export class WidgetContentService {
     return this.http.post<any>(API_END_POINTS.USER_KARMA_POINTS, {});
   }
 
-  getEnrolledData(doId: string) {
-    const enrollmentMapData = JSON.parse(localStorage.getItem('enrollmentMapData') || '{}');
-    const enrolledCourseData = enrollmentMapData[doId];
-    return enrolledCourseData;
+  async getEnrolledData(doId: string) {
+    let userId = this.configSvc.userProfile.userId
+    const responseData =  await this.userSvc.fetchEnrollmentDataByContentId(userId,doId).toPromise().then(async (res: any) => {
+      if (res && res.courses && res.courses.length) {
+        return res.courses
+      } else {
+        return []
+      }
+    }).catch((_err: any) => {
+      return []
+    });
+    return responseData || []
   }
 
   async getResourseLink(content: any) {
-    const enrolledCourseData: any = this.getEnrolledData(content.identifier);
-    if (enrolledCourseData) {
+    const enrolledCourse: any = await this.getEnrolledData(content.identifier);
+    if (enrolledCourse && enrolledCourse.length) {
+      const enrolledCourseData = enrolledCourse[0]
       if (enrolledCourseData.content.courseCategory ===  NsContent.ECourseCategory.BLENDED_PROGRAM ||
         enrolledCourseData.content.courseCategory ===  NsContent.ECourseCategory.INVITE_ONLY_PROGRAM ||
         enrolledCourseData.content.courseCategory ===  NsContent.ECourseCategory.MODERATED_PROGRAM ||
@@ -482,10 +493,8 @@ export class WidgetContentService {
         const data =  await this.checkForDataToFormUrl(content, enrolledCourseData);
         return data;
       }
-
     }
     return this.gotoTocPage(content);
-
   }
   async checkForDataToFormUrl(content: any, enrollData: any) {
     let urlData: any;
@@ -578,5 +587,13 @@ export class WidgetContentService {
   getApiMethod(apiUrl: any): Observable<NsContent.IContent> {
     // req.query = req.query || '';
     return this.http.get<NsContent.IContent>(apiUrl);
+  }
+
+
+  getEnrolledDataFromList(enrollmentList: any, collectionId: string) {
+    if(enrollmentList && enrollmentList.length) {
+      let enrolledData = enrollmentList.filter((ele: any) => ele.collectionId === collectionId)
+      return enrolledData.length ? enrolledData[0]: {}
+    }
   }
 }

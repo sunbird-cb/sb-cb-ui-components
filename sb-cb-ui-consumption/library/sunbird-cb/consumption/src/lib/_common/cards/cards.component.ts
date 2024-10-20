@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { WidgetBaseComponent, NsWidgetResolver } from '@sunbird-cb/resolver-v2';
 import { NsCardContent } from '../../_models/card-content.model';
 import { UtilityService } from '@sunbird-cb/utils-v2';
-import { WidgetContentService } from '../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../_services/widget-content-lib.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,10 +18,8 @@ implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard>  {
   isIntranetAllowedSettings = false
   cbPlanMapData: any
   cbPlanInterval: any
-  enrollInterval: any
-  enrollmentMapData: any
   constructor(private utilitySvc: UtilityService,
-    private contSvc: WidgetContentService,
+    private contSvc: WidgetContentLibService,
     public router: Router
   ) {
     super();
@@ -32,10 +30,7 @@ implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard>  {
       this.getCbPlanData()
     },                                1000)
     
-    this.enrollInterval = setInterval(() => {
-      this.getEnrollmentData()
-    // tslint:disable-next-line
-    }, 1000)
+   
   }
 
   get isLiveOrMarkForDeletion() {
@@ -84,12 +79,7 @@ implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard>  {
     }
   }
 
-  getEnrollmentData() {
-    if (localStorage.getItem('enrollmentMapData')) {
-       this.enrollmentMapData = JSON.parse(localStorage.getItem('enrollmentMapData') || '{}')
-      clearInterval(this.enrollInterval)
-    }
-  }
+
 
   raiseCardClick(data: any) {
     this.triggerTelemetry.emit(data)

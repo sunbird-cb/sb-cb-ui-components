@@ -15,7 +15,7 @@
                 <div class="flex flex-col p-4">
                     <div class="flex flex-row cursor-pointer">
                         <div class="flex flex-row gap-2 items-center">
-                            <div class="name">{{allcompetencyTheme[obj?.name]?.name}}</div>
+                            <div class="name">{{allcompetencyTheme[obj?.name]?.displayName}}</div>
                             <!-- <div class="flex items-baseline">
                                 <img src="assets/icons/competency/cp-arrow.svg" class="arrow-img cursor-pointer" alt="cp arrow img" (click)="navigateToCompetency(obj)" />
                             </div> -->
@@ -31,8 +31,8 @@
                     <div class="line mt-3 mt-2"></div>
                     <div class="flex flex-wrap gap-3 pt-4 chip-container">
                         <ng-container *ngFor="let child of allcompetencyTheme[obj.name]?.children| slice:0: allcompetencyTheme[obj.name]?.viewMore ? allcompetencyTheme[obj.name]?.children?.length : 3; let i = index">
-                            <div class="chip rounded-full p-2 text-xs chip-ellipsis" [title]="child?.name" >
-                                {{ child.name }}
+                            <div class="chip rounded-full p-2 text-xs chip-ellipsis" [title]="child?.displayName" >
+                                {{ child?.displayName }}
                             </div>
                         </ng-container>
                         <div class="p-2 info-btn cursor-pointer"

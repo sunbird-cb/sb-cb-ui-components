@@ -1,0 +1,90 @@
+<div class="px-4 md:px-0 pt-4 md:pt-0 week-progress {{expand ? 'pb-4' : 'pb-1'}}">
+    <div class="flex user-progress-title gap-2 margin-bottom-xs items-center justify-between">
+        <div class="flex gap-2">
+            {{objectData?.title}}
+            <div><img [src]="objectData?.infoIcon" alt="" i18n-matTooltip [matTooltip]="objectData?.infoText"></div>
+        </div>
+        <div class="block md:hidden">
+            <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
+        </div>
+    </div>
+    <div class="user-progress-wrapper" *ngIf="expand">
+        <div class="user-rank flex items-center">
+            <div class="flex item-center">
+                <div class="current-rank" *ngIf="userProgress?.rank > 0">#{{userProgress?.rank}} Rank</div>
+            </div>
+        </div>
+        <div class="user-details-wrapper">
+            <div class="user-details flex gap-2">
+                <div class="user-initial" *ngIf="userProgress?.profile_image">
+                    <img class="user-profile" [src]="userProgress?.profile_image" alt=""/>
+                </div>
+                <div class="user-initial" *ngIf="!userProgress?.profile_image && userProgress?.fullname">{{createInititals(userProgress?.fullname)}}</div>
+                <div class="user-name pt-3">{{userProgress?.fullname}}</div>
+            </div>
+            <div class="user-stats my-3">
+                <div class="flex gap-2 items-center justify-center">
+                    <div class="my-hours">
+                        <div class="flex items-center gap-3">
+                            <img class="hours-icon"
+                                src="https://portal.dev.karmayogibharat.net/content-store/orgStore/0135071359030722569/1726808794219_InProgress_Icon.svg" alt="">
+                            <div>
+                                <div class="counter">{{userProgress?.total_learning_hours || 0}}</div>
+                                <div class="counter-title pt-1">Learning Hours</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="my-certificates">
+                        <div class="flex items-center gap-3">
+                            <img class="cert-icon"
+                                src="https://portal.dev.karmayogibharat.net/content-store/orgStore/0135071359030722569/1726808775795_Certificate_icon.svg" alt="">
+                            <div>
+                                <div class="counter">{{userProgress?.count || 0}}</div>
+                                <div class="counter-title pt-1">Certificates</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 items-center justify-center pt-3">
+                    <div class="k-points">
+                        <div class="flex items-center gap-3">
+                            <img class="kp-point-icon"
+                                src="https://portal.dev.karmayogibharat.net/content-store/orgStore/0135071359030722569/1726808815206_karma-badge.svg" alt="">
+                            <div>
+                                <div class="counter">{{userProgress?.total_points || 0}}</div>
+                                <div class="counter-title pt-1">Karma Points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="insights-wrapper">
+                <div class="insights-container">
+                    <sb-uic-sliders-ng-content
+                        [title]="'p1'"
+                        [currentIndex]="currentIndex"
+                        (currentIndexValue)="getCurrentIndex($event)"
+                        [loadNgContentData]="true" [widgetData]="insitesData"
+                        [customBanner]="true" [autoScroll]="true"
+                        [styleData]="styleData">
+                        <div sliderbody>
+                            <div class="insights-item" *ngFor="let item of insitesData; let i = index" [hidden]="i !== currentIndex">
+                                <div class="flex gap-4">
+                                    <div class="insights-lable">{{item?.label}}</div>
+                                    <div class="flex items-center growth-positive" *ngIf="item?.growth === 'positive'">
+                                        <mat-icon class="positive-icon">arrow_upward</mat-icon>
+                                        <span class="positive-note pt-1">+{{roundTo(item?.progress)}}%</span>
+                                    </div>
+                                    <div class="flex items-center growth-negative" *ngIf="item?.growth === 'negative' && item?.progress > 0">
+                                        <mat-icon class="negative-icon">arrow_downward</mat-icon>
+                                        <span class="negative-note">-{{roundTo(item?.progress)}}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </sb-uic-sliders-ng-content>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

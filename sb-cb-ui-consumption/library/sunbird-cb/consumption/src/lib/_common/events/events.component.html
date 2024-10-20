@@ -1,0 +1,36 @@
+<div class="flex items-center mb-4 mt-2 e-header">
+    <div class="event-title">
+        {{object?.title}}
+    </div>
+   <div class="flex gap-4">
+        <div class="events-select">
+            <select (change)="getEvents($event)">
+                <option value="{{d?.startDate}}" *ngFor="let d of daysBetween" [selected]="currentDay === d.startDate">{{d?.diplayFormat}}</option>
+            </select>
+        </div>
+        <div class="flex gap-4">
+            <a  [routerLink]="'/app/event-hub/home'" class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer ">Show All <mat-icon>chevron_right</mat-icon></a>
+        </div>
+   </div>
+</div>
+<div class="grid grid-cols-1 gap-4">
+    <div class="events-card-wrapper">
+        <div *ngIf="!loader">
+            <div *ngIf="events?.length > 0">
+                <div *ngFor="let event of events">
+                    <sb-uic-event-card [objectData]="object" [eventDetails]="event" [loader]="loader"></sb-uic-event-card>
+                </div>
+            </div>
+            <div *ngIf="events?.length === 0">
+                <div class="flex item-center justify-center p-5 no-events">
+                    No events exist.
+                </div>
+            </div>
+        </div>
+        <div *ngIf="loader && events?.length === 0">
+            <div *ngFor="let event of [1,2,3]">
+                <sb-uic-event-card [objectData]="object" [eventDetails]="event" [loader]="loader"></sb-uic-event-card>
+            </div>
+        </div>
+    </div>
+</div>

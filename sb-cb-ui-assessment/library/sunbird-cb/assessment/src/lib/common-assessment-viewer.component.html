@@ -1,22 +1,36 @@
 <!-- <router-outlet (activate)="getContentData($event)"></router-outlet> -->
-<div class="assessment-preview-dialog">
+<div [ngClass]="questionPreview ? 'assessment-preview-dialog-question-preview' : 'assessment-preview-dialog'">
   <button mat-icon-button class="close-button cursor-pointer" [mat-dialog-close]="true">
     <mat-icon class="close-icon">close</mat-icon>
   </button>
-  <div class="margin-m" *ngIf="!isFetchingDataComplete || !testData">
-    <div class="flex flex-center">
-      <mat-spinner></mat-spinner>
+  <ng-container *ngIf="!questionPreview">
+    <div class="margin-m" *ngIf="!isFetchingDataComplete || !testData">
+      <div class="flex flex-center">
+        <mat-spinner></mat-spinner>
+      </div>
     </div>
-  </div>
-  <ng-container *ngIf="testData && isFetchingDataComplete">
-    <!-- <viewer-practice-container *ngIf="isFetchingDataComplete" [isFetchingDataComplete]="isFetchingDataComplete"
-      [isErrorOccured]="isErrorOccured" [quizData]="testData" [forPreview]="forPreview" [quizJson]="quizJson"
-      [fromCreation]="true">
-    </viewer-practice-container> -->
-    <viewer-plugin-practice [identifier]="testData?.identifier" [artifactUrl]="testData?.artifactUrl"
-      [name]="testData?.name" [learningObjective]="testData?.name" [primaryCategory]="testData?.primaryCategory"
-      [complexityLevel]="testData?.difficultyLevel" [duration]="testData?.expectedDuration || 1" [quizJson]="quizJson"
-      [collectionId]="collectionId" [fromCreation]="fromCreation" [quizData]="testData">
-    </viewer-plugin-practice>
+    <ng-container *ngIf="testData && isFetchingDataComplete">
+      <!-- <viewer-practice-container *ngIf="isFetchingDataComplete" [isFetchingDataComplete]="isFetchingDataComplete"
+        [isErrorOccured]="isErrorOccured" [quizData]="testData" [forPreview]="forPreview" [quizJson]="quizJson"
+        [fromCreation]="true">
+      </viewer-practice-container> -->
+      <viewer-plugin-practice [identifier]="testData?.identifier" [artifactUrl]="testData?.artifactUrl"
+        [name]="testData?.name" [learningObjective]="testData?.name" [primaryCategory]="testData?.primaryCategory"
+        [complexityLevel]="testData?.difficultyLevel" [duration]="testData?.expectedDuration || 1" [quizJson]="quizJson"
+        [collectionId]="collectionId" [fromCreation]="fromCreation" [quizData]="testData">
+      </viewer-plugin-practice>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="questionPreview">
+    <viewer-question [showQuestionMarks]="data.assesment.marks ? 'Yes':'No'"
+      [selectedAssessmentCompatibilityLevel]="data.assesment.compatibilityLevel"
+      [questionNumber]="data.assesment.questionNumber" class="flex-1" [showOnlyQuestion]="true"
+      [questionPreview]="questionPreview" [assessmentType]="data.assesment.assessmentType"
+      [question]="data.assesment.question"></viewer-question>
+    <viewer-question [showQuestionMarks]="data.assesment.marks ? 'Yes':'No'"
+      [selectedAssessmentCompatibilityLevel]="data.assesment.compatibilityLevel"
+      [questionNumber]="data.assesment.questionNumber" [assessmentType]="data.assesment.assessmentType" class="flex-1"
+      [questionPreview]="questionPreview" [showOnlyQuestion]="false"
+      [question]="data.assesment.question"></viewer-question>
   </ng-container>
 </div>

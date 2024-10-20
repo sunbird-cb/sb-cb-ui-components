@@ -16,6 +16,7 @@ export class SlidersNgContentLibComponent extends WidgetBaseComponent
   @Input() title: any = ''
   @Input() loadNgContentData: boolean = false
   @Input() autoScroll: boolean = false
+  @Input() customBanner: boolean = false
   @Output() currentIndexValue = new EventEmitter<any>()
   
   @HostBinding('id')

@@ -106,6 +106,7 @@ export class ConfigurationsService {
   // )}`
   // setHostPath = (sitePath: string) => (sitePath).replace(':', '_')
   welcomeTabs: NSProfileDataV3.IProfileTab | null = null
+  compentency: any = null
 
   // variable setting for csJwtToken
   cstoken = ''
@@ -123,4 +124,5 @@ export class ConfigurationsService {
   updatePlatformRatingMethod(state: any) {
     this.updatePlatformRating.next(state)
   }
+
 }

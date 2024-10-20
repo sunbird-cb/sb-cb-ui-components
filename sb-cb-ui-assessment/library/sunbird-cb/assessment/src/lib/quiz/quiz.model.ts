@@ -23,7 +23,8 @@ export namespace NSQuiz {
     questionType?: TQuizQuestionType,
     questionLevel?: string,
     marks?: number,
-    rhsChoices?: any[]
+    rhsChoices?: any[],
+    choices?: IChoiceOptions[]
   }
 
   export interface IOption {
@@ -62,6 +63,10 @@ export namespace NSQuiz {
     passPercent: number
     result: number
     total: number
+  }
+
+  export interface IChoiceOptions {
+    options?: any[]
   }
 
 }

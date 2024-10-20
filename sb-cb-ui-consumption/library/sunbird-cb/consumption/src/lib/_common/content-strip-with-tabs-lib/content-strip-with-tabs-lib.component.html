@@ -83,7 +83,8 @@
                   (selectedTabChange)="tabClicked($event, stripsResultDataMap[key], key)">
                   <mat-tab label="{{tab?.label}}" *ngFor="let tab of stripsResultDataMap[key].tabs; let last = last;">
                     <ng-template mat-tab-label>
-                      <span>{{ translateLabels(tab?.label, 'home') }} &nbsp;</span>
+                      <span><span *ngIf="!tab?.disableTranslate">{{ translateLabels(tab?.label, 'home') }}</span>
+                      <span class="tab-highlight" *ngIf="tab?.disableTranslate">{{tab?.label}}</span> &nbsp;</span>
                       <span *ngIf="tab?.showTabDataCount && tab?.widgets?.length">({{tab?.widgets?.length}})</span>
                     </ng-template>
                     <div>

@@ -1,0 +1,28 @@
+<div class="flex flex-1 flex-col start-comment-container">
+    <div class="flex flex-1 flex-col mb-6"  *ngIf="config?.showTopInfo">
+        <div class=" w-full text-center">
+            <mat-icon class="icon new-post-icon" aria-hidden="false" i18n-aria-label aria-label="Fail">{{config?.topInfo?.icon}}</mat-icon>
+        </div>
+        <div class="flex items-center justify-center" [innerHTML]="config?.topInfo?.text">
+
+        </div>
+    </div>
+    <div class="flex gap-4 items-center" id="start-comment" >
+        <div class="" *ngIf="config?.avatarPhoto?.show">
+            <d-v2-avatar-photo [size]="config?.avatarPhoto?.size"  [name]="loogedInUserProfile?.firstName || config?.avatarPhoto?.name"
+                    [photoUrl]="loogedInUserProfile?.profileImageUrl || config?.avatarPhoto?.photoUrl"></d-v2-avatar-photo>
+        </div>
+        <div class="flex flex-1 items-center">
+            <form class="flex flex-1 items-center">
+                <!-- <mat-form-field appearance="outline" class="w-full pl-1"> -->
+                    <input #comment name="comment" class="flex-1 discuss-input mr-4" [formControl]="searchControl" i18n-placeholder 
+                    [placeholder]="config?.commentBox?.placeholder || 'post a comment'">
+                <!-- </mat-form-field> -->
+                <button mat-flat-button color="secondary" class="primary-button" (click)="submitComment()"
+                [disabled]="!comment.value || comment.value.length < 3">{{config?.postBtn.text || 'Post'}}</button>
+            </form>
+        </div>
+            <!-- <div class="text-box">Ask a question or post an idea</div> 
+      <div class="buton">start discussion</div> -->
+    </div>
+</div>

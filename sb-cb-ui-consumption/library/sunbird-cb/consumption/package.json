@@ -1,11 +1,11 @@
 {
   "name": "@sunbird-cb/consumption",
-  "version": "0.0.72",
+  "version": "0.0.95",
   "peerDependencies": {
     "@angular/common": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@sunbird-cb/design-system": "0.0.2",
-    "@sunbird-cb/utils-v2": "0.0.1",
+    "@sunbird-cb/utils-v2": "0.0.14",
     "@sunbird-cb/resolver-v2": "0.0.7"
   }
 }

@@ -4,6 +4,52 @@
     src: url('https://cdn.jsdelivr.net/fontsource/fonts/poppins@latest/latin-400-normal.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/poppins@latest/latin-400-normal.woff') format('woff');
   }
 
+    .stats-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .stats-title {
+        background-color: #F3962F;
+        padding: 12px 16px;
+        color: white;
+        /* stylelint-disable */
+        font-family: Lato;
+        /* stylelint-enable */
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 16.8px;
+        border-radius: 35px;
+        margin-top: -20px;
+        z-index: 90;
+    }
+    .my-arrow {
+        font-size: 12px;
+    }
+    .less-opacity1 {
+        opacity: 0.75;
+    }
+    .less-opacity2 {
+        opacity: 0.5;
+    }
+    .nlw-status {
+        background: linear-gradient(173.01deg, #266EEB -5.09%, #133F8B 133.16%);
+        margin-top: -22px;
+    }
+    .nlw-status-mob {
+        background: linear-gradient(173.01deg, #266EEB -5.09%, #133F8B 133.16%);
+        margin-top: -22px;
+        padding-top: 32px;
+    }
+
+    .nlw-div {
+        padding: 0 16px;
+        margin: 10px 0 16px 0;
+    }
+    .divider {
+        border-left: 1.6px solid #a6a4a4;
+    }
+
   .mob-image-container-v2 {
     height: 28px;
     width: 28px;

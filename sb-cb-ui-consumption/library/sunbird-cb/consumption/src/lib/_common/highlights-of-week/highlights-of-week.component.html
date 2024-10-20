@@ -1,0 +1,43 @@
+<div *ngIf="contentdata.length" class="highlights-of-the-week-container {{expand ? 'mb-4' : ''}}">
+    <ng-container *ngIf="contentdata.length">
+        <div class="flex title pb-3 no-radius items-center justify-between">
+            <div class="flex gap-2">
+                {{objectData?.title}}
+                <div class="block md:hidden">
+                    <img [src]="objectData?.infoIcon" alt="" i18n-matTooltip [matTooltip]="objectData?.infoText">
+                </div>                
+            </div>
+            <div class="block md:hidden">
+                <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
+            </div>
+        </div>
+        <div *ngIf="expand">
+            <sb-uic-sliders-ng-content
+                [title]="'providerName'"
+                [currentIndex]="currentIndex"
+                (currentIndexValue)="getCurrentIndex($event)"
+                [loadNgContentData]="true" [widgetData]="contentdata"
+                [styleData]="styleData">
+                <div sliderbody>
+                    <div *ngFor="let item of contentdata; let i = index" [hidden]="i !== currentIndex">
+                        <div class="wh-wrapper no-radius">
+                            <div class="player">
+                                <video width="100%" height="100%" controls *ngIf="i === currentIndex">
+                                    <source [src]="item.videoUrl" type="video/mp4">
+                                    <source [src]="item.videoUrl" type="application/x-mpegURL" />
+                                </video>
+                            </div>
+                            <div class="player-title py-3">
+                                {{item?.title}}
+                            </div>
+                            <div class="player-body">
+                                {{item?.description}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sb-uic-sliders-ng-content>
+        </div>
+    </ng-container>
+</div>
+
