@@ -3,56 +3,53 @@ import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 
 import {
-  MatCardModule,
-  MatDividerModule,
-  MatButtonModule,
-  MatSnackBarModule,
-} from '@angular/material'
-
-import {
-  BtnContentDownloadModule,
-  BtnContentFeedbackModule,
+  // BtnContentDownloadModule,
+  // BtnContentFeedbackModule,
   BtnContentLikeModule,
-  BtnContentShareModule,
+  // BtnContentShareModule,
   BtnFullscreenModule,
-  BtnGoalsModule,
+  // BtnGoalsModule,
   BtnPlaylistModule,
   DisplayContentTypeModule,
   UserContentRatingModule,
   UserImageModule,
   BtnContentFeedbackV2Module,
-} from '@ws-widget/collection'
+} from '@sunbird-cb/collection'
 
 import {
   PipeDurationTransformModule,
   PipeLimitToModule,
   PipePartialContentModule,
-} from '@ws-widget/utils'
+} from '@sunbird-cb/utils'
 
-import { WidgetResolverModule } from '@ws-widget/resolver'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 
 import { HtmlModule as HtmlViewContainerModule } from '../../route-view-container/html/html.module'
 
 import { HtmlComponent } from './html.component'
 
-// import { AccessControlService } from '@ws/author'
 
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatDividerModule } from '@angular/material/divider'
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
+import { AccessControlService } from '@sunbird-cb/toc'
 @NgModule({
   declarations: [HtmlComponent],
   imports: [
     CommonModule,
     HtmlViewContainerModule,
     RouterModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
     PipeDurationTransformModule,
     PipeLimitToModule,
     PipePartialContentModule,
-    BtnContentDownloadModule,
-    BtnContentFeedbackModule,
+    // BtnContentDownloadModule,
+    // BtnContentFeedbackModule,
     BtnContentLikeModule,
-    BtnContentShareModule,
+    // BtnContentShareModule,
     BtnFullscreenModule,
-    BtnGoalsModule,
+    // BtnGoalsModule,
     BtnPlaylistModule,
     DisplayContentTypeModule,
     UserImageModule,
@@ -63,6 +60,6 @@ import { HtmlComponent } from './html.component'
     UserContentRatingModule,
     BtnContentFeedbackV2Module,
   ],
-  // providers: [AccessControlService],
+  providers: [AccessControlService],
 })
 export class HtmlModule { }

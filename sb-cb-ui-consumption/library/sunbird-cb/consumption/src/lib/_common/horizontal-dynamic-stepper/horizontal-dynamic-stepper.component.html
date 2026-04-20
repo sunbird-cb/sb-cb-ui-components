@@ -1,0 +1,15 @@
+<div class="horizontal-stepper">
+  <mat-stepper labelPosition="bottom" [selectedIndex]="selectedIndex" (selectionChange)="onSelectionChange($event)"
+    #stepper>
+    <ng-container *ngFor="let label of labels; let i = index">
+      <mat-step label="{{label}}" [completed]="false">
+        <ng-template matStepLabel>{{ label }}</ng-template>
+        <ng-template matStepContent>
+          <ng-container [ngTemplateOutlet]="stepBodies?.get(i)">
+          </ng-container>
+        </ng-template>
+      </mat-step>
+
+    </ng-container>
+  </mat-stepper>
+</div>

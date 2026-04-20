@@ -3,14 +3,15 @@
   role="link" i18n-aria-label>
   <mat-card class="card-portrait mr-2 card-portrait-clickable min-height-remove" [ngClass]="widgetData.cardCustomeClass ? widgetData.cardCustomeClass : ''">
      <div class="course_widget portrait_widget flex  margin-bottom-xs">
-        <div class="flex flex-end flex-middle course_port">
+        <div class="flex flex-end flex-middle course_port margin-right-xs" *ngIf="widgetData.content?.primaryCategory">
            <mat-icon class="mat-icon main_icon  ws-mat-default-text margin-right-xs">video_library</mat-icon>
-           <sb-uic-display-content-type i18n-title title="Content Type" *ngIf="widgetData.content?.primaryCategory"
+           <sb-uic-display-content-type i18n-title title="Content Type" 
            class="ws-mat-black60-text font-normal mat-caption " [useTranslation]="false" [displayContentType]="widgetData.content?.primaryCategory==='Course Unit'
            ?'Module'
            :widgetData.content?.primaryCategory">
            </sb-uic-display-content-type>
         </div>
+        <sb-uic-knowledge-level [content]="widgetData?.content"></sb-uic-knowledge-level>
      </div>
      <div class="flex">
         <div class="margin-right-s">
@@ -19,18 +20,20 @@
                  <img mat-card-image [src]="widgetData?.content?.posterImage | pipePublicURL" loading="lazy"
                  class="card-image ws-mat-primary-lite-background margin-remove" [wsUtilsDefaultThumbnail]="defaultThumbnail"
                  [alt]="widgetData.content.name" />
-                 <div class="duration-box right-corner-portrait" *ngIf="widgetData?.content?.duration > 0">
+                 <div class="duration-box right-corner-portrait" *ngIf="widgetData?.content?.duration > 0; else programDurationSpan">
                     <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
                     <span class=" ws-mat-white-text duration">
                     {{ (widgetData?.content?.duration || 120)| pipeDurationTransform: 'hms' }}
                     </span>
                  </div>
+                 <ng-template #programDurationSpan>
                  <div class="duration-box right-corner-portrait" *ngIf="widgetData?.content?.programDuration > 0">
                     <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
                     <span class=" ws-mat-white-text duration">
                     {{widgetData?.content?.programDuration}} {{widgetData?.content?.programDuration === 1 ? 'day' : 'days'}}
                     </span>
                  </div>
+                </ng-template>
                 <ng-container *ngIf="cbPlanMapData && cbPlanMapData[widgetData?.content?.identifier] &&  cbPlanMapData[widgetData?.content?.identifier]?.contentStatus < 2">
                   <ng-container [ngTemplateOutlet]="cbpPlan" [ngTemplateOutletContext]="{data: {
                     cbpData: cbPlanMapData[widgetData?.content?.identifier]
@@ -39,16 +42,24 @@
               </div>
            </ng-container>
            <ng-container *ngIf="!widgetData?.content?.posterImage">
-              <ng-container *ngIf="widgetData?.content?.appIcon; else defaultImg">
-                 <img mat-card-image [src]="widgetData.content.appIcon | pipePublicURL" loading="lazy"
-                 class="card-image ws-mat-primary-lite-background margin-remove"  [wsUtilsDefaultThumbnail]="defaultThumbnail"
-                 [alt]="widgetData.content.name" />
-              </ng-container>
-              <ng-template #defaultImg>
-                 <img mat-card-image [src]="defaultThumbnail" loading="lazy"
-                 class="card-image ws-mat-primary-lite-background margin-remove"
-                 [alt]="widgetData?.content?.name" />
-              </ng-template>
+             <div class=" img-block-portrait position-relative">
+                <ng-container *ngIf="widgetData?.content?.appIcon; else defaultImg">
+                  <img mat-card-image [src]="widgetData.content.appIcon | pipePublicURL" loading="lazy"
+                  class="card-image ws-mat-primary-lite-background margin-remove"  [wsUtilsDefaultThumbnail]="defaultThumbnail"
+                  [alt]="widgetData.content.name" />
+                </ng-container>
+                <ng-template #defaultImg>
+                  <img mat-card-image [src]="defaultThumbnail" loading="lazy"
+                  class="card-image ws-mat-primary-lite-background margin-remove"
+                  [alt]="widgetData?.content?.name" />
+                </ng-template>
+                <div class="duration-box right-corner-portrait" *ngIf="widgetData?.content?.duration;">
+                    <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
+                    <span class=" ws-mat-white-text duration">
+                    {{ (widgetData?.content?.duration || 120)| pipeDurationTransform: 'hms' }}
+                    </span>
+                 </div>
+              </div>
            </ng-container>
         </div>
         <div class="width-1-1">
@@ -56,15 +67,29 @@
               class="portrait-subheading mat-subheading-2 title-text">
               {{ widgetData?.content?.name }}
            </div>
-           <div class="flex w-full  flex-middle">
+           <div class="flex w-full  flex-middle" *ngIf="!(widgetData?.content?.courseProvider?.length && widgetData.content?.courseProvider[0]?.name)">
               <div class="portrait_course_logo_box margin-right-xs">
-                 <img [src]="widgetData?.content?.creatorLogo | pipePublicURL " class="source-icon"  loading="lazy" [wsUtilsDefaultThumbnail]="defaultSLogo"
+                 <img [src]="widgetData?.content?.creatorLogo || widgetData?.content?.contentPartner?.link | pipePublicURL " class="source-icon"  loading="lazy" [wsUtilsDefaultThumbnail]="defaultSLogo"
                  [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
               </div>
-              <span class="portrait-org-name font-normal mat-caption">By {{ (widgetData.content.organisation && widgetData.content.organisation[0]) ? widgetData.content.organisation[0] : 'Karmayogi Bharat' }}</span>
+              <span class="portrait-org-name font-normal mat-caption">By {{ (widgetData.content.organisation && widgetData.content.organisation[0]) ? widgetData.content.organisation[0] : widgetData?.content?.contentPartner?.contentPartnerName || 'Karmayogi Bharat' }}</span>
               <!-- <span class="portrait-org-name font-normal mat-caption">{{'cardcontentv2.by' | translate}} {{ (widgetData.content.organisation && widgetData.content.organisation[0]) ? widgetData.content.organisation[0] : 'Karmayogi Bharat' }}</span> -->
            </div>
-
+           
+            <div class="flex w-full flex-middle provider-wrapper" *ngIf="widgetData?.content?.courseProvider?.length && widgetData.content?.courseProvider[0]?.name">
+              <div class="portrait_course_logo_box margin-right-xs">
+                 <img [src]="widgetData?.content?.courseProvider[0]?.logoUrl" class="source-icon"  loading="lazy" [wsUtilsDefaultThumbnail]="defaultSLogo"
+                 [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
+              </div>
+              <span class="font-normal mat-caption">By&nbsp;</span>
+              <span class="provider-name font-normal mat-caption">{{ widgetData.content?.courseProvider[0]?.name }}</span>
+              <span *ngIf="widgetData.content?.courseProvider?.length > 1" 
+                    class="provider-count font-normal mat-caption cursor-pointer"
+                    [matTooltip]="getProviderNames(widgetData.content?.courseProvider)"
+                    matTooltipPosition="above">
+                  &nbsp;+{{ widgetData?.content?.courseProvider?.length - 1 }}
+              </span>
+           </div>
            <div class="flex flex-middle rating-session margin-top-xs">
             <div class="flex flex-middle" *ngIf="widgetData?.content?.avgRating">
               <mat-icon class="mr-1">star</mat-icon>

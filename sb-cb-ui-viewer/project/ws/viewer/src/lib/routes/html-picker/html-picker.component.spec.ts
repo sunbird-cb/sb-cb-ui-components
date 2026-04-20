@@ -1,16 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
 import { HtmlPickerComponent } from './html-picker.component'
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'
 
 describe('HtmlPickerComponent', () => {
   let component: HtmlPickerComponent
   let fixture: ComponentFixture<HtmlPickerComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [HtmlPickerComponent],
+      imports: [CUSTOM_ELEMENTS_SCHEMA],
     })
-    .compileComponents()
+      .compileComponents()
   }))
 
   beforeEach(() => {

@@ -1,0 +1,60 @@
+// Public API for collection-related exports
+// This file provides a clean import path for all collection functionality
+
+// Models
+export * from './_services/widget-content.model'
+export * from './_constants/widget-content.constants'
+export * from './_models/common.model'
+export * from './_models/error.model'
+export * from './_services/viewer-route-util'
+export * from './collection.config'
+
+// Services
+export * from './_services/widget-content.service'
+
+// Modules from _common
+export * from './_collection/_common/connection-name/connection-name.module'
+export * from './_collection/_common/content-toc/content-toc.module'
+// export * from './_collection/_common/karma-points/karma-points.module' // Note: Inside content-toc
+export * from './_collection/_common/tips-for-learner/tips-for-learner.module'
+export * from './_collection/_common/mark-as-complete/mark-as-complete.module'
+export * from './_collection/_common/player-brief/player-brief.module'
+export * from './_collection/_common/content-progress/content-progress.module'
+export * from './_collection/_common/user-content-rating/user-content-rating.module'
+export * from './_collection/_common/user-image/user-image.module'
+export * from './_collection/_common/display-content-type/display-content-type.module'
+export * from './_collection/_common/display-content-type-icon/display-content-type-icon.module'
+export * from './_collection/_common/avatar-photo/avatar-photo.module'
+export * from './_collection/_common/user-autocomplete/user-autocomplete.module'
+export * from './_collection/_common/user-autocomplete/user-autocomplete.model'
+export * from './_collection/_common/content-rating-v2-dialog/content-rating-v2-dialog.module'
+export * from './_collection/_common/content-rating-v2-dialog/content-rating-v2-dialog.component'
+export * from './_collection/_common/rating-summary/rating-summary.module'
+export * from './_collection/_common/attendance-helper/attendance-helper.module'
+export * from './_collection/_common/attendance-helper/attendance-helper.component'
+export * from './_collection/_common/attendance-card/attendance-card.module'
+export * from './_collection/_common/pipe-content-route/pipe-content-route.module'
+export * from './_collection/_common/pipe-content-route/pipe-content-route.pipe'
+export * from './_collection/_common/certificate-dialog/certificate-dialog.component'
+export * from './_collection/_common/confirm-dialog/confirm-dialog.component'
+export * from './_collection/_common/connection-hover-card/connection-hover.servive'
+export * from './_collection/_common/content-toc/content-services/handle-claim.service'
+
+// Feature modules - TODO: Copy these from sunbird-cb-portal if full functionality is needed
+// export * from './_collection/btn-call/btn-call.module'
+// export * from './_collection/btn-content-download/btn-content-download.module'
+// export * from './_collection/btn-content-like/btn-content-like.module'
+// export * from './_collection/btn-content-share/btn-content-share.module'
+// export * from './_collection/btn-content-feedback/btn-content-feedback.module'
+// export * from './_collection/btn-content-feedback-v2/btn-content-feedback-v2.module'
+// export * from './_collection/btn-goals/btn-goals.module'
+// export * from './_collection/btn-mail-user/btn-mail-user.module'
+export * from './_collection/btn-page-back/btn-page-back.module'
+// export * from './_collection/btn-playlist/btn-playlist.module'
+// export * from './_collection/btn-kb/btn-kb.module'
+// export * from './_collection/card-content/card-content.model'
+// export * from './_collection/card-content-v2/card-content-v2.module'
+export * from './_collection/card-rating-comment/card-rating-comment.module'
+// export * from './_collection/ctrl-file-upload/ctrl-file-upload.module'
+// export * from './_collection/grid-layout/nps-grid.service'
+// export * from './_collection/discussion-forum/ws-discussion-forum.model'

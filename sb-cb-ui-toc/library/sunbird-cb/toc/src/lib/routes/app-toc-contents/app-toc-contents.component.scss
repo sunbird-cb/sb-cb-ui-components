@@ -1,0 +1,77 @@
+@import '../../_mixins';
+@import '../../_variables';
+
+$border-color: #d8d8d8;
+
+.contents-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 16px 0 24px 0;
+
+  .main-container {
+    width: 100%;
+    box-sizing: border-box;
+
+    .toc-section {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 8px;
+    }
+
+    .content-card {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #F5F6FA;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .noChildren {
+      color: #222222 !important;
+    }
+
+    @include breakpoint-lt-m {
+      width: 100%;
+      padding-right: 0;
+      margin-bottom: 24px;
+    }
+
+  }
+
+  .side-container {
+    flex: 1;
+    min-width: 250px;
+
+    @include breakpoint-lt-m {
+      width: 100%;
+    }
+  }
+}
+
+.playgrounds-container {
+  margin: 0 0 24px 0;
+
+  .plg-card {
+    position: relative;
+    margin-bottom: 8px;
+    margin-right: 24px;
+
+    .plg-img {
+      display: block;
+      width: 265px;
+      height: 150px;
+    }
+
+    .plg-overlay {
+      position: absolute;
+      bottom: 0;
+      padding: 4px 8px;
+      box-sizing: border-box;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #000000, transparent);
+      color: white;
+    }
+  }
+}

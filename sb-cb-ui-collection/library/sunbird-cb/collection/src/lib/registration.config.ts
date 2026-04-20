@@ -1,4 +1,4 @@
-import { NsWidgetResolver } from '@sunbird-cb/resolver'
+import { NsWidgetResolver } from '@sunbird-cb/resolver-v2'
 import { ROOT_WIDGET_CONFIG } from './collection.config'
 // Components
 import { BtnAppsComponent } from './btn-apps/btn-apps.component'
@@ -94,9 +94,9 @@ import { LayoutTabComponent } from './layout-tab/layout-tab.component'
 import { LayoutTabModule } from './layout-tab/layout-tab.module'
 import { NetworkStripMultipleModule } from './network-strip-multiple/network-strip-multiple.module'
 import { CarrierStripMultipleModule } from './carrier-strip-multiple/carrier-strip-multiple.module'
-// import { ActivityStripMultipleModule } from './activity-strip-multiple/activity-strip-multiple.module'
+import { ActivityStripMultipleModule } from './activity-strip-multiple/activity-strip-multiple.module'
 import { NetworkStripMultipleComponent } from './network-strip-multiple/network-strip-multiple.component'
-// import { ActivityStripMultipleComponent } from './activity-strip-multiple/activity-strip-multiple.component'
+import { ActivityStripMultipleComponent } from './activity-strip-multiple/activity-strip-multiple.component'
 import { PageComponent } from './page/page.component'
 import { PageModule } from './page/page.module'
 import { ProfileAcademicsComponent } from './profile-v2/profile-academics/profile-academics.component'
@@ -143,8 +143,8 @@ import { TreeComponent } from './tree/tree.component'
 import { TreeModule } from './tree/tree.module'
 import { VideoWrapperComponent } from './video-wrapper/video-wrapper.component'
 import { VideoWrapperModule } from './video-wrapper/video-wrapper.module'
-// import { ContentStripVerticalModule } from './content-strip-vertical/content-strip-vertical.module'
-// import { ContentStripVerticalComponent } from './content-strip-vertical/content-strip-vertical.component'
+import { ContentStripVerticalModule } from './content-strip-vertical/content-strip-vertical.module'
+import { ContentStripVerticalComponent } from './content-strip-vertical/content-strip-vertical.component'
 import { CardNetworkHomeComponent } from './card-network-home/card-network-home.component'
 import { CardHomeDiscussComponent } from './card-home-discuss/card-home-discuss.component'
 import { CardBrowseCourseComponent } from './card-browse-course/card-browse-course.component'
@@ -173,6 +173,8 @@ import { UIORGTableModule } from './ui-org-table/ui-org-table.module'
 import { BreadcrumbsOrgModule } from './breadcrumbs-org/breadcrumbs-org.module'
 import { AuthorCardModule } from './author-card/author-card.module'
 import { AuthorCardComponent } from './author-card/author-card.component'
+import { LeftMenuV2Module } from './left-menu-v2/left-menu-v2.module'
+import { LeftMenuV2Component } from './left-menu-v2/left-menu-v2.component'
 
 export const WIDGET_REGISTERED_MODULES = [
   AvatarPhotoModule,
@@ -211,7 +213,7 @@ export const WIDGET_REGISTERED_MODULES = [
   ContentStripMultipleModule,
   ContentStripNewMultipleModule,
   ContentStripSingleModule,
-  // ContentStripVerticalModule,
+  ContentStripVerticalModule,
   GraphGeneralModule,
   LayoutLinearModule,
   LayoutTabModule,
@@ -255,9 +257,10 @@ export const WIDGET_REGISTERED_MODULES = [
   CarrierStripMultipleModule,
   DiscussStripMultipleModule,
   CardActivityModule,
-  // ActivityStripMultipleModule,
+  ActivityStripMultipleModule,
   UIAdminTableModule,
   LeftMenuModule,
+  LeftMenuV2Module,
   UIORGTableModule,
   BreadcrumbsOrgModule,
   BtnPageBackModuleAdmin,
@@ -435,11 +438,11 @@ export const WIDGET_REGISTRATION_CONFIG: NsWidgetResolver.IRegistrationConfig[] 
     widgetSubType: ROOT_WIDGET_CONFIG.contentStrip.multiStripNew,
     component: ContentStripNewMultipleComponent,
   },
-  // {
-  //   widgetType: ROOT_WIDGET_CONFIG.contentStrip._type,
-  //   widgetSubType: ROOT_WIDGET_CONFIG.contentStrip.verticalStrip,
-  //   component: ContentStripVerticalComponent,
-  // },
+  {
+    widgetType: ROOT_WIDGET_CONFIG.contentStrip._type,
+    widgetSubType: ROOT_WIDGET_CONFIG.contentStrip.verticalStrip,
+    component: ContentStripVerticalComponent,
+  },
   {
     widgetType: ROOT_WIDGET_CONFIG.contentStrip._type,
     widgetSubType: ROOT_WIDGET_CONFIG.contentStrip.singleStrip,
@@ -470,11 +473,11 @@ export const WIDGET_REGISTRATION_CONFIG: NsWidgetResolver.IRegistrationConfig[] 
     widgetSubType: ROOT_WIDGET_CONFIG.networkStrip.multipleStrip,
     component: NetworkStripMultipleComponent,
   },
-  // {
-  //   widgetType: ROOT_WIDGET_CONFIG.activityStrip._type,
-  //   widgetSubType: ROOT_WIDGET_CONFIG.activityStrip.multipleStrip,
-  //   component: ActivityStripMultipleComponent,
-  // },
+  {
+    widgetType: ROOT_WIDGET_CONFIG.activityStrip._type,
+    widgetSubType: ROOT_WIDGET_CONFIG.activityStrip.multipleStrip,
+    component: ActivityStripMultipleComponent,
+  },
   {
     widgetType: ROOT_WIDGET_CONFIG.carrierStrip._type,
     widgetSubType: ROOT_WIDGET_CONFIG.carrierStrip.multipleStrip,
@@ -656,5 +659,10 @@ export const WIDGET_REGISTRATION_CONFIG: NsWidgetResolver.IRegistrationConfig[] 
     widgetType: ROOT_WIDGET_CONFIG.menus._type,
     widgetSubType: ROOT_WIDGET_CONFIG.menus.leftMenu,
     component: LeftMenuComponent,
+  },
+  {
+    widgetType: ROOT_WIDGET_CONFIG.menus._type,
+    widgetSubType: ROOT_WIDGET_CONFIG.menus.leftMenuV2,
+    component: LeftMenuV2Component,
   },
 ]

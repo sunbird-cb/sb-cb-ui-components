@@ -1,7 +1,8 @@
 // need to refactor
-import { HostListener } from '@angular/core'
+import { HostListener, Directive } from '@angular/core'
 
-export abstract class ComponentCanDeactivate {
+@Directive()
+export abstract class ComponentCanDeactivateDirective {
     abstract canDeactivate(): boolean
     @HostListener('window:beforeunload', ['$event'])
     unloadNotification($event: any) {

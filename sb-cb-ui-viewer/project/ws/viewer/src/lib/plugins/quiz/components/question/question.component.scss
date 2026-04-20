@@ -1,5 +1,4 @@
-@import '~@ws-widget/design-system/src/styles/_ws-vars.scss';
-@import '~@ws-widget/design-system/src/styles/_ws-mixins.scss';
+@import 'ws-vars';
 
 .app-class .mat-list-option {
   padding-top: $size-m;
@@ -52,7 +51,6 @@
   word-wrap: break-word;
   text-align: center;
 }
-
 .answer {
   width: 40%;
   max-width: 200px;

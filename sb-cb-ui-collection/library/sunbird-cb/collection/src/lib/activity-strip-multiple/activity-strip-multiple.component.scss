@@ -1,5 +1,24 @@
-@import 'ws-mixins';
-@import 'ws-common';
+@mixin breakpoint-xs {
+  @media only screen and (max-width: 599px) {
+    @content;
+  }
+}
+
+@mixin breakpoint-s {
+  @media only screen and (min-width: 600px) and (max-width: 959px) {
+    @content;
+  }
+}
+
+$page-center: 100%;
+$max-screen: 94%;
+
+%page-center {
+  max-width: $page-center;
+  max-width: $max-screen;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
 .container-balanced {
   @extend %page-center;
@@ -33,11 +52,11 @@
 }
 
 .pad {
-  padding: $size-l $size-l $size-l $size-l;
+  padding: 24px 24px 24px 24px;
 }
 
 .new-width {
-  max-width: $max-screen;
+  max-width: 94%;
   display: inline-block;
   // margin: 0 auto;
   margin-top: 1rem;

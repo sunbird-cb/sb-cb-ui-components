@@ -1,110 +1,126 @@
 <ng-container *ngIf="!isCardLoading">
-  <mat-card class="card-wide-v2 padding-remove position-relative flex {{widgetData?.cardCustomeClass}}">
-      <div class="imageholder ">
-        <img mat-card-image class="margin-remove"
-        [src]="widgetData?.content?.posterImage || widgetData?.content?.appIcon  | pipePublicURL" [wsUtilsDefaultThumbnail]="defaultThumbnail"
-        [alt]="widgetData?.content?.name">
-        <div class="source-div" [hidden]="true">
-          <img [src]="widgetData?.content?.creatorLogo" class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
-            [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
-        </div>
-        <div class="duration-box right-corner" *ngIf="widgetData?.content?.duration > 0">
-          <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
-          <span class=" ws-mat-white-text duration"> {{ (widgetData?.content?.duration || 120)| pipeDurationTransform: 'hms' }}</span>
-        </div>
-        <ng-container *ngIf="cbPlanMapData && cbPlanMapData[widgetData?.content?.identifier]">
-          <ng-container [ngTemplateOutlet]="cbpPlan" [ngTemplateOutletContext]="{data: {
+  <mat-card class="card-wide-v2 padding-remove position-relative flex mt-5 {{widgetData?.cardCustomeClass}}">
+    <div class="imageholder ">
+      <img mat-card-image class="margin-remove"
+        [src]="widgetData?.content?.posterImage || widgetData?.content?.appIcon  | pipePublicURL"
+        [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="widgetData?.content?.name">
+      <div class="source-div" [hidden]="true">
+        <img [src]="widgetData?.content?.creatorLogo | pipePublicURL" class="source-icon"
+          [wsUtilsDefaultThumbnail]="defaultSLogo"
+          [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
+      </div>
+      <div class="duration-box right-corner" *ngIf="widgetData?.content?.duration > 0">
+        <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
+        <span class=" ws-mat-white-text duration"> {{ (widgetData?.content?.duration || 120)| pipeDurationTransform:
+          'hms' }}</span>
+      </div>
+      <ng-container *ngIf="cbPlanMapData && cbPlanMapData[widgetData?.content?.identifier]">
+        <ng-container [ngTemplateOutlet]="cbpPlan" [ngTemplateOutletContext]="{data: {
             cbpData: cbPlanMapData[widgetData?.content?.identifier]
           }}"></ng-container>
-        </ng-container>
+      </ng-container>
+    </div>
+    <mat-card-content class="mat-text-box mb-0">
+      <div class="course_widget flex flex-between margin-remove">
+        <div class="flex flex-end course_v2">
+          <ng-container
+            *ngIf="widgetData?.content?.contentType === 'Resource' || widgetData?.content?.contentType === 'Course' || widgetData?.content?.contentType === 'Module'">
+            <mat-icon class="mat-icon main_icon ws-mat-default-text margin-right-xs">video_library</mat-icon>
+            <span class="ws-mat-black60-text font-normal mat-caption ">
+              {{widgetData?.content?.courseCategory || widgetData?.content?.contentType}}
+              <!-- {{ translateLabel(widgetData.content.primaryCategory || widgetData.content.contentType, 'searchfilters') }} -->
+            </span>
+          </ng-container>
+        </div>
       </div>
-      <mat-card-content class="mat-text-box mb-0">
-        <div class="course_widget flex flex-between margin-remove">
-          <div class="flex flex-end course_v2">
-            <ng-container *ngIf="widgetData?.content?.contentType === 'Resource' || widgetData?.content?.contentType === 'Course' || widgetData?.content?.contentType === 'Module'">
-              <mat-icon class="mat-icon main_icon ws-mat-default-text margin-right-xs">video_library</mat-icon>
-              <span class="ws-mat-black60-text font-normal mat-caption ">
-                {{widgetData?.content?.primaryCategory || widgetData?.content?.contentType}}
-                <!-- {{ translateLabel(widgetData.content.primaryCategory || widgetData.content.contentType, 'searchfilters') }} -->
-              </span>
-            </ng-container>
-          </div>
-        </div>
 
-        <div class="flex main_title_box">
-          <p class="mat-subheading-1 title-text font-bold-imp cursor-pointer content-title">
-            <a (click)="raiseTelemetry(widgetData?.content);getRedirectUrlData(widgetData?.content); $event.stopPropagation()">
-              {{widgetData?.content?.name}}
-            </a>
+      <div class="flex main_title_box">
+        <p class="mat-subheading-1 title-text font-bold-imp cursor-pointer content-title">
+          <a
+            (click)="raiseTelemetry(widgetData?.content);getRedirectUrlData(widgetData?.content); $event.stopPropagation()">
+            {{widgetData?.content?.name}}
+          </a>
         </p>
-        </div>
+      </div>
 
-        <div class="bottomsection">
-          <div class="flex w-full flex-wrap flex-middle provider">
-            <div class="course_logo_box">
-              <img [src]="widgetData?.content?.creatorLogo | pipePublicURL " class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
+      <div class="bottomsection">
+        <div class="flex w-full flex-wrap flex-middle provider">
+          <div class="course_logo_box">
+            <img [src]="widgetData?.content?.creatorLogo | pipePublicURL " class="source-icon"
+              [wsUtilsDefaultThumbnail]="defaultSLogo"
               [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
-            </div>
-            <span class="org-text">By&nbsp;
-              <!-- {{'cardcontentv2.by' | translate}}  -->
-              {{widgetData?.content?.organisation[0] }}</span>
           </div>
-          <div class="flex flex-middle rating-session margin-top-xs">
-            <div class="flex flex-middle" *ngIf="widgetData?.content?.avgRating">
-              <mat-icon>star</mat-icon>
-              <span class="rating-number">{{widgetData?.content?.avgRating}}</span>
-            </div>
-            <!-- <span class="most-enrolled-text margin-left-m">{{ 'cardcontentv2.mostEnrolled' | translate }}</span> -->
-            <ng-container *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostEnrolled')">
-              <!-- <span class="most-enrolled-text margin-left-xs">{{ 'cardcontentv2.mostEnrolled' | translate }}</span> -->
-            </ng-container>
-            <ng-container *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostTrending')">
-              <!-- <span class="most-enrolled-text margin-left-xs">{{ 'cardcontentv2.mostTrending' | translate }}</span> -->
-            </ng-container>
-          </div>
+          <span class="org-text">By&nbsp;
+            <!-- {{'cardcontentv2.by' | translate}}  -->
+            {{widgetData?.content?.organisation[0] }}</span>
         </div>
-      </mat-card-content>
+        <div class="flex flex-middle rating-session margin-top-xs">
+          <div class="flex flex-middle" *ngIf="widgetData?.content?.avgRating">
+            <mat-icon>star</mat-icon>
+            <span class="rating-number">{{widgetData?.content?.avgRating}}</span>
+          </div>
+          <!-- <span class="most-enrolled-text margin-left-m">{{ 'cardcontentv2.mostEnrolled' | translate }}</span> -->
+          <ng-container
+            *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostEnrolled')">
+            <!-- <span class="most-enrolled-text margin-left-xs">{{ 'cardcontentv2.mostEnrolled' | translate }}</span> -->
+          </ng-container>
+          <ng-container
+            *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostTrending')">
+            <!-- <span class="most-enrolled-text margin-left-xs">{{ 'cardcontentv2.mostTrending' | translate }}</span> -->
+          </ng-container>
+        </div>
+      </div>
+    </mat-card-content>
   </mat-card>
-  <ng-template #cbpPlan  let-data="data">
+  <ng-template #cbpPlan let-data="data">
     <div class="cbp-mark left-0 border-top-radius">
-      <p *ngIf="data?.cbpData?.planDuration === acbpConstants?.UPCOMING"  class="cbp-warning">{{data?.cbpData?.endDate | date: 'd MMM, y'}}</p>
-      <p *ngIf="data?.cbpData?.planDuration === acbpConstants?.SUCCESS"  class="cbp-success">{{data?.cbpData?.endDate | date: 'd MMM, y'}}</p>
+      <p *ngIf="data?.cbpData?.planDuration === acbpConstants?.UPCOMING" class="cbp-warning">{{data?.cbpData?.endDate |
+        date: 'd MMM, y'}}</p>
+      <p *ngIf="data?.cbpData?.planDuration === acbpConstants?.SUCCESS" class="cbp-success">{{data?.cbpData?.endDate |
+        date: 'd MMM, y'}}</p>
       <p *ngIf="data?.cbpData?.planDuration === acbpConstants?.OVERDUE" class="cbp-danger">{{'OverDue' }}</p>
     </div>
   </ng-template>
 </ng-container>
-  <ng-container *ngIf="isCardLoading">
-    <mat-card class="card-wide-v2 padding-remove position-relative flex">
-      <div class="">
-        <sb-uic-skeleton-loader [width]="'300px'" [height]="'100%'" class="h-full" [bindingClass]="'flex rounded h-full min-height-width'"></sb-uic-skeleton-loader>
+<ng-container *ngIf="isCardLoading">
+  <mat-card class="card-wide-v2 padding-remove position-relative flex">
+    <div class="">
+      <sb-uic-skeleton-loader [width]="'300px'" [height]="'100%'" class="h-full"
+        [bindingClass]="'flex rounded h-full min-height-width'"></sb-uic-skeleton-loader>
+    </div>
+    <mat-card-content class="mat-text-box">
+      <div class="course_widget flex margin-remove">
+        <div class="flex flex-end ">
+          <sb-uic-skeleton-loader [width]="'100px'" [height]="'21px'"
+            [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+        </div>
       </div>
-      <mat-card-content class="mat-text-box">
-        <div class="course_widget flex margin-remove">
-          <div class="flex flex-end ">
-            <sb-uic-skeleton-loader [width]="'100px'" [height]="'21px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
-          </div>
-        </div>
-  
-        <div class="flex main_title_box">
-          <!-- <p class="mat-subheading-1 title-text font-bold-imp cursor-pointer content-title"> -->
-            <sb-uic-skeleton-loader [width]="'100%'" [height]="'21px'" class="w-full h-full mt-2" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+
+      <div class="flex main_title_box">
+        <!-- <p class="mat-subheading-1 title-text font-bold-imp cursor-pointer content-title"> -->
+        <sb-uic-skeleton-loader [width]="'100%'" [height]="'21px'" class="w-full h-full mt-2"
+          [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
         <!-- </p> -->
-        </div>
-  
-        <div class="bottomsection">
-          <div class="flex w-full flex-wrap flex-middle">
-            <div class="course_logo_box mr-2">
-              <sb-uic-skeleton-loader [width]="'28px'" [height]="'28px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
-            </div>
-            <sb-uic-skeleton-loader [width]="'100px'" [height]="'16px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+      </div>
+
+      <div class="bottomsection">
+        <div class="flex w-full flex-wrap flex-middle">
+          <div class="course_logo_box mr-2">
+            <sb-uic-skeleton-loader [width]="'28px'" [height]="'28px'"
+              [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
           </div>
-          <div class="flex flex-middle rating-session margin-top-xs">
-            <div class="flex flex-middle mr-2">
-              <sb-uic-skeleton-loader [width]="'50px'" [height]="'16px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
-            </div>
-            <sb-uic-skeleton-loader [width]="'80px'" [height]="'16px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
-          </div>
+          <sb-uic-skeleton-loader [width]="'100px'" [height]="'16px'"
+            [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
         </div>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
+        <div class="flex flex-middle rating-session margin-top-xs">
+          <div class="flex flex-middle mr-2">
+            <sb-uic-skeleton-loader [width]="'50px'" [height]="'16px'"
+              [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+          </div>
+          <sb-uic-skeleton-loader [width]="'80px'" [height]="'16px'"
+            [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

@@ -1,0 +1,327 @@
+<div class="assessment-basic-info" *ngIf="assessmentForm">
+  <form [formGroup]="assessmentForm">
+    <!-- Assessment Type -->
+    <div class="form-section">
+      <mat-radio-group formControlName="assessmentType" class="assessment-type-group flex flex-middle gap-4">
+        <mat-radio-button value="basic">Basic Assessment</mat-radio-button>
+        <mat-radio-button value="advanced">Advanced Assessment</mat-radio-button>
+      </mat-radio-group>
+      <p class="hint-text">Assessment type cannot be changed once saved.</p>
+    </div>
+
+    <!-- Name -->
+    <div class="form-section mat-full-radius">
+      <label class="field-label required">Title</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="name" [maxlength]="nameMaxLength" placeholder="Enter name">
+        <mat-hint>Only ( a-z/A-Z , 0-9 , . - _ $ / : [ ] * ' ! ) characters are supported</mat-hint>
+        <mat-hint align="end">{{ nameLength }} / {{ nameMaxLength }}</mat-hint>
+        <mat-error *ngIf="controls['name'].hasError('required')">Name is required</mat-error>
+        <mat-error *ngIf="controls['name'].hasError('pattern')">Only ( a-z/A-Z , 0-9 , . - _ $ / : [ ] * ' !
+          ) characters are supported</mat-error>
+        <mat-error *ngIf="controls['name'].hasError('maxlength')">Name cannot exceed {{ nameMaxLength }}
+          characters</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Question Weightage Type (for Advanced Assessment) -->
+    <ng-container *ngIf="assessmentForm.get('assessmentType')?.value === 'advanced'">
+      <div class="form-section mat-full-radius">
+        <label class="field-label required">Assessment Type
+          <mat-icon class="info-icon"
+            matTooltip="By choosing question weightage, content creator can create competency based or marks-based assessment. On the selection of option weightage, psychometric assessment will be created. In practice test, in question weightage, marks and pass or fail status will not be visible.">info_outline</mat-icon>
+        </label>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-select formControlName="questionWeightageType" placeholder="Select">
+            <mat-option *ngFor="let option of assessmentTypeList" [value]="option.value">{{ option.name
+              }}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="controls['questionWeightageType'].hasError('required')">Assessment type is
+            required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- No of questions to be displayed (for Option Weightage) -->
+      <ng-container *ngIf="assessmentForm.get('questionWeightageType')?.value === 'optionalWeightage'">
+        <div class="form-section mat-full-radius">
+          <label class="field-label required">No of questions to be displayed</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput type="number" formControlName="numberOfQuestionsToDisplay" min="0" placeholder="0">
+            <mat-error *ngIf="controls['numberOfQuestionsToDisplay'].hasError('required')">Number of questions is
+              required</mat-error>
+            <mat-error *ngIf="controls['numberOfQuestionsToDisplay'].hasError('min')">Value must be 0 or
+              greater</mat-error>
+          </mat-form-field>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <!-- Type of Score Cutoffs -->
+    <ng-container *ngIf="isFinalAssessment && assessmentForm.get('assessmentType')?.value === 'basic'">
+      <div class="form-section">
+        <label class="field-label required">Type of score cutoffs</label>
+        <mat-radio-group formControlName="scoreCutoffType" class="score-cutoff-group">
+          <div class="radio-option" *ngFor="let option of overallScoreCutoffOptions">
+            <mat-radio-button [value]="option.id">
+              <span class="radio-label">{{ option.name }}</span>
+              <p class="radio-description">{{ option.description }}</p>
+            </mat-radio-button>
+          </div>
+        </mat-radio-group>
+      </div>
+    </ng-container>
+
+    <!-- Section details (for Question Weightage) -->
+    <ng-container *ngIf="assessmentForm.get('questionWeightageType')?.value === 'questionWeightage'">
+      <div class="section-detail-container">
+        <label class="field-label">Section details</label>
+
+        <!-- Total number of sections (for Question Weightage) -->
+        <div class="form-section mat-full-radius">
+          <label class="field-label required">Total number of sections</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput type="number" formControlName="noOfSection" min="1" max="5" placeholder="1">
+            <mat-error *ngIf="controls['noOfSection'].hasError('required')">Total number of sections is
+              required</mat-error>
+            <mat-error *ngIf="controls['noOfSection'].hasError('min')">Value must be at least 1</mat-error>
+            <mat-error *ngIf="controls['noOfSection'].hasError('max')">Value must be at most 5</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Section Tabs and Content -->
+        <div class="sections-container" *ngIf="sections.length > 0">
+          <!-- Section Tabs -->
+          <div class="section-tabs-row flex flex-middle">
+            <div class="section-tabs flex flex-middle gap-2">
+              <button *ngFor="let section of sections.controls; let i = index" type="button" class="section-tab"
+                [class.active]="selectedSectionIndex === i" (click)="selectSection(i)">
+                Section-{{ i + 1 }}
+              </button>
+            </div>
+            <div class="paragraph-toggle flex flex-middle gap-2 margin-left-auto">
+              <mat-slide-toggle [formControl]="sections.at(selectedSectionIndex).get('paragraph')">
+                Paragraph
+              </mat-slide-toggle>
+            </div>
+          </div>
+
+          <!-- Section Content -->
+          <div class="section-content" formArrayName="sections">
+            <ng-container [formGroupName]="selectedSectionIndex">
+              <div class="difficulty-table">
+                <!-- Table Header -->
+                <div class="table-header flex">
+                  <div class="label-col"></div>
+                  <div class="input-col">No. Of Questions</div>
+                  <div class="multiply-col"></div>
+                  <div class="input-col">Marks/Question</div>
+                  <div class="equals-col"></div>
+                  <div class="result-col"></div>
+                </div>
+
+                <!-- Difficulty Level Rows -->
+                <div formArrayName="difficultyLevels">
+                  <div class="table-row flex flex-middle"
+                    *ngFor="let level of getSectionDifficultyLevels(selectedSectionIndex).controls; let levelIndex = index"
+                    [formGroupName]="levelIndex">
+                    <div class="label-col">{{ difficultyLevels[levelIndex] }}-</div>
+                    <div class="input-col mat-full-radius">
+                      <mat-form-field appearance="outline" class="full-width"
+                        [class.mat-form-field-invalid]="isDifficultyLevelQuestionsInvalid(selectedSectionIndex, levelIndex)">
+                        <input matInput type="number" formControlName="numberOfQuestions" min="0" placeholder="0">
+                        <mat-error *ngIf="isDifficultyLevelQuestionsInvalid(selectedSectionIndex, levelIndex)">Questions
+                          required when marks are added</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="multiply-col">*</div>
+                    <div class="input-col mat-full-radius">
+                      <mat-form-field appearance="outline" class="full-width"
+                        [class.mat-form-field-invalid]="isDifficultyLevelMarksInvalid(selectedSectionIndex, levelIndex)">
+                        <input matInput type="number" formControlName="marksPerQuestion" min="0" placeholder="0">
+                        <mat-error *ngIf="isDifficultyLevelMarksInvalid(selectedSectionIndex, levelIndex)">Marks
+                          required when questions are added</mat-error>
+                      </mat-form-field>
+                    </div>
+                    <div class="equals-col">=</div>
+                    <div class="result-col">
+                      <span class="result-value">{{ calculateTotalMarks(selectedSectionIndex, levelIndex) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Totals Row -->
+                <div class="totals-row flex flex-middle flex-center gap-4">
+                  <div class="total-badge">
+                    Total Questions: <strong>{{ getSectionTotalQuestions(selectedSectionIndex) }}</strong>
+                  </div>
+                  <div class="total-badge">
+                    Total Marks: <strong>{{ getSectionTotalMarks(selectedSectionIndex) }}</strong>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Question Weightage Settings -->
+        <div class="question-weightage-settings">
+          <!-- First Row: Show Marks/Question, Sectional Passing Percentage, Sectional Time Bound -->
+          <div class="settings-row flex gap-4">
+            <!-- Show Marks/Question -->
+            <div class="form-section setting-field">
+              <label class="field-label required">Show Marks/Question</label>
+              <mat-radio-group formControlName="showMarks" class="yes-no-group flex gap-5">
+                <mat-radio-button value="Yes">Yes</mat-radio-button>
+                <mat-radio-button value="No">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <!-- Sectional Passing Percentage (only if sections > 1) -->
+            <div class="form-section setting-field" *ngIf="hasMultipleSections">
+              <label class="field-label required">Sectional Passing Percentage</label>
+              <mat-radio-group formControlName="sectionalPassPercentage" class="yes-no-group flex gap-5">
+                <mat-radio-button value="Yes">Yes</mat-radio-button>
+                <mat-radio-button value="No">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <!-- Sectional Time Bound (only if sections > 1) -->
+            <div class="form-section setting-field" *ngIf="hasMultipleSections">
+              <label class="field-label required">Sectional Time Bound</label>
+              <mat-radio-group formControlName="sectionTimeBound" class="yes-no-group flex gap-5">
+                <mat-radio-button value="Yes">Yes</mat-radio-button>
+                <mat-radio-button value="No">No</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <!-- Minimum Passing Percentage -->
+          <div class="form-section mat-full-radius">
+            <label class="field-label required">Minimum Passing Percentage</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput type="number" formControlName="minimumPassPercentage" min="50" max="100" placeholder="50">
+              <mat-error *ngIf="controls['minimumPassPercentage'].hasError('required')">Minimum passing percentage is
+                required</mat-error>
+              <mat-error *ngIf="controls['minimumPassPercentage'].hasError('min')">Value must be 50 or
+                greater</mat-error>
+              <mat-error *ngIf="controls['minimumPassPercentage'].hasError('max')">Value must be 100 or
+                less</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Negative Percentage% Question -->
+          <div class="form-section mat-full-radius">
+            <label class="field-label required">Negative Percentage% Question</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-select formControlName="negativeMarkingPercentage" placeholder="Select">
+                <mat-option *ngFor="let option of negativePercentageOptions" [value]="option">{{ option }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="controls['negativeMarkingPercentage'].hasError('required')">Negative percentage is
+                required</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Re-attempts and Duration Row -->
+    <div class="form-row">
+      <!-- Number of Re-attempts -->
+      <ng-container *ngIf="isFinalAssessment">
+        <div class="form-section flex-grow mat-full-radius">
+          <label class="field-label required">
+            Number of Re-attempts
+            <mat-icon class="info-icon" matTooltip="If count is zero then learner will not have option to re-attempt the test and
+                    if count is one or more than 1 up to 5 then learner can re-attempt the same test as per entered
+                    count by clicking on ‘Re-attempt test’ button given on result page.">info_outline</mat-icon>
+          </label>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-select formControlName="maxAssessmentRetakeAttempts" placeholder="Select">
+              <mat-option *ngFor="let option of reAttemptOptions" [value]="option">{{ option }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="controls['maxAssessmentRetakeAttempts'].hasError('required')">Number of re-attempts is
+              required</mat-error>
+          </mat-form-field>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isPracticeAssessment && assessmentForm.get('assessmentType')?.value !== 'advanced'">
+        <div class="form-section flex-grow">
+          <mat-checkbox formControlName="showTimer">Show timer</mat-checkbox>
+        </div>
+      </ng-container>
+
+      <!-- Duration -->
+      <div class="form-section mat-full-radius"
+        *ngIf="isFinalAssessment || (isPracticeAssessment && assessmentForm.get('showTimer')?.value)">
+        <label class="field-label required">Duration <span class="duration-format">(hh:mm:ss)</span></label>
+        <div class="duration-inputs">
+          <mat-form-field appearance="outline" class="duration-field"
+            [class.mat-form-field-invalid]="isDurationInvalid">
+            <input matInput type="number" formControlName="durationHours" min="0" max="23" (blur)="onDurationBlur()">
+            <mat-error *ngIf="controls['durationHours'].hasError('max')">Max 23</mat-error>
+          </mat-form-field>
+          <span class="duration-separator">:</span>
+          <mat-form-field appearance="outline" class="duration-field"
+            [class.mat-form-field-invalid]="isDurationInvalid">
+            <input matInput type="number" formControlName="durationMinutes" min="0" max="59" (blur)="onDurationBlur()">
+            <mat-error *ngIf="controls['durationMinutes'].hasError('max')">Max 59</mat-error>
+          </mat-form-field>
+          <span class="duration-separator">:</span>
+          <mat-form-field appearance="outline" class="duration-field"
+            [class.mat-form-field-invalid]="isDurationInvalid">
+            <input matInput type="number" formControlName="durationSeconds" min="0" max="59" (blur)="onDurationBlur()">
+            <mat-error *ngIf="controls['durationSeconds'].hasError('max')">Max 59</mat-error>
+          </mat-form-field>
+        </div>
+        <mat-error *ngIf="isDurationInvalid" class="duration-error">Duration is required</mat-error>
+      </div>
+    </div>
+
+    <!-- Cool off period -->
+    <ng-container *ngIf="showCoolOffPeriod">
+      <div class="form-section mat-full-radius">
+        <label class="field-label required">Cool off period (in days)
+          <mat-icon class="info-icon"
+            matTooltip="Once all re-attempts are exhausted, the user must wait for a predefined cool-off period before they can attempt again. During this time, no further attempts are allowed. Access is automatically restored after the cool-off period ends.">info_outline</mat-icon>
+        </label>
+        <mat-form-field appearance="outline" class="full-width">
+          <input matInput formControlName="coolOffPeriod" placeholder="Enter cool off period in days" type="number"
+            max="7" min="1">
+          <mat-error *ngIf="controls['coolOffPeriod'].hasError('required')">Cool off period is required</mat-error>
+          <mat-error *ngIf="controls['coolOffPeriod'].hasError('min')">Value must be 1 or greater</mat-error>
+          <mat-error *ngIf="controls['coolOffPeriod'].hasError('max')">Value must be 7 or less</mat-error>
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <!-- Instructions -->
+    <div class="form-section mat-full-radius">
+      <label class="field-label">Instructions</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <textarea matInput formControlName="description" [maxlength]="instructionsMaxLength" rows="5"
+          placeholder="Enter instructions"></textarea>
+        <mat-error *ngIf="controls['description'].hasError('maxlength')">Instructions cannot exceed {{
+          instructionsMaxLength }} characters</mat-error>
+      </mat-form-field>
+      <div class="field-footer">
+        <span></span>
+        <span class="char-count">{{ descriptionLength }}/{{ instructionsMaxLength }}</span>
+      </div>
+    </div>
+
+    <!-- Actions Buttons -->
+    <div class="form-actions flex flex-middle flex-center gap-5" *ngIf="!isReadOnly">
+      <button *ngIf="!assessmentData" mat-button class="btn-common btn-primary"
+        [ngClass]="{'btn-disable': !isFormValid}" (click)="onSave()" [disabled]="!isFormValid" type="button">
+        Save and Continue
+      </button>
+      <button *ngIf="assessmentData" mat-button class="btn-common btn-primary" [ngClass]="{'btn-disable': !isFormValid}"
+        (click)="onUpdate()" [disabled]="!isFormValid" type="button">
+        Update
+      </button>
+      <button mat-button class="btn-common btn-secondary" (click)="onCancel()" type="button">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,26 @@
+<div class="contents-container">
+  <div class="main-container">
+    <ng-container *ngIf="batchData?.content[0]?.batchAttributes?.sessionDetails_v2?.length > 0">
+      <div class="content-card padding-right-m padding-left-m padding-top-s padding-bottom-s margin-bottom-m">
+        <ws-widget-app-toc-session-card-new [forPreview]="forPreview" [batchId]="batchId" [content]="content"
+          [pathSet]="pathSet" [rootId]="rootId" [rootContentType]="rootContentType" [rootId]="contextId"
+          [batchData]="batchData" [config]="config" [session]="getBatchHashMap()"
+          [sessionType]="sessionType"></ws-widget-app-toc-session-card-new>
+      </div>
+    </ng-container>
+
+    <ng-contaier *ngIf="batchOfflineOnlineSessionData && batchOfflineOnlineSessionData.length; else noSessionChildren">
+      <div *ngFor="let item of batchOfflineOnlineSessionData">
+        <div class="content-card padding-right-m padding-left-m padding-top-s padding-bottom-s margin-bottom-m">
+          {{item?.name}}
+        </div>
+      </div>
+    </ng-contaier>
+    <ng-template #noSessionChildren>
+      <div>
+        No sessions available in this batch
+      </div>
+    </ng-template>
+  </div>
+
+</div>

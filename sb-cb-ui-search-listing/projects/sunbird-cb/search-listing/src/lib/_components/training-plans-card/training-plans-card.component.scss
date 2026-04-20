@@ -1,0 +1,127 @@
+@import "../../_scss/ws-vars";
+
+.plan-name {
+  /* stylelint-disable */
+  font-family: Montserrat;
+  /* stylelint-enable */
+  font-weight: 600;
+  font-style: SemiBold;
+  font-size: 20px;
+  color: $text-primary;
+}
+
+.org-scope {
+  /* stylelint-disable */
+  font-family: Lato;
+  /* stylelint-enable */
+  font-weight: 400;
+  text-align: center;
+  border: 1px solid;
+  border-image-source: linear-gradient(90deg, #2c77a6 0%, #07446b 100%);
+  background: #2c77a6;
+}
+
+.course-type {
+  display: flex;
+  align-items: center;
+  color: #1b2133;
+  gap: 4px;
+  background-color: #ef951e29;
+  /* stylelint-disable */
+  font-family: Lato;
+  /* stylelint-enable */
+  padding: 2px 8px;
+  height: 20px;
+  border: 1px solid #ef951e;
+}
+
+.document-icon {
+  color: $courseYellow;
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+}
+
+.content-type-text {
+  font-family: Poppins, "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  color: #212121;
+}
+
+.is-apar-box {
+  background-color: #212121;
+}
+
+.training-plan-box {
+  border: 1px solid $borderColor;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  min-height: 172px;
+}
+
+.trp-meta-texts {
+  /* stylelint-disable */
+  font-family: Lato;
+  /* stylelint-enable */
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.badge-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0px 8px;
+  border-radius: 4px;
+
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.live-badge {
+  border: 1px solid #1d8923;
+  color: #1d8923;
+  background: #1d892329;
+}
+
+.live-dot {
+  background: #1d8923;
+}
+
+.draft-badge {
+  border: 1px solid #ef951e;
+  color: #ef951e;
+  background: #ef951e29;
+}
+
+.draft-dot {
+  background: #ef951e;
+}
+
+.retired-badge {
+  border: 1px solid #d12e2e;
+  color: #d12e2e;
+  background: rgba(209, 46, 46, 0.16);
+}
+
+.retired-dot {
+  background: #d12e2e;
+}
+
+.text-ellipse {
+  display: inline-block;
+  max-width: 16em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

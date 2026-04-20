@@ -1,11 +1,9 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
-
+@use "@sunbird-cb/design-system/src/styles/ws-common";
+@use "@sunbird-cb/design-system/src/styles/ws-vars";
+@use "@sunbird-cb/design-system/src/styles/ws-mixins" as *;
 
 .min-wid {
-  min-width: 240px;
-
+  min-width: 263px;
 }
 
 .outline-1 {
@@ -16,9 +14,14 @@
   padding-left: 2.75rem;
 }
 
-.img {
-  width: 184px;
-  // height: 74px;
+.logo-cover {
+  width: 100px;
+  border: 1px solid #00000014;
+  overflow: hidden;
+  .img {
+    width: 100%;
+    object-fit: contain;
+  }
 }
 
 .max-width {
@@ -31,7 +34,7 @@
 
   /* width */
   &::-webkit-scrollbar {
-    width: 5px;
+    width: 2px;
   }
 
   /* Track */
@@ -48,5 +51,76 @@
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
     background: #555;
+  }
+}
+
+:host ::ng-deep {
+  .mat-expansion-panel {
+    --mat-expansion-header-expanded-state-height: 48px;
+    background-color: inherit !important;
+    border-radius: 0 !important;
+
+    .mat-list-item-content {
+      padding: 0 16px 0 32px !important;
+    }
+  }
+  .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+    box-shadow: none !important;
+  }
+
+  .menu-text,
+  .mat-expansion-panel-header-title {
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16.8px;
+    color: #000000e0;
+  }
+  .mat-expansion-panel-body {
+    background-color: #fff;
+    padding: 0px !important;
+    .mat-list-base {
+      padding-top: 0 !important ;
+    }
+  }
+  .mat-expansion-panel-header-title,
+  .mat-expansion-panel-header-description,
+  .mat-content.mat-content-hide-toggle {
+    margin-right: 0 !important;
+  }
+  .mat-expansion-panel-header-description {
+    justify-content: flex-end;
+  }
+}
+
+::ng-deep {
+  .menu-left {
+    max-width: 235px;
+    margin: auto;
+    .mat-expansion-panel-header {
+      padding: 0 16px !important;
+    }
+  }
+
+  .ws-active-route-menu {
+    border-radius: 8px;
+    background-color: #1b4ca1;
+    mat-icon,
+    .menu-text {
+      color: #fff !important;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: #1b4ca1 !important;
+    }
+  }
+
+  .menu-left mat-icon {
+    color: #1b4ca1;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
   }
 }

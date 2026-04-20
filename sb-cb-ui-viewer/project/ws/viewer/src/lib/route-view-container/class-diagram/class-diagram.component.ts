@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { NsContent } from '@ws-widget/collection'
+import { NsContent } from '@sunbird-cb/collection'
 
 @Component({
   selector: 'viewer-class-diagram-container',
@@ -14,5 +14,5 @@ export class ClassDiagramComponent {
   @Input() classDiagramData: NsContent.IContent | null = null
   @Input() classDiagramManifest: any
 
-  constructor() {}
+  constructor() { }
 }

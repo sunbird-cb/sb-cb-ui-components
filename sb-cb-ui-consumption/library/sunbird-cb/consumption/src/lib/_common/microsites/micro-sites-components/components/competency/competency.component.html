@@ -1,0 +1,29 @@
+<div class="padding-top-l padding-bottom-l relative" [style.background]="competency?.background"
+     *ngIf="!hideCompetencyBlock; else noData">
+  <div class="w-full container-balanced">
+    <p class="mat-body-1 pl-5 pr-4 md:pl-0 md:pr-0">
+      This section shows the list of top competencies users in this MDO are learning, 
+      based on the courses they've completed and enrolled in.
+    </p>
+    <div class="pl-4 pr-4 md:pl-0 md:pr-0">
+      <sb-uic-competency-passbook-mdo 
+        [dynamicColor]="'#999999'" 
+        [dynamicAlignPills]="'start'"
+        [cardDisplayCount]="2" 
+        (emptyResponse)="hideCompetency($event)"
+        (temeletryResponse)="raiseCompetencyTelemetry($event)" 
+        [objectData]="competency"
+        [providerId]="orgId">
+      </sb-uic-competency-passbook-mdo>
+    </div>
+  </div>
+</div>
+
+<ng-template #noData>
+  <div class="flex justify-center w-full">
+    <div class="margin-xl text-center">
+      <img src="/assets/common/error-pages/empty_search.svg" alt="No results" class="margin-top-l margin-bottom-s">
+      <h2 class="mat-h2">{{'learnsearch.noResults' | translate}}</h2>
+    </div>
+  </div>
+</ng-template>

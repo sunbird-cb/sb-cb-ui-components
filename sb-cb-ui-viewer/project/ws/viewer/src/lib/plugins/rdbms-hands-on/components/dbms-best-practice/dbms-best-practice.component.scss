@@ -1,5 +1,5 @@
-@import '~@ws-widget/design-system/src/styles/_ws-vars.scss';
-@import '~@ws-widget/design-system/src/styles/_ws-mixins.scss';
+@use '@sunbird-cb/design-system/src/styles/ws-vars' as *;
+@use '@sunbird-cb/design-system/src/styles/ws-mixins';
 
 pre {
   background-color: #f5f5f5;
@@ -9,11 +9,11 @@ pre {
   overflow: auto;
   height: auto;
   width: 380px;
-  // @include breakpoint-xs {
+  // @include ws-mixins.breakpoint-xs {
   //   width: auto;
   // }
 
-  // @include breakpoint-sm {
+  // @include ws-mixins.breakpoint-sm {
   //   width: auto;
   // }
 }
@@ -54,11 +54,11 @@ pre {
   height: 181px;
   overflow-y: auto;
   width: 50%;
-  // @include breakpoint-xs {
+  // @include ws-mixins.breakpoint-xs {
   //   width: auto;
   // }
 
-  // @include breakpoint-sm {
+  // @include ws-mixins.breakpoint-sm {
   //   width: 45%;
   // }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { CertificationComponent } from './certification.component'
 import { CertificationModule as CertificationViewContainerModule } from '../../route-view-container/certification/certification.module'
 import { CertificationRoutingModule } from './certification-routing.module'
-import { WidgetResolverModule } from '@ws-widget/resolver'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 
 @NgModule({
   declarations: [CertificationComponent],
@@ -11,7 +11,7 @@ import { WidgetResolverModule } from '@ws-widget/resolver'
     CommonModule,
     CertificationViewContainerModule,
     CertificationRoutingModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
   ],
 })
 export class CertificationModule { }

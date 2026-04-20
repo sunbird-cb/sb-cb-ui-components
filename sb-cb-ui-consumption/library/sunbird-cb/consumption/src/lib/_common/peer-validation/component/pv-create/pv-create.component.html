@@ -1,0 +1,40 @@
+<div class="container-balanced px-8 py-5">
+  <div class="header-container flex flex-middle">
+    <div class="bread-crumb-container flex flex-middle gap-3">
+      <span class="breadcrumb-item cursor-pointer" (click)="backToDashboard()">Survey Dashboard</span>
+      <span class="breadcrumb-separator">&gt;</span>
+      <span class="breadcrumb-item breadcrumb-active">Create New Survey</span>
+    </div>
+    <div class="btn-container flex ml-auto gap-5">
+      <button mat-button type="button" class="btn-common btn-secondary" (click)="saveDraftAndExit()">
+        Save Draft & Exit
+      </button>
+      <button mat-button type="button" class="btn-common btn-secondary" (click)="onPreviousStepper()"
+        *ngIf="currentStepperIndex > 0">
+        Previous
+      </button>
+      <button mat-button type="button" class="btn-common btn-primary" (click)="onNext()"
+        *ngIf="currentStepperIndex < stepsLabels.length - 1">
+        Next
+      </button>
+      <button mat-button type="button" class="btn-common btn-primary" (click)="onPublish()"
+        *ngIf="currentStepperIndex === stepsLabels.length - 1">
+        Publish
+      </button>
+    </div>
+  </div>
+  <div class="lp-stepper-container mt-5">
+    <sb-uic-horizontal-dynamic-stepper [labels]="stepsLabels" [selectedIndex]="currentStepperIndex"
+      (stepChange)="onStepChanged($event)">
+      <ng-template>
+        <!-- Configuration Step Content -->
+        <sb-uic-pv-config-step [hidden]="currentStepperIndex !== 0"></sb-uic-pv-config-step>
+      </ng-template>
+      <ng-template>
+        <!-- Questions Step Content -->
+        <sb-uic-pv-question-step [hidden]="currentStepperIndex !== 1" [formData]="formData"
+          (fieldAdded)="onFieldAdded($event)" (fieldRemoved)="onFieldRemoved($event)"></sb-uic-pv-question-step>
+      </ng-template>
+    </sb-uic-horizontal-dynamic-stepper>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+<div class="card-l1" *ngIf="post.status !== 'inactive'" [ngClass]="{'card-l1' : cardType=== 'topLevel',
+'card-l2 mb-3' : cardType=== 'reply',  'card-l3 mb-3' : cardType=== 'reply-l2',
+'suspended': post && post.status === 'suspended'}">
+    <div class="flex user-info">
+        <div>
+            <div class="mr-4">
+                <d-v2-avatar-photo [size]="levelConfig?.cardConfig?.avatarPhoto?.size || 'ml'"
+                    [name]="loogedInUserProfile?.firstName || levelConfig?.cardConfig?.avatarPhoto?.name"
+                    [photoUrl]="loogedInUserProfile?.profileImageUrl || ''" [color]="levelConfig?.cardConfig?.avatarPhoto?.color">
+                </d-v2-avatar-photo>
+            </div>
+        </div>
+
+        <div class="flex flex-1 items-start justify-center  flex-col">
+            <div class="flex items-center">
+                <span class="mat-body-1 bold mr-1 nodtranslate"> {{loogedInUserProfile?.firstName}} </span>
+                <mat-icon class="icon verified mr-1"
+                    *ngIf="loogedInUserProfile?.profileDetails?.profileStatus?.toLowerCase() === 'verified'"
+                    i18n-aria-label aria-label="verified">check_circle</mat-icon>
+            </div>
+            <div class="ws-mat-black60-text mat-body-2 nodtranslate"
+                *ngIf="loogedInUserProfile?.professionalDetails[0]?.designation  && (loogedInUserProfile?.professionalDetails[0]?.designation !== 'null') ">
+                {{loogedInUserProfile?.professionalDetails[0]?.designation}}
+            </div>
+        </div>
+        <!-- <span class="mat-body-2">{{post?.createdOn | pipeRelativeTime}}</span> -->
+        <!-- <div>
+            <mat-icon class="icon" aria-hidden="false" i18n-aria-label
+                aria-label="more">more_vertical</mat-icon>
+        </div> -->
+    </div>
+    <div class="comment mb-4 mt-2 ">
+        <!-- <div class="flex mb-2">
+            <div class="ws-mat-black-text mat-body-1"
+                [innerHTML]="post?.title">
+            </div>
+        </div> -->
+        <div class="comment-txt mat-body-1 ws-mat-black-text description {{getEditorTextLength(post?.description) > viewMoreLength && !post?.expanded ? 'expand' : 'un-expand'}}"
+            [innerHTML]="post?.description">
+        </div>
+        <div class="more-or-less text-right" *ngIf="getEditorTextLength(post?.description) > viewMoreLength">
+            <div class="cursor-pointer nodtranslate" (click)="viewMoreOrLess(post)" *ngIf="!post?.expanded">View more
+            </div>
+            <div class="cursor-pointer nodtranslate" (click)="viewMoreOrLess(post)" *ngIf="post?.expanded">View less
+            </div>
+        </div>
+        <ng-container *ngIf="post?.categoryType?.includes('image')">
+            <div class="media" *ngIf="post?.mediaCategory && post?.mediaCategory?.image">
+                <d-v2-image-sliders [title]="'Images'" [imageUrls]="post?.mediaCategory?.image"
+                    [styleData]="levelConfig?.cardConfig?.sliderData?.styleData"></d-v2-image-sliders>
+            </div>
+        </ng-container>
+        <!-- IF Doc  -->
+        <ng-container *ngIf="post?.categoryType?.includes('document')">
+            <div class="media" *ngIf="post?.mediaCategory && post?.mediaCategory?.document">
+                <div *ngFor="let doc of post?.mediaCategory?.document" class="doc-item flex items-center gap-2 mb-2">
+                    <mat-icon class="doc-icon" [ngClass]="{
+                       'pdf-icon': getFileExtension(doc) === 'pdf',
+                       'doc-icon': getFileExtension(doc) === 'doc',
+                       'docx-icon': getFileExtension(doc) === 'docx'
+                   }">
+                        {{getFileIcon(doc)}}
+                    </mat-icon>
+                    <a [href]="" target="_blank" rel="noopener noreferrer" class="doc-name doc-link nodtranslate">
+                        {{getFileName(doc)}}
+                    </a>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="post?.categoryType?.includes('link')">
+            <div class="media" *ngIf="post?.mediaCategory && post?.mediaCategory?.link">
+                <div *ngFor="let linkUrl of post?.mediaCategory?.link" class="doc-item flex items-center gap-2 mb-2">
+                    <mat-icon class="doc-icon">link</mat-icon>
+                    <a [href]="linkUrl" target="_blank" rel="noopener noreferrer"
+                        class="doc-name doc-link nodtranslate">
+                        {{linkUrl}}
+                    </a>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="flex mt-4 tags-section" *ngIf="post?.tags && post?.tags?.length">
+        <ng-container *ngFor="let tag of post?.tags">
+            <div class="circleBtn mr-3 nodtranslate">
+                {{tag}}
+            </div>
+        </ng-container>
+    </div>
+    <div class="my-3 h-divider"></div>
+    <div class="actions" *ngIf="levelConfig?.cardConfig?.showActions">
+        <div class="flex">
+            <ng-container *ngIf="levelConfig?.cardConfig?.actions?.like?.show">
+                <div class="mr-4 circleBtn">
+                    <mat-icon class="icon like-icon mr-2 nodtranslate" aria-hidden="false" i18n-aria-label
+                        aria-label="Fail">{{levelConfig?.cardConfig?.actions?.like?.icon}}</mat-icon>
+                    <!-- <span class="" *ngIf="cardConfig?.actions?.like?.showCount">
+                        {{(post?.upVoteCount && post?.upVoteCount) || 0}}
+                    </span> -->
+                </div>
+            </ng-container>
+            <ng-container *ngIf="levelConfig?.cardConfig?.actions?.comments?.show && levelConfig.replyLevelRef">
+                <div class="mr-4 cursor-pointer circleBtn">
+                    <mat-icon class="icon mr-2" aria-hidden="false" i18n-aria-label
+                        aria-label="Dropdown-open">arrow_drop_down</mat-icon>
+                    <mat-icon class="icon mr-2" aria-hidden="false" i18n-aria-label
+                        *ngIf="levelConfig?.cardConfig?.actions?.comments?.icon"
+                        aria-label="Fail">{{levelConfig?.cardConfig?.actions?.comments?.icon}}</mat-icon>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="levelConfig?.cardConfig?.actions?.bookmark?.show">
+                <div class=" flex bookmarkDiv cursor-pointer">
+                    <mat-icon role="button" aria-hidden="false" aria-label="bookmark"
+                        class="mat-icon notranslate icon material-icons mat-ligature-font mat-icon-no-color nodtranslate">
+                        bookmark_outline
+                    </mat-icon>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

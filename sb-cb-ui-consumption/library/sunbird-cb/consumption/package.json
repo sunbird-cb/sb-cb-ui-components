@@ -1,11 +1,14 @@
 {
   "name": "@sunbird-cb/consumption",
-  "version": "0.0.72",
+  "version": "0.0.33-cbrelease-4.8.35",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
   "peerDependencies": {
-    "@angular/common": "^8.2.14",
-    "@angular/core": "^8.2.14",
-    "@sunbird-cb/design-system": "0.0.2",
-    "@sunbird-cb/utils-v2": "0.0.1",
-    "@sunbird-cb/resolver-v2": "0.0.7"
+    "@angular/common": "^16.2.12",
+    "@angular/core": "^16.2.12",
+    "@sunbird-cb/design-system": "0.0.3",
+    "@sunbird-cb/utils-v2": "0.0.2-cbrelease-4.8.31",
+    "@sunbird-cb/resolver-v2": "0.0.7-ang-13-16"
   }
 }

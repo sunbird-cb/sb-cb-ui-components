@@ -1,0 +1,50 @@
+<mat-card class="member-card-wrapper relative" *ngIf="!isLoading && memeberData">
+    <div class="absolute photo-block">
+        <d-v2-avatar-photo [size]="'l'" [name]="memeberData?.first_name ||  memeberData?.firstName"
+            [photoUrl]="memeberData?.user_profile_img_url || memeberData?.profileDetails?.profileImageUrl || ''">
+        </d-v2-avatar-photo>
+    </div>
+    <div class="member-info">
+        <div class="member-name">
+            <span class="nodtranslate" dV2MultiLineElipsis *ngIf="memeberData?.first_name || memeberData?.firstName">{{memeberData?.first_name || memeberData?.firstName}}</span>
+        </div>
+        <div class="member-role">
+            <span class="nodtranslate" dV2MultiLineElipsis>{{memeberData?.designation ||
+                memeberData?.profileDetails?.employmentDetails?.departmentName}}</span>
+        </div>
+        <div class="flex items-center justify-center mt-2">
+            <!-- <button  class="connect-btn">
+                <mat-icon>person_add</mat-icon>
+                <span>Connect</span>
+            </button> -->
+        </div>
+    </div>
+</mat-card>
+
+<mat-card class="member-card-wrapper relative" *ngIf="isLoading">
+    <div class="absolute photo-block">
+        <d-v2-widget-skeleton-loader [width]="'80px'" [height]="'80px'"
+            [bindingClass]="'flex rounded rounded-full '"></d-v2-widget-skeleton-loader>
+    </div>
+    <div class="member-info">
+        <div class="member-name">
+            <span class="">
+                <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'18px'"
+                    [bindingClass]="'flex rounded mb-2'"></d-v2-widget-skeleton-loader>
+            </span>
+        </div>
+        <div class="member-role">
+            <span class="">
+                <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'18px'"
+                    [bindingClass]="'flex rounded '"></d-v2-widget-skeleton-loader>
+            </span>
+        </div>
+        <div class="flex items-center justify-center mt-2">
+            <!-- <button  class="connect-btn">
+                <mat-icon>person_add</mat-icon>
+                <span>Connect</span>
+            </button> -->
+        </div>
+    </div>
+
+</mat-card>

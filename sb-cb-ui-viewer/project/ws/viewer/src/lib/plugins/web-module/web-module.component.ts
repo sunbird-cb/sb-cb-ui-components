@@ -10,10 +10,10 @@ import {
 } from '@angular/core'
 import { Subscription, fromEvent } from 'rxjs'
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser'
-import { ValueService, ConfigurationsService } from '@ws-widget/utils'
-import { WidgetContentService, NsContent } from '@ws-widget/collection'
+import { ValueService, ConfigurationsService } from '@sunbird-cb/utils'
+import { WidgetContentService, NsContent } from '@sunbird-cb/collection'
 import { ViewerUtilService } from '../../viewer-util.service'
-import { EventService } from '../../../../../../../library/ws-widget/utils/src/public-api'
+import { EventService } from '@sunbird-cb/utils'
 import { ActivatedRoute } from '@angular/router'
 @Component({
   selector: 'viewer-plugin-web-module',
@@ -50,7 +50,7 @@ export class WebModuleComponent implements OnInit, OnChanges, OnDestroy {
   iframeLoadingInProgress = true
   isCompleted = false
   slideAudioUrl: SafeUrl = ''
-  @ViewChild('iframeElem', { static: false }) iframeElem: ElementRef<HTMLIFrameElement>
+  @ViewChild('iframeElem') iframeElem: ElementRef<HTMLIFrameElement>
   current: string[] = []
   counter = false
   isScrolled = false
@@ -88,7 +88,7 @@ export class WebModuleComponent implements OnInit, OnChanges, OnDestroy {
       if (prop === 'widgetData') {
         if (this.widgetData.identifier !== this.oldIdentifier) {
           if (this.current.length > 0) {
-            this.saveContinueLearning(this.oldIdentifier)
+            // this.saveContinueLearning(this.oldIdentifier)
             this.fireRealTimeProgress(this.oldIdentifier)
           }
         }
@@ -106,7 +106,7 @@ export class WebModuleComponent implements OnInit, OnChanges, OnDestroy {
     if (this.screenSizeSubscription) {
       this.screenSizeSubscription.unsubscribe()
     }
-    this.saveContinueLearning(this.widgetData.identifier)
+    // this.saveContinueLearning(this.widgetData.identifier)
     this.fireRealTimeProgress(this.widgetData.identifier)
   }
 
@@ -181,7 +181,7 @@ export class WebModuleComponent implements OnInit, OnChanges, OnDestroy {
       this.current.push(pageNumber.toString())
     }
     if (this.iframeUrl && pageNumber === this.currentSlideNumber) {
-      return
+      return null
     }
     if (pageNumber >= 1 && pageNumber <= this.slides.length) {
       this.currentSlideNumber = pageNumber
@@ -227,10 +227,10 @@ export class WebModuleComponent implements OnInit, OnChanges, OnDestroy {
       this.setPage(this.currentSlideNumber - 1)
     }
   }
-  raiseTelemetry(action: string, event: string) {
+  raiseTelemetry(action: any, event: string) {
     if (this.widgetData.identifier) {
       this.events.raiseInteractTelemetry(action, event, {
-        contentId: this.widgetData.identifier,
+        //   contentId: this.widgetData.identifier,
       })
     }
     if (event === 'scroll') {

@@ -1,0 +1,37 @@
+<ng-container *ngIf="column?.config?.showSearch">
+    <div class="w-full sticky">
+        <div class="search mb-5">
+            <div class="rsearch">
+                <div class="sinput mat-field-rounded flex flex-middle">
+                    <mat-icon class="search-icon">search</mat-icon>
+                    <input type="search" [formControl]="searchValue" placeholder="Search" #search>
+                    <button *ngIf="search.value" class="clear-btn flex" (click)="clearSearch()">
+                        <mat-icon>clear</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="columnItems && columnItems.length > 0; else noDataTemplate;">
+    <ng-container *ngFor="let child of columnItems; let j = index">
+        <div #cardEle id="{{column.code}}Card{{j+1}}" >
+            <lib-term-card
+                [data]="{'children': child, 'selected' : false, 'category':column.code, cardSubType: 'minimal', isViewOnly:false,'index':column.index, columnInfo: column}"
+                [enableThreeDots]="(isChildOrg && childOrg.channel === child.name) ? true : (isChildOrg) ? false : true"
+                [checkIfChildOrg]="isChildOrg"
+                (isSelected)="updateSelection1($event)" (selectedCard)="selectedCard($event)" (cardAction)="cardActionEmit($event)">
+            </lib-term-card>
+        </div>
+    </ng-container>
+</ng-container>
+<ng-template #noDataTemplate >
+    <ng-container *ngIf="searchValue?.value">
+    <div>No Data found</div>
+    </ng-container>
+</ng-template>
+
+<div class="w-full flex justify-center" *ngIf="!disableLoadButton">
+    <button (click)="loadMore()" class="mat-raised-button mat-button-base loadMore" [ngClass]="{'disablBtn': disableLoadButton}"
+    [disabled]="disableLoadButton">Load more...</button>
+</div>

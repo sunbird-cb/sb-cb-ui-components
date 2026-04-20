@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import { MAT_DIALOG_DATA } from '@angular/material'
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog'
 import { WidgetContentService } from './services/widget-content.service'
 @Component({
   selector: 'lib-common-assessment-viewer',
@@ -19,8 +19,14 @@ export class CommonAssessmentViewerComponent implements OnInit {
   quizJson: any
   fromCreation = true
   collectionId = ''
+  questionPreview = false
   ngOnInit() {
+    // tslint:disable-next-line
+    console.log('this.data', this.data)
     if (this.data) {
+      // tslint:disable-next-line
+      console.log('this.data', this.data)
+      this.questionPreview = this.data.questionPreview
       this.isFetchingDataComplete = this.data.isFetchingDataComplete
       this.testData = this.data.testData
       this.isErrorOccured = this.data.isErrorOccured

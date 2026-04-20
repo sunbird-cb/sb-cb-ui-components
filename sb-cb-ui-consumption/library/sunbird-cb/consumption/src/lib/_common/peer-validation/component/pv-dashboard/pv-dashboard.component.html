@@ -1,0 +1,268 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <h1 class="title">Survey Dashboard</h1>
+      <p class="subtitle">Performance overview and peer validation management.</p>
+    </div>
+    <button mat-button class="btn-common btn-primary" (click)="createNewSurvey()">
+      <mat-icon>add</mat-icon>
+      Create New Survey
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)" class="tabs">
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">All <span class="tab-count">({{allCount}})</span></span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Active <span class="tab-count">({{activeCount}})</span></span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Ended <span class="tab-count">({{endedCount}})</span></span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Draft <span class="tab-count">({{draftCount}})</span></span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Archived <span class="tab-count">({{archivedCount}})</span></span>
+      </ng-template>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <span class="tab-label">Downloadable Reports</span>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Filters (hidden on Archived tab) -->
+  <form [formGroup]="filterForm" class="filters" *ngIf="selectedTab !== 'archived' && selectedTab !== 'download'">
+    <div class="filter-row">
+      <div class="filter-item search-filter mat-full-radius">
+        <label class="filter-label">Search Surveys</label>
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Type here to search..." formControlName="searchText">
+        </mat-form-field>
+      </div>
+
+      <div class="filter-item date-filter mat-full-radius">
+        <label class="filter-label">Date Range</label>
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-date-range-input [rangePicker]="rangePicker" [formGroup]="filterForm">
+            <input matStartDate formControlName="startDate" placeholder="Start date">
+            <input matEndDate formControlName="endDate" placeholder="End date">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-item status-filter mat-full-radius" *ngIf="selectedTab === 'all'">
+        <label class="filter-label">Status</label>
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-select formControlName="status" placeholder="Select status">
+            <mat-option *ngFor="let status of statusOptions" [value]="status">
+              {{status}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-item mdo-filter mat-full-radius" *ngIf="isSPVRoute">
+        <label class="filter-label">MDO</label>
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-select formControlName="mdo" placeholder="Select MDO" multiple [compareWith]="compareMdo">
+            <mat-select-trigger>
+              <span *ngIf="filterForm.value.mdo && filterForm.value.mdo.length === 0">Select MDO</span>
+              <span *ngIf="filterForm.value.mdo && filterForm.value.mdo.length > 0">
+                {{filterForm.value.mdo.length}} MDO selected
+              </span>
+            </mat-select-trigger>
+            <mat-option *ngFor="let mdo of mdoOptions" [value]="mdo">
+              <span *ngIf="mdo.orgName">{{mdo.orgName}} ({{mdo.count}})</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-item clear-filter-item" *ngIf="hasActiveFilters">
+        <label class="filter-label">&nbsp;</label>
+        <button mat-button class="btn-common btn-secondary flex flex-center" (click)="clearAllFilters()">
+          <mat-icon>filter_list_off</mat-icon>
+          Clear All Filters
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Table -->
+  <div class="table-container">
+    <div class="download-note" *ngIf="selectedTab === 'download'">
+      Note : The reports in this tab will be automatically removed after 24 hour
+    </div>
+
+    <table mat-table [dataSource]="dataSource" class="survey-table" *ngIf="selectedTab !== 'download'">
+      <!-- Course Name Column -->
+      <ng-container matColumnDef="courseName">
+        <th mat-header-cell *matHeaderCellDef>Content Name</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="course-name-cell">
+            <img [src]="row.thumbnail" [alt]="row.courseName" onerror="this.src='/assets/images/default.png'">
+            <span>{{row.courseName}}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Organisation Column -->
+      <ng-container matColumnDef="organisation">
+        <th mat-header-cell *matHeaderCellDef>Organisation</th>
+        <td mat-cell *matCellDef="let row">{{row.organisation}}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status-badge" [ngClass]="getStatusClass(row.status)">
+            {{row.status}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Start Date Column -->
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef>Start Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.status === 'Draft' ? 'N/A' : row.startDate }}</td>
+      </ng-container>
+
+      <!-- End Date Column -->
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef>End Date</th>
+        <td mat-cell *matCellDef="let row">{{row.endDate}}</td>
+      </ng-container>
+
+      <!-- Submission Rate Column -->
+      <ng-container matColumnDef="submissionRate">
+        <th mat-header-cell *matHeaderCellDef>
+          Submission Rate
+          <mat-icon class="info-icon"
+            matTooltip="(Number of submissions by learner/ number of times user were asked to fill the survey) * 100">info_outline</mat-icon>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          {{ (row.status === 'Active' || row.status === 'Draft') ? 'N/A' : (row.submissionCount + '/' + row.totalCount +
+          ' (' + row.submissionRate + ')') }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="row.status !== 'Archived'">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </ng-container>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editSurvey(row)" *ngIf="row.status === 'Draft'">
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button mat-menu-item (click)="endSurvey(row)"
+              *ngIf="row.status === 'Active' && row.createdBy === loggedInUserId">
+              <mat-icon>stop_circle</mat-icon>
+              <span>End Survey</span>
+            </button>
+            <button mat-menu-item (click)="archiveSurvey(row)"
+              *ngIf="row.status === 'Ended' && row.createdBy === loggedInUserId">
+              <mat-icon>archive</mat-icon>
+              <span>Archive</span>
+            </button>
+            <button mat-menu-item (click)="downloadExcel(row)" *ngIf="row.status === 'Ended'">
+              <mat-icon>download</mat-icon>
+              <span>Download CSV</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <!-- Archive Date Column -->
+      <ng-container matColumnDef="archiveDate">
+        <th mat-header-cell *matHeaderCellDef>Archive Date</th>
+        <td mat-cell *matCellDef="let row">{{row.archiveDate}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <table mat-table [dataSource]="downloadReports" class="survey-table" *ngIf="selectedTab === 'download'">
+      <ng-container matColumnDef="courseName">
+        <th mat-header-cell *matHeaderCellDef>Course Name</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="course-name-cell">
+            <ng-container *ngIf="row.thumbnail; else thumbnailPlaceholder">
+              <img [src]="row.thumbnail" [alt]="row.formtitle">
+            </ng-container>
+            <ng-template #thumbnailPlaceholder>
+              <div class="download-thumbnail-placeholder" aria-hidden="true"></div>
+            </ng-template>
+            <span>{{row.formtitle}}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="organisation">
+        <th mat-header-cell *matHeaderCellDef>Organisation</th>
+        <td mat-cell *matCellDef="let row">{{row.orgname}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="requestedOn">
+        <th mat-header-cell *matHeaderCellDef>Requested On</th>
+        <td mat-cell *matCellDef="let row">{{row.requestedOn}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="downloadStatus">
+        <th mat-header-cell *matHeaderCellDef>Download Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="download-status in-progress" *ngIf="row.downloadStatus === 'In Progress'">In Progress</span>
+          <span class="download-status ready" *ngIf="row.downloadStatus === 'Ready'">
+            Ready
+            <mat-icon>check_circle</mat-icon>
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button class="download-action-btn" (click)="triggerReportDownload(row)"
+            [disabled]="row.downloadStatus !== 'Ready'" [attr.aria-label]="'Download ' + row.courseName">
+            <mat-icon>file_download</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedDownloadColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedDownloadColumns;"></tr>
+    </table>
+
+    <!-- Paginator -->
+    <div class="paginator-container" *ngIf="selectedTab !== 'download'">
+      <mat-paginator [length]="totalCount" [pageSize]="15" [pageSizeOptions]="[15, 30, 50]" (page)="onPaginatorChange()"
+        showFirstLastButtons aria-label="Select page">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

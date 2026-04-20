@@ -1,16 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
 import { HandsOnDialogComponent } from './hands-on-dialog.component'
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog'
 
 describe('HandsOnDialogComponent', () => {
   let component: HandsOnDialogComponent
   let fixture: ComponentFixture<HandsOnDialogComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [HandsOnDialogComponent],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: {} },
+      { provide: MatDialogRef, useValue: {} },
+      ],
     })
-    .compileComponents()
+      .compileComponents()
   }))
 
   beforeEach(() => {

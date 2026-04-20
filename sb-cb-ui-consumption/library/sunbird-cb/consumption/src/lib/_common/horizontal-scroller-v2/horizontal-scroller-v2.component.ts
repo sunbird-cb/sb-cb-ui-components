@@ -9,6 +9,8 @@ import { TFetchStatus } from '../../_constants/misc.constants';
 import { ValueService } from '@sunbird-cb/utils-v2';
 import { NsCommonStrip } from '../common-strip/common-strip.model';
 import { NsContentStripMultiple } from '../../_models/content-strip-multiple.model';
+import { TranslateService } from '@ngx-translate/core';
+import { SakshamAI } from '../../consumption.config';
 
 @Component({
   selector: 'sb-uic-horizontal-scroller-v2',
@@ -25,11 +27,13 @@ export class HorizontalScrollerV2Component implements OnInit, OnChanges, OnDestr
     showNavs: true,
     showDots: true,
     cerificateCardMargin: false,
+    justifyCenter: false,
   };
   @Output() loadNext = new EventEmitter();
   @Input() widgetsLength: any;
   @Input() defaultMaxWidgets: any;
   @Input() stripConfig: any;
+  @Input() extraMeta: any;
   @ViewChild('horizontalScrollElem', { static: true })
   horizontalScrollElem: ElementRef | null = null;
 
@@ -42,8 +46,15 @@ export class HorizontalScrollerV2Component implements OnInit, OnChanges, OnDestr
   isMobile = false
   private defaultMenuSubscribe: Subscription | null = null
   isLtMedium$ = this.valueSvc.isLtMedium$
-
-  constructor(private valueSvc: ValueService) { }
+  sakshamAIEnum = SakshamAI
+  constructor(private valueSvc: ValueService, private translate: TranslateService) {
+    if (localStorage.getItem('websiteLanguage')) {
+      this.translate.setDefaultLang('en');
+      let lang = JSON.stringify(localStorage.getItem('websiteLanguage'));
+      lang = lang.replace(/\"/g, '');
+      this.translate.use(lang);
+    }
+   }
 
   ngOnInit() {
     this.cardSubType = this.stripConfig && this.stripConfig.cardSubType ? this.stripConfig.cardSubType : 'standard';
@@ -65,6 +76,7 @@ export class HorizontalScrollerV2Component implements OnInit, OnChanges, OnDestr
     this.defaultMenuSubscribe = this.isLtMedium$.subscribe((isLtMedium: boolean) => {
       this.isMobile = isLtMedium
     })
+
   }
 
   ngOnChanges() {
@@ -218,6 +230,7 @@ export class HorizontalScrollerV2Component implements OnInit, OnChanges, OnDestr
 
   getBottomDotsArray() {
     if (this.horizontalScrollElem) {
+    this.cardSubType = this.stripConfig && this.stripConfig.cardSubType ? this.stripConfig.cardSubType : 'standard';
       this.bottomDotsArray = [];
       let cardWidth;
       let arrLength;

@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core'
 import { Subscription } from 'rxjs'
-import { NsContent, NsDiscussionForum, WidgetContentService } from '@ws-widget/collection'
-import { WsEvents, EventService } from '@ws-widget/utils'
-import { NsWidgetResolver } from '@ws-widget/resolver'
+import { NsContent, NsDiscussionForum, WidgetContentService } from '@sunbird-cb/collection'
+import { WsEvents, EventService } from '@sunbird-cb/utils'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ActivatedRoute } from '@angular/router'
 import { ViewerUtilService } from '../../viewer-util.service'
-import { AccessControlService } from '../../access-control.service'
-
+import { AccessControlService } from '@sunbird-cb/toc'
 @Component({
   selector: 'viewer-pdf',
   templateUrl: './pdf.component.html',
@@ -17,7 +17,7 @@ export class PdfComponent implements OnInit, OnDestroy {
   private viewerDataSubscription: Subscription | null = null
   private telemetryIntervalSubscription: Subscription | null = null
   isFetchingDataComplete = false
-  pdfData: NsContent.IContent | null = null
+  pdfData: NsContent.IContent | any | null = null
   oldData: NsContent.IContent | null = null
   alreadyRaised = false
   widgetResolverPdfData: any = {
@@ -41,6 +41,7 @@ export class PdfComponent implements OnInit, OnDestroy {
     private viewerSvc: ViewerUtilService,
     private eventSvc: EventService,
     private accessControlSvc: AccessControlService,
+    @Inject('environment') private environment: any,
   ) { }
 
   ngOnInit() {
@@ -53,15 +54,19 @@ export class PdfComponent implements OnInit, OnDestroy {
         .getContent(this.activatedRoute.snapshot.paramMap.get('resourceId') || '')
         .subscribe(data => {
           this.pdfData = data
+          console.log('pdfData', this.pdfData)
           if (this.pdfData) {
             this.formDiscussionForumWidget(this.pdfData)
             if (this.discussionForumWidget) {
               this.discussionForumWidget.widgetData.isDisabled = true
             }
           }
-          this.widgetResolverPdfData.widgetData.pdfUrl = this.pdfData
-            ? `/apis/authContent/${encodeURIComponent(this.pdfData.artifactUrl)}`
-            : ''
+          // this.widgetResolverPdfData.widgetData.pdfUrl = this.pdfData
+          //   ? `/apis/authContent/${encodeURIComponent(this.pdfData.artifactUrl)}`
+          //   : ''
+
+          // this.widgetResolverPdfData.widgetData.pdfUrl = this.pdfData.artifactUrl
+          this.widgetResolverPdfData.widgetData.pdfUrl = this.getUrl(this.generateUrl(this.pdfData.artifactUrl))
           this.widgetResolverPdfData.widgetData.disableTelemetry = true
           this.isFetchingDataComplete = true
         })
@@ -76,26 +81,22 @@ export class PdfComponent implements OnInit, OnDestroy {
             this.formDiscussionForumWidget(this.pdfData)
           }
 
-          if (this.pdfData && this.pdfData.artifactUrl.indexOf('content-store') >= 0) {
-            await this.setS3Cookie(this.pdfData.identifier)
-          }
+          // if (this.pdfData && this.pdfData.artifactUrl.indexOf('content-store') >= 0) {
+          //   await this.setS3Cookie(this.pdfData.identifier)
+          // }
           this.widgetResolverPdfData.widgetData.resumePage = 1
           if (this.pdfData && this.pdfData.identifier) {
             if (this.activatedRoute.snapshot.queryParams.collectionId) {
-              await this.fetchContinueLearning(
-                this.activatedRoute.snapshot.queryParams.collectionId,
-                this.pdfData.identifier,
-              )
-            } else {
-              await this.fetchContinueLearning(this.pdfData.identifier, this.pdfData.identifier)
+              // await this.fetchContinueLearning(
+              //   this.activatedRoute.snapshot.queryParams.collectionId,
+              //   this.pdfData.identifier,
+              // )
             }
           }
-          this.widgetResolverPdfData.widgetData.pdfUrl = this.pdfData
-            ? this.forPreview
-              ? this.viewerSvc.getAuthoringUrl(this.pdfData.artifactUrl)
-              : this.pdfData.artifactUrl
-            : ''
-          this.widgetResolverPdfData.widgetData.identifier = this.pdfData && this.pdfData.identifier
+          // this.viewerSvc.getAuthoringUrl(this.pdfData.artifactUrl)
+          // tslint:disable-next-line: max-line-length
+          this.widgetResolverPdfData.widgetData.pdfUrl = this.pdfData ? this.forPreview ? this.getUrl(this.pdfData.artifactUrl) : this.getUrl(this.pdfData.artifactUrl) : '' // NOSONAR
+          this.widgetResolverPdfData.widgetData.identifier = this.pdfData && this.pdfData.identifier // NOSONAR
           this.widgetResolverPdfData = JSON.parse(JSON.stringify(this.widgetResolverPdfData))
           if (this.pdfData) {
             this.oldData = this.pdfData
@@ -107,6 +108,22 @@ export class PdfComponent implements OnInit, OnDestroy {
         () => { },
       )
     }
+  }
+  generateUrl(oldUrl: string) {
+    const chunk = oldUrl ? oldUrl.split('/') : []
+    const newChunk = this.environment.azureHost.split('/')
+    const newLink = []
+    for (let i = 0; i < chunk.length; i += 1) {
+      if (i === 2) {
+        newLink.push(newChunk[i])
+      } else if (i === 3) {
+        newLink.push(this.environment.azureBucket)
+      } else {
+        newLink.push(chunk[i])
+      }
+    }
+    const newUrl = newLink.join('/')
+    return newUrl
   }
 
   formDiscussionForumWidget(content: NsContent.IContent) {
@@ -160,18 +177,19 @@ export class PdfComponent implements OnInit, OnDestroy {
         },
         () => resolve(true),
       )
+      resolve(true)
     })
   }
 
-  private async setS3Cookie(contentId: string) {
-    await this.contentSvc
-      .setS3Cookie(contentId)
-      .toPromise()
-      .catch(() => {
-        // throw new DataResponseError('COOKIE_SET_FAILURE')
-      })
-    return
-  }
+  // private async setS3Cookie(contentId: string) {
+  //   await this.contentSvc
+  //     .setS3Cookie(contentId)
+  //     .toPromise()
+  //     .catch(() => {
+  //       // throw new DataResponseError('COOKIE_SET_FAILURE')
+  //     })
+  //   return
+  // }
 
   ngOnDestroy() {
     if (this.pdfData) {
@@ -186,5 +204,16 @@ export class PdfComponent implements OnInit, OnDestroy {
     if (this.telemetryIntervalSubscription) {
       this.telemetryIntervalSubscription.unsubscribe()
     }
+  }
+
+  getUrl(url: string) {
+    if (url && url.length > 0) {
+      const tempData = url.split('content')
+      if (url.indexOf(`/collection`) > 0) {
+        return `${this.environment.mdoPath}${this.environment.contentBucket}${tempData[tempData.length - 1]}`
+      }
+      return `${this.environment.mdoPath}${this.environment.contentBucket}/content${tempData[tempData.length - 1]}`
+    }
+    return url
   }
 }

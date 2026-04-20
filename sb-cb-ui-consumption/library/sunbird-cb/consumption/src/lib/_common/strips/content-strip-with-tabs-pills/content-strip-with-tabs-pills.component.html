@@ -6,7 +6,7 @@
   <ng-container *ngIf="showParentError" [sbUiResolverWidget]="widgetData.errorWidget"></ng-container>
   <ng-container *ngIf="showParentNoData" [sbUiResolverWidget]="widgetData.noDataWidget"></ng-container>
   <ng-container *ngFor="let key of stripsKeyOrder; let i = index; trackBy: identify">
-    <ng-container *ngIf="isStripShowing(stripsResultDataMap[key])">
+    <ng-container *ngIf="isStripShowing(stripsResultDataMap[key]) && canShowHeading(stripsResultDataMap[key])">
       <a name="{{stripsResultDataMap[key]?.stripTitle}}" [class]="key">
         <div *ngIf="stripsResultDataMap && (getLength(stripsResultDataMap[key]) ||
                     stripsResultDataMap[key]?.showOnNoData ||
@@ -14,7 +14,7 @@
                     stripsResultDataMap[key]?.showOnError)
                   " [ngClass]="
                     !widgetData?.isChannelStrip ? 'xs:px-8 sx:px-10ss' : i > 0 ? 'mt-12' : ''
-                  " [id]="key" [ngClass]="!widgetData?.isChannelStrip ? margin-bottom-custom : margin-bottom-xs">
+                  " [id]="key" [ngClass]="!widgetData?.isChannelStrip ? 'margin-bottom-custom' : 'margin-bottom-xs'">
           <div [ngClass]="{ pad: stripsResultDataMap[key]?.stripBackground }"
             [ngStyle]="{ 'background-color': stripsResultDataMap[key]?.stripBackground }">
             <div class="flex flex-col pl-4 pr-4 md:pr-0 md:pl-0 " [ngClass]="
@@ -48,12 +48,14 @@
                 <span class="spacer"></span>
                 <!-- viewAll start-->
                 <div *ngIf="checkCondition(widgetData , stripsResultDataMap[key])" class="block md:hidden">
-                  <div 
-                    class="ml-4 pl-2 view-more ws-mat-default-text  ">
-                    <a class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer" 
+                  <div class="ml-4 pl-2 view-more ws-mat-default-text  ">
+                    <a class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer"
                       (click)="raiseTelemetry(stripsResultDataMap[key]);redirectViewAll(stripsResultDataMap[key], stripsResultDataMap[key]?.viewMoreUrl?.path, stripsResultDataMap[key]?.viewMoreUrl?.queryParams )">
-                      <span i18n class="ws-mat-default-text">{{translateLabels(widgetData.strips[0].viewMoreUrl.viewMoreText,'home')  || 'See all'}}</span>
-                      <mat-icon class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color" color="accent">navigate_next</mat-icon>
+                      <span i18n
+                        class="ws-mat-default-text">{{translateLabels(widgetData.strips[0]?.viewMoreUrl?.viewMoreText,'home')
+                        || 'See all'}}</span>
+                      <mat-icon class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color"
+                        color="accent">navigate_next</mat-icon>
                     </a>
                   </div>
                 </div>
@@ -78,83 +80,195 @@
             <!-- IF no errors then proceed to show tabs or non tabs strip -->
             <ng-container *ngIf="!stripsResultDataMap[key]?.showOnNoData && !stripsResultDataMap[key]?.showOnError">
               <ng-container *ngIf="stripsResultDataMap[key].tabs && stripsResultDataMap[key].tabs.length">
-                <mat-tab-group animationDuration="0ms" [selectedIndex]="getSelectedIndex(stripsResultDataMap[key], key)"
-                class="mat-tab-labels w-full strips-tabgroup" dynamicHeight
-                  (selectedTabChange)="tabClicked($event, 0, stripsResultDataMap[key], key)">
-                  <mat-tab label="{{tab?.label}}" *ngFor="let tab of stripsResultDataMap[key].tabs; let last = last;let tabIndex = index">
-                    <ng-template mat-tab-label>
-                      <span>{{ translateLabels(tab?.label, 'home') }} &nbsp;</span>
-                      <span *ngIf="tab?.showTabDataCount && tab?.widgets?.length">({{tab?.widgets?.length}})</span>
-                    </ng-template>
-
-                    <div class="wfull" *ngIf="tab?.pillsData && tab?.pillsData?.length">
-                      <div class="flex justify-between item-center">
-                        <div>
-                          <ng-container >
-                            <mat-chip-list  class="content-pill" aria-label="Fish selection">
-                                <ng-container *ngFor="let pill of tab?.pillsData;let p = index">
-                                    <mat-chip [selected]="pill?.selected" (click)="pillClicked($event, stripsResultDataMap[key], key, p, tabIndex)">
-                                      <span class="pill-name">{{pill?.label}}</span></mat-chip>
-                                </ng-container>
-                            </mat-chip-list>
+                <mat-tab-group animationDuration="0ms" 
+                  class="mat-tab-labels w-full strips-tabgroup padding-bottom-tabs" dynamicHeight>
+                  <ng-container *ngFor="let tab of stripsResultDataMap[key].tabs; let last = last;let tabIndex = index">
+                    <mat-tab *ngIf="!tab?.hideTab">
+                      <ng-template mat-tab-label>
+                        <div (click)="tabClicked(tabIndex, 0, stripsResultDataMap[key], key)">
+                          <ng-container *ngIf="tab?.value !== sakshamAIEnum.SakshamAI">
+                            <span>
+                              <span *ngIf="tab?.disableTranslate">{{tab?.label}}</span>
+                              <span *ngIf="!tab?.disableTranslate">{{ translateLabels(tab?.label, 'home') }}</span> &nbsp;
+                            </span>
+                            <span *ngIf="tab?.showTabDataCount && tab?.widgets?.length">({{tab?.widgets?.length}})</span>
+                          </ng-container>
+                          <ng-container *ngIf="tab?.value === sakshamAIEnum.SakshamAI">
+                            <div class="flex items-center">
+                              <img src="/assets/images/sakshamAI/ai-icon.svg" alt="loader" width="16" height="16"
+                                class="mr-2">
+                              <span>{{ translateLabels(tab?.label, 'home') }} &nbsp;</span>
+                              <mat-icon svgIcon="info-outline"
+                                class="margin-remove w-16-px cursor-pointer request-id-toolTip m-px"
+                                [matTooltip]="'home.sakshamAITooltip' | translate" [matTooltipPosition]="'above'"
+                                matTooltipClass="request-id-toolTip"></mat-icon>
+                            </div>
                           </ng-container>
                         </div>
-                         <!-- viewAll start-->
-                          <div *ngIf="checkCondition(widgetData , stripsResultDataMap[key])" class=" hidden md:block">
-                            <div  class="ml-4 pl-2 view-more ws-mat-default-text">
-                              <a class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer" 
-                                (click)="raiseTelemetry(stripsResultDataMap[key]);redirectViewAll(stripsResultDataMap[key], stripsResultDataMap[key]?.viewMoreUrl?.path, stripsResultDataMap[key]?.viewMoreUrl?.queryParams )">
-                                <span i18n class="ws-mat-default-text">{{translateLabels(widgetData.strips[0].viewMoreUrl.viewMoreText,'home')  || 'See all'}}</span>
-                                <mat-icon class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color" color="accent">navigate_next</mat-icon>
+                      </ng-template>
+                      <div class="wfull wrapper-saksham"
+                        *ngIf="tab?.pillsData && tab?.pillsData?.length && !tab?.hideTab"
+                        [ngClass]="{'overlay-max-height': recommendationPopup || sakshamFeedbackPopup}">
+                        <div class="pt-3 flex justify-between item-center">
+                          <ng-container *ngIf="tab?.value !== sakshamAIEnum.SakshamAI">
+                            <div class=" flex items-center">
+                              <mat-chip-list class="content-pill" aria-label="Fish selection">
+                                <ng-container *ngFor="let pill of tab?.pillsData;let p = index">
+                                  <mat-chip [selected]="pill?.selected"
+                                    (click)="pillClicked($event, stripsResultDataMap[key], key, p, tabIndex)">
+                                    <span class="pill-name">{{pill?.label}}</span></mat-chip>
+                                </ng-container>
+                              </mat-chip-list>
+                            </div>
+                          </ng-container>
+                          <!-- viewAll start-->
+                          <div
+                            *ngIf="checkCondition(widgetData , stripsResultDataMap[key]) && tab?.value !== sakshamAIEnum.SakshamAI"
+                            class=" hidden md:block">
+                            <div class="ml-4 pl-2 view-more ws-mat-default-text">
+                              <a class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer"
+                                (click)="raiseTelemetry(stripsResultDataMap[key]);redirectViewAll(stripsResultDataMap[key], stripsResultDataMap[key]?.viewMoreUrl?.path, stripsResultDataMap[key]?.viewMoreUrl?.queryParams, tabIndex )">
+                                <span i18n
+                                  class="ws-mat-default-text">{{translateLabels(widgetData.strips[0]?.viewMoreUrl?.viewMoreText,'home')
+                                  || 'See all'}}</span>
+                                <mat-icon
+                                  class="ws-mat-default-text mat-icon notranslate material-icons mat-icon-no-color"
+                                  color="accent">navigate_next</mat-icon>
                               </a>
                             </div>
                           </div>
-                            
                           <!-- viewAll end-->
-                      </div>
-                      <div *ngIf="stripsResultDataMap && stripsResultDataMap[key]?.showOnLoader ||
-                      !tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus"
-                      class="text-center my-2">
-                            <sb-uic-horizontal-scroller-v2 [sliderConfig]="stripsResultDataMap[key]?.sliderConfig" [id]="key+'-scroller'"
-                                    [loadStatus]="'fetching'" [stripConfig]="stripsResultDataMap[key]?.stripConfig">
-                                <ng-container *ngFor="let widget of stripsResultDataMap[key]?.loaderWidgets; trackBy: tracker">
-                                <ng-container [sbUiResolverWidget]="widget"></ng-container>
-                              </ng-container>
-                            </sb-uic-horizontal-scroller-v2>
-                      </div>
-                     <ng-container *ngIf="tab?.pillsData && tab?.pillsData.length && tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]">
-                      <div *ngIf="((tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus && tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus === 'done') &&
-                      (!tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets || !tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length))">
-                      <ng-container *ngIf="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.value === 'inprogress'; else msgTemp">
-                        <div class="w-full flex flex-col items-center justify-center">
-                          <img alt="" class="mt-4 mb-4" src="assets/icons/home/nodataDefault.svg">
-                          <div class="mat-subheading-1 text-center info-content">{{ 'contentstripmultiple.getReadyForLearningAdventure' | translate }} -
-                            <a class="click-here" [routerLink]="'/page/learn'">{{ 'contentstripmultiple.clickHere' | translate }}</a> {{ 'contentstripmultiple.toEnrollNextCourse' | translate }}</div>
                         </div>
-                      </ng-container>
-                      <ng-template #msgTemp>
-                        <div class="w-full flex flex-col items-center justify-center">
-                          <img alt="" class="mt-4 mb-4" src="assets/icons/home/nodataDefault.png">
-                          <div class="mat-subheading-1 text-center">{{ translateLabels(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.nodataMsg, 'home') }}</div>
-                        </div>
-                      </ng-template>
-                      </div>
-                     </ng-container>
-                      <ng-container *ngIf="(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus === 'done' || tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length)">
-                        <ng-container  *ngIf="!tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.tabLoading">
-                          <sb-uic-horizontal-scroller-v2 [id]="key+'-scroller'" [sliderConfig]="stripsResultDataMap[key]?.sliderConfig" [widgetsLength]="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length"
-                            *ngIf="getContineuLearningLenth(stripsResultDataMap[key]) && showAccordion(key)"
-                            [loadStatus]="'done'" [defaultMaxWidgets]="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
-                            stripsResultDataMap[key]?.sliderConfig?.maxWidgets || defaultMaxWidgets" [stripConfig]="stripsResultDataMap[key]?.stripConfig">
-                            <ng-container *ngFor="let widget of tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets| slice:0:(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
-                            stripsResultDataMap[key]?.sliderConfig?.maxWidgets || defaultMaxWidgets); trackBy: tracker">
-                                <ng-container [sbUiResolverWidget]="widget"></ng-container>
+                        <div *ngIf="(stripsResultDataMap && stripsResultDataMap[key]?.showOnLoader ||
+                         !tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus) && !sakshamLoader"
+                          class="text-center my-2">
+                          <sb-uic-horizontal-scroller-v2 [sliderConfig]="stripsResultDataMap[key]?.sliderConfig"
+                            [id]="key+'-scroller'" [loadStatus]="'fetching'"
+                            [stripConfig]="stripsResultDataMap[key]?.stripConfig">
+                            <ng-container
+                              *ngFor="let widget of stripsResultDataMap[key]?.loaderWidgets; trackBy: tracker">
+                              <ng-container [sbUiResolverWidget]="widget"></ng-container>
                             </ng-container>
                           </sb-uic-horizontal-scroller-v2>
+                        </div>
+                        <ng-container
+                          *ngIf="tab?.pillsData && tab?.pillsData.length && tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]">
+                          <div
+                            *ngIf="((tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus && tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus === 'done') &&
+                         (!tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets || !tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length))">
+                            <ng-container
+                              *ngIf="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.value === 'inprogress'; else msgTemp">
+                              <div class="w-full flex flex-col items-center justify-center">
+                                <img alt="" class="mt-4 mb-4" src="assets/icons/home/nodataDefault.svg">
+                                <div class="mat-subheading-1 text-center info-content">{{
+                                  'contentstripmultiple.getReadyForLearningAdventure' | translate }} -
+                                  <a class="click-here"
+                                    [routerLink]="tab?.label === 'Events' ? '/app/event-hub/home':'/page/learn'">{{
+                                    'contentstripmultiple.clickHere' | translate }}</a> <span
+                                    *ngIf=" tab?.label === 'Events'">{{'contentstripmultiple.toEnrollNextEvents' |
+                                    translate }}</span>
+                                  <span *ngIf=" tab?.label !== 'Events'">{{ 'contentstripmultiple.toEnrollNextCourse' |
+                                    translate }}</span>
+                                </div>
+                              </div>
+                            </ng-container>
+                            <ng-template #msgTemp>
+                              <div class="w-full flex flex-col items-center justify-center">
+                                <img alt="" class="mt-4 mb-4" src="assets/icons/home/nodataDefault.png">
+                                <div class="mat-subheading-1 text-center">{{
+                                  translateLabels(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.nodataMsg,
+                                  'home') }}</div>
+                              </div>
+                            </ng-template>
+                          </div>
                         </ng-container>
-                      </ng-container>
-                    </div>
-                  </mat-tab>
+                        <ng-container
+                          *ngIf="(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.fetchTabStatus === 'done' || tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length)">
+                          <ng-container *ngIf="!tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.tabLoading">
+                            <sb-uic-horizontal-scroller-v2 [id]="key+'-scroller'"
+                              [sliderConfig]="stripsResultDataMap[key]?.sliderConfig"
+                              [widgetsLength]="tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets?.length"
+                              *ngIf="getContineuLearningLenth(stripsResultDataMap[key]) && showAccordion(key)"
+                              [loadStatus]="'done'" [defaultMaxWidgets]="tab?.value === sakshamAIEnum.SakshamAI ? maxWidgetsSakshamAI : tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
+                               stripsResultDataMap[key]?.sliderConfig?.maxWidgets || defaultMaxWidgets"
+                              [stripConfig]="stripsResultDataMap[key]?.stripConfig" [extraMeta]="tab">
+                              <!-- <ng-container
+                                *ngFor="let widget of tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets| slice:0:(tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
+                               stripsResultDataMap[key]?.sliderConfig?.maxWidgets || defaultMaxWidgets); trackBy: tracker">
+                                <ng-container [sbUiResolverWidget]="widget"></ng-container>
+                              </ng-container> -->
+                              <ng-container
+                                *ngFor="let widget of tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.widgets | slice:0:(
+                                  tab?.value === sakshamAIEnum.SakshamAI 
+                                    ? maxWidgetsSakshamAI 
+                                    : tab?.pillsData[getSelectedPillIndex(tab ,tabIndex)]?.maxWidgets ||
+                                      stripsResultDataMap[key]?.sliderConfig?.maxWidgets || 
+                                      defaultMaxWidgets
+                                ); trackBy: tracker">
+                                <ng-container [sbUiResolverWidget]="widget"></ng-container>
+                              </ng-container>
+
+                            </sb-uic-horizontal-scroller-v2>
+                          </ng-container>
+                        </ng-container>
+
+                        <ng-container *ngIf="tab?.value === sakshamAIEnum.SakshamAI">
+                          <ng-container *ngIf="recommendationPopup">
+                            <div class="greet-overlay" @fadeInOut>
+                              <img src="/assets/images/sakshamAI/lady-greet.svg" alt="greet" width="106">
+                              <div class="overlay-text mt-4 text-white">
+                                {{'home.sakshamaidesc' | translate}}
+                              </div>
+                              <button mat-raised-button class="overlay-button"
+                                (click)="recommendationPopup = false">{{'profileInfo.ok' | translate}}</button>
+                            </div>
+                          </ng-container>
+
+                          <ng-container *ngIf="sakshamFeedbackPopup" >
+                            <div class="greet-overlay feedback-overlay" @fadeInOut>
+                              <div class="overlay-text mt-4 text-white">
+                                {{'home.sakshamaifeedbackText' | translate}}
+                              </div>
+                              <mat-form-field class="feedback-text w-4/5 mt-4" appearance="outline">
+                                <textarea matInput placeholder="Enter your feedback..." rows="4" #feedback [maxLength]="500"></textarea>
+                              </mat-form-field>
+                              <div class="action-feedback mt-4 flex gap-4 justify-center items-center">
+                                <button mat-raised-button class="overlay-button"
+                                  (click)="saveFeedback(feedback.value)">{{'userProfile.submit' | translate}}
+                                </button>
+                                <button mat-raised-button class="overlay-button-transparent"
+                                  (click)="cancelFeedbackPopup()">{{'userProfile.cancel' | translate}}</button>
+                              </div>
+                            </div>
+                          </ng-container>
+
+                          <ng-container *ngIf="sakshamAddCompetency">
+                            <div class="text-center py-6">
+                              <div class="saksham-load-text text-sm font-normal lato">
+                                Let us know what do you want to learn today!
+                              </div>
+                              <button mat-raised-button class="overlay-button mt-4" (click)="addCompetency()">
+                                <mat-icon class="mb-1">add</mat-icon>
+                                Add Competency</button>
+
+                            </div>
+                          </ng-container>
+
+                          <!-- Loader and Content -->
+                          <ng-container *ngIf="sakshamLoader">
+                            <div class="w-full text-center py-6">
+                              <img src="/assets/images/sakshamAI/saksham_ai_loader-2.gif" alt="loader" class="mb-3"
+                                width="100" height="100">
+                              <div class="saksham-load-text text-sm font-normal lato">
+                                {{'home.sakshamaiLoaderText' | translate}}
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </div>
+
+                    </mat-tab>
+                  </ng-container>
                 </mat-tab-group>
               </ng-container>
             </ng-container>

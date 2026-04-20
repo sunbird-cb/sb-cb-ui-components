@@ -35,4 +35,9 @@ export namespace NsCardContent {
     DELETED = 'Deleted',
     MARK_FOR_DELETION = 'MarkedForDeletion',
   }
+
+  export interface ICompetency extends ICard {
+    competencyArea: ''
+    competencyObject: {}
+  }
 }

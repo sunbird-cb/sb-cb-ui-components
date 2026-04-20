@@ -1,0 +1,535 @@
+<div class="p-6">
+  <div class="flex items-center justify-between items-center mb-8">
+    <div class="flex items-center gap-4">
+      <mat-icon class="backIcon" (click)="cancel()">arrow_back</mat-icon>
+      <div>
+        <sb-uic-avatar-photo i18n-aria-label role="link" tabindex="0" [name]="avatarUserName"
+          [photoUrl]="userDetails?.photo" size="m-side-rating">
+        </sb-uic-avatar-photo>
+      </div>
+      <div class=" flex flex-col">
+        <div class="flex gap-2">
+          <div class="slot-header">{{userName}} </div>
+          <ng-container
+            *ngIf="designationStatus === 'VERIFIED' && groupStatus === 'VERIFIED'; else verificationPending">
+            <div class="flex items-center justify-center gap-2 px-2 statusApproved">
+              Approved <mat-icon class="status-info-icon">check_circle</mat-icon>
+            </div>
+          </ng-container>
+          <ng-template #verificationPending>
+            <div class="flex items-center justify-center gap-2 px-2 statusPending">
+              Pending <mat-icon class="status-info-icon">info_outline</mat-icon>
+            </div>
+          </ng-template>
+        </div>
+        <div class="userDesignation">{{currentDesignation}}</div>
+      </div>
+    </div>
+
+    <div class="flex gap-4">
+      <button mat-button class="cancelBtn" (click)="cancel()">Cancel</button>
+      <button mat-button class="updateProfileBtn" (click)="confirmUpdate()">Update Profile</button>
+    </div>
+  </div>
+
+  <div class="flex gap-6 w-full user-edit">
+    <form [formGroup]="userForm" class="flex flex-col gap-6 w-full">
+      <!-- #region (primary details) -->
+      <mat-card class="">
+        <mat-card-content class="flex flex-col gap-4">
+          <div class="slot-header flex gap-2 items-center mb-5">Primary details
+            <mat-icon class="info-icon">info_outline</mat-icon>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div class="label required">Designation</div>
+            <div class="flex gap-2 items-center">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-select formControlName="designation" placeholder="Choose a designation" panelClass="user-edit"
+                  (openedChange)="setupScrollListener($event)" (closed)="onDesignationDropdownClosed()">
+                  <div class="sticky-search-container" (click)="$event.stopPropagation()">
+                    <div class="search-input-wrapper user-edit">
+                      <input type="text" placeholder="Search designation" formControlName="searchDesignation"
+                        class="search-input" (keydown)="$event.stopPropagation()" (click)="$event.stopPropagation()"
+                        autocomplete="off">
+                    </div>
+                  </div>
+                  <mat-option *ngFor="let option of designationsMeta" [value]="option?.designation">
+                    {{ option?.designation }}
+                  </mat-option>
+                  <div *ngIf="isLoadingMoreDesignations" class="loading-indicator">
+                    Loading more...
+                  </div>
+                  <mat-option *ngIf="(designationsMeta )?.length === 0" disabled>
+                    No matches found
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <ng-container *ngIf="designationStatus === 'VERIFIED'">
+                <mat-icon class="verified-icon margin-left-xs">
+                  check_circle</mat-icon>
+              </ng-container>
+              <ng-container *ngIf="designationStatus === 'NOT-VERIFIED'">
+                <mat-icon class="nonverified-icon margin-left-xs">
+                  cancel</mat-icon>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div class="label required">Group</div>
+            <div class="flex gap-2 items-center">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-select #group formControlName="group" placeholder="Select group">
+                  <mat-option [value]="groupName" *ngFor="let groupName of groupsList">
+                    {{groupName}}
+                  </mat-option>
+                </mat-select>
+                <mat-error [hidden]="false"
+                  *ngIf="userForm?.controls['group']?.errors?.required && userForm?.controls['group'].touched">
+                  Group is mandatory
+                </mat-error>
+              </mat-form-field>
+              <ng-container *ngIf="groupStatus === 'VERIFIED'">
+                <mat-icon class="verified-icon margin-left-xs">
+                  check_circle</mat-icon>
+              </ng-container>
+              <ng-container *ngIf="groupStatus === 'NOT-VERIFIED'">
+                <mat-icon class="nonverified-icon margin-left-xs">
+                  cancel</mat-icon>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="flex gap-12">
+            <ng-container *ngIf="isMdoLeader">
+              <div class="flex flex-col gap-2">
+                <div class="label">Assign Mentor</div>
+                <div class="flex items-center gap-2">
+                  <span class="toggle-label">No</span>
+                  <mat-slide-toggle formControlName="assignMentor" (change)="onAssignMentorChange($event.checked)">
+                    <span class="toggle-label">Yes</span>
+                  </mat-slide-toggle>
+                </div>
+              </div>
+            </ng-container>
+            <div class="flex flex-col gap-2">
+              <div class="label">This is my user</div>
+              <div class="flex items-center gap-2">
+                <span class="toggle-label">No</span>
+                <mat-slide-toggle formControlName="isMyUser" (change)="onIsMyUserChange($event.checked)">
+                  <span class="toggle-label">Yes</span>
+                </mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+
+          <!-- #region (approval section) -->
+            <ng-container *ngIf="designationApprovalField || groupApprovalField">
+              <hr class="w-full">
+              <div class="flex gap-2 flex-col">
+                <div class="slot-header">Approvals</div>
+                <ng-container *ngIf="designationApprovalField">
+                  <div class="flex flex-col gap-2">
+                    <div class="label required">Designation</div>
+                    <div class="flex gap-2 items-center">
+                      <input type="text" class="appr-text-field" [value]="designationApprovalField?.toValue"
+                        [disabled]="true">
+                      <ng-container *ngIf="userForm?.get('approveDesignation')?.value === true">
+                        <mat-icon class="verified-icon margin-left-xs">
+                          check_circle</mat-icon>
+                      </ng-container>
+                      <ng-container *ngIf="userForm?.get('approveDesignation')?.value === false">
+                        <mat-icon class="nonverified-icon margin-left-xs">
+                          cancel</mat-icon>
+                      </ng-container>
+                    </div>
+                    <mat-radio-group aria-label="Select an option"
+                      formControlName="approveDesignation" class="mat-caption">
+                      <mat-radio-button value="approvedesg" class="margin-right-s"
+                        (change)="onClickHandleWorkflow('APPROVE', 'designation')">
+                        Approve
+                      </mat-radio-button>
+                      <mat-radio-button value="rejectdesg" (change)="onClickHandleWorkflow('REJECT', 'designation')">
+                        Reject
+                      </mat-radio-button>
+                      <mat-icon class="margin-left-m editreasonicon cursor-pointer"
+                          *ngIf="designationApprovalField?.action === 'REJECT' && designationApprovalField?.comment !== '' && !htmlDetected"
+                          (click)="updateRejection(designationApprovalField)">chat_bubble</mat-icon>
+                    </mat-radio-group>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="groupApprovalField">
+                  <div class="flex flex-col gap-2">
+                    <div class="label required">Group</div>
+                    <div class="flex gap-2 items-center">
+                      <input type="text" class="appr-text-field" [value]="groupApprovalField?.toValue"
+                        [disabled]="true">
+                      <ng-container *ngIf="userForm?.get('approveGroup')?.value === true">
+                        <mat-icon class="verified-icon margin-left-xs">
+                          check_circle</mat-icon>
+                      </ng-container>
+                      <ng-container *ngIf="userForm?.get('approveGroup')?.value === false">
+                        <mat-icon class="nonverified-icon margin-left-xs">
+                          cancel</mat-icon>
+                      </ng-container>
+                    </div>
+                    <mat-radio-group aria-label="Select an option"
+                      formControlName="approveGroup" class="mat-caption">
+                      <mat-radio-button value="approvegroup" class="margin-right-s"
+                        (change)="onClickHandleWorkflow('APPROVE', 'group')">
+                        Approve
+                      </mat-radio-button>
+                      <mat-radio-button value="rejectgroup" (change)="onClickHandleWorkflow('REJECT', 'group')">
+                        Reject
+                      </mat-radio-button>
+                      <mat-icon class="margin-left-m editreasonicon cursor-pointer"
+                          *ngIf="groupApprovalField?.action === 'REJECT' && groupApprovalField?.comment !== '' && !htmlDetected"
+                          (click)="updateRejection(groupApprovalField)">chat_bubble</mat-icon>
+                    </mat-radio-group>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="showApprovalButtons">
+                  <div class="flex justify-end">
+                    <button mat-button class="updateProfileBtn"
+                      (click)="updateApprovals()">Update Approvals</button>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          <!-- #endregion (approval section) -->
+        </mat-card-content>
+      </mat-card>
+      <!-- #endregion (primary details) -->
+
+
+      <!-- #region (Roles) -->
+      <mat-card class="">
+        <mat-card-content>
+          <div class="slot-header flex gap-2 items-center mb-5 required">Roles
+            <mat-icon class="info-icon">info_outline</mat-icon>
+          </div>
+          <div>
+            <mat-selection-list id="roles" formControlName="roles" #roles class="roles-list">
+              <ng-container *ngFor="let role of rolesList">
+                <mat-list-option [ngClass]="{'oppDisable': role.roleName === 'PUBLIC'}"
+                  (click)="modifyUserRoles(role.roleName)" [selected]="role.isSelected" [value]="role?.roleName"
+                  [disabled]="role.roleName === 'PUBLIC'">
+                  {{role.roleName}}
+                </mat-list-option>
+              </ng-container>
+            </mat-selection-list>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <!-- #endregion (Roles) -->
+    </form>
+
+    <!-- #region (other details) -->
+    <mat-card class="w-full">
+      <mat-card-content>
+        <div class=" flex justify-between items-center">
+          <div class="slot-header flex gap-2 items-center mb-5">Other details
+            <mat-icon class="info-icon">info_outline</mat-icon>
+          </div>
+          <ng-container *ngIf="!otherDetailsEditable">
+            <button mat-button class="cancelBtn" (click)="editOtherDetails()">
+              <mat-icon class="edit-icon">edit</mat-icon> Edit</button>
+          </ng-container>
+        </div>
+
+        <!-- #region (other details view) -->
+        <ng-container *ngIf="!otherDetailsEditable; else editOtherDetailsTemplate">
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="other-details-label">Employee ID</div>
+              <div class="detail-value">{{ otherDetails?.employeeId }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Email</div>
+              <div class="detail-value">{{ otherDetails?.primaryEmail }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Mobile Number</div>
+              <div class="detail-value">{{ otherDetails?.mobile }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Gender</div>
+              <div class="detail-value">{{ otherDetails?.gender }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Date of Birth</div>
+              <div class="detail-value">{{ otherDetails?.dob }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Mother Tongue</div>
+              <div class="detail-value">{{ otherDetails?.domicileMedium }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Category</div>
+              <div class="detail-value">{{ otherDetails?.category }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Office Pin Code</div>
+              <div class="detail-value">{{ otherDetails?.pincode }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">eHRMS ID/External System ID</div>
+              <div class="detail-value">{{ otherDetails?.ehrmsID }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Date of Retirement</div>
+              <div class="detail-value">{{ otherDetails?.externalSystemDor }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="other-details-label">Are you a Cadre Employee</div>
+              <div class="detail-value">{{ otherDetails?.civilServiceType ? 'Yes': 'No' }}</div>
+            </div>
+            <ng-container *ngIf="otherDetails?.civilServiceType">
+              <div class="detail-item">
+                <div class="other-details-label">Type of Civil Service</div>
+                <div class="detail-value">{{ otherDetails?.civilServiceType || '-' }}</div>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Service</div>
+                <div class="detail-value">{{ otherDetails?.civilServiceName }}</div>
+              </div>
+              <ng-container *ngIf="showCadreDetails">
+                <div class="detail-item">
+                  <div class="other-details-label">Cadre</div>
+                  <div class="detail-value">{{ otherDetails?.cadreName }}</div>
+                </div>
+              </ng-container>
+              <div class="detail-item">
+                <div class="other-details-label">Batch</div>
+                <div class="detail-value">{{ otherDetails?.cadreBatch }}</div>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Cadre Controlling Authority</div>
+                <div class="detail-value">{{ otherDetails?.cadreControllingAuthorityName }}</div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <!-- #endregion (other details view) -->
+
+        <!-- #region (other details edit) -->
+        <ng-template #editOtherDetailsTemplate>
+          <form [formGroup]="otherDetailsForm" class="user-edit">
+            <div class="details-grid">
+              <div class="detail-item">
+                <div class="other-details-label">Employee ID</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput formControlName="employeeId" placeholder="Enter Employee ID">
+                  <mat-error [hidden]="false" class="custom-error" *ngIf="otherDetailsForm?.controls['employeeId'].touched &&
+                      otherDetailsForm?.controls['employeeId'].errors?.pattern" aria-label="Please enter a valid id">
+                    Please enter a valid employee Id
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label required">Email</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput formControlName="primaryEmail" placeholder="Enter Email">
+                  <ng-container *ngIf="otherDetailsForm?.controls['primaryEmail'].touched">
+                    <mat-error [hidden]="false" *ngIf="otherDetailsForm?.controls['primaryEmail'].errors?.required">
+                      Email is mandatory
+                    </mat-error>
+                    <mat-error [hidden]="false" class="custom-error"
+                      *ngIf="otherDetailsForm?.controls['primaryEmail'].errors?.pattern"
+                      aria-label="Please enter a valid email">
+                      Please enter a valid email
+                    </mat-error>
+                  </ng-container>
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label required">Mobile Number</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput formControlName="mobile" placeholder="Enter Mobile Number" aria-label="Mobile Number input"
+                  (paste)="numericOnly($event)" (keypress)="numericOnly($event)" maxlength="10">
+                  <ng-container *ngIf="otherDetailsForm?.controls['mobile'].touched">
+                    <mat-error [hidden]="false" *ngIf="otherDetailsForm?.controls['mobile'].errors?.required"
+                      aria-label="Please enter your mobile number">
+                      Please enter your mobile number
+                    </mat-error>
+                    <mat-error [hidden]="false" *ngIf="otherDetailsForm?.controls['mobile'].errors?.pattern"
+                      aria-label="Please enter a valid 10 digit mobile number">
+                      Please enter a valid 10 digit mobile number
+                    </mat-error>
+                  </ng-container>
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Gender</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <mat-select formControlName="gender" placeholder="Select Gender">
+                    <mat-option *ngFor="let gender of genderList" [value]="gender">{{ gender }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Date of Birth</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput formControlName="dob" [matDatepicker]="picker" placeholder="Choose Date of Birth"
+                    [min]="1/1/1900" [max]="today">
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Mother Tongue</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input id="language" matInput type="text" placeholder="Mother Tongue" formControlName="domicileMedium"
+                    [matAutocomplete]="motherTongueAuto" aria-label="Domicile Medium (Mother Tongue)" #motherTongue
+                    maxlength="30" />
+                </mat-form-field>
+                <mat-autocomplete #motherTongueAuto="matAutocomplete" autoActiveFirstOption="true">
+                  <mat-option *ngFor="let option of masterLanguages | async" [value]="option.name">
+                    {{ option.name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Category</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <mat-select formControlName="category" placeholder="Select Category">
+                    <mat-option *ngFor="let ctg of categoryList" [value]="ctg">{{ ctg }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Office Pin Code</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput formControlName="pincode" placeholder="Enter Office Pin Code" (paste)="numericOnly($event)"
+                  aria-label="Pin Code input field" autocomplete="off" (keypress)="numericOnly($event)" maxlength="6">
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">eHRMS ID/External System ID</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput formControlName="ehrmsID" placeholder="Enter eHRMS/External System ID">
+                </mat-form-field>
+              </div>
+              <div class="detail-item">
+                <div class="other-details-label">Are you a Cadre Employee</div>
+                <mat-form-field appearance="outline" class="w-full">
+                  <input matInput [disabled]="true"
+                    [value]="otherDetailsForm?.get('civilServiceType')?.value ? 'Yes' : 'No'">
+                </mat-form-field>
+              </div>
+              <ng-container *ngIf="otherDetailsForm?.get('civilServiceType')?.value">
+                <div class="detail-item">
+                  <div class="other-details-label">Type of Civil Service</div>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <input matInput [disabled]="true" [value]="otherDetailsForm?.get('civilServiceType')?.value || '-'">
+                  </mat-form-field>
+                </div>
+                <div class="detail-item">
+                  <div class="other-details-label">Service</div>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <input matInput [disabled]="true" [value]="otherDetailsForm?.get('civilServiceName')?.value || '-'">
+                  </mat-form-field>
+                </div>
+                <ng-container *ngIf="showCadreDetails">
+                  <div class="detail-item">
+                    <div class="other-details-label">Cadre</div>
+                    <mat-form-field appearance="outline" class="w-full">
+                      <input matInput [disabled]="true" [value]="otherDetailsForm?.get('cadreName')?.value || '-'">
+                    </mat-form-field>
+                  </div>
+                </ng-container>
+                <div class="detail-item">
+                  <div class="other-details-label">Batch</div>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <input matInput [disabled]="true" [value]="otherDetailsForm?.get('cadreBatch')?.value || '-'">
+                  </mat-form-field>
+                </div>
+                <div class="detail-item">
+                  <div class="other-details-label">Cadre Controlling Authority</div>
+                  <mat-form-field appearance="outline" class="w-full">
+                    <input matInput [disabled]="true"
+                      [value]="otherDetailsForm?.get('cadreControllingAuthorityName')?.value || '-'">
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+            <div class="flex flex-col gap-2 mt-6 mb-3">
+              <div class="slot-header">Tags</div>
+              <div class="flex gap-4">
+                <mat-form-field appearance="outline" class="w-full">
+                  <input #tags matInput formControlName="tags" placeholder="Type here" [matChipInputFor]="chipListTags"
+                    autocomplete="off" maxlength="100" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addActivity($event)">
+                  <mat-error class="hintErr" *ngIf="otherDetailsForm?.controls['tags'].errors?.pattern">
+                    Only space and alphabets are supported
+                  </mat-error>
+                </mat-form-field>
+                <button mat-raised-button type="button" [disabled]="!tags.value"
+                  (click)="addActivity({input: tags, value: tags.value})" class="btn-success btn-add-activity">
+                  <span class="text-white"> Add tag</span>
+                </button>
+              </div>
+            </div>
+            <mat-chip-list #chipListTags>
+              <mat-chip *ngFor="let tag of selectedtagsList; let i = index" [selectable]="true" [removable]="true"
+                (removed)="removeActivity(i)">
+                {{ tag }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            </mat-chip-list>
+          </form>
+        </ng-template>
+        <!-- #endregion (other details edit) -->
+      </mat-card-content>
+    </mat-card>
+    <!-- #endregion (other details) -->
+  </div>
+
+</div>
+
+
+<ng-template #rejectDialog>
+  <form class="rejectdialog">
+    <p mat-dialog-title class="dialog-title">Reason for rejection</p>
+    <mat-dialog-content>
+      <mat-form-field class="w-full mt-5" appearance="outline">
+        <textarea matInput class="reason-text-area" [(ngModel)]="comment" name="reason"
+          placeholder="Type the description in fewer than 100 characters" resizable="none" maxlength="100"
+          (input)="validateText($event.target.value)"></textarea>
+        <mat-error [hidden]="false" aria-label="Budget year Error|Explains name is required" *ngIf="htmlDetected">
+          Field is mandatory
+        </mat-error>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions class="flex flex-wrap justify-end">
+      <button mat-raised-button class="btn-success btn-responsive successbtn" [mat-dialog-close]="true"
+        [disabled]="!comment || htmlDetected">
+        <span class="text-white">Submit</span></button>
+      <button mat-raised-button class="btn-success btn-responsive cancelbtn" matDialogClose>Cancel</button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>
+
+<ng-template #updaterejectDialog>
+  <form class="rejectdialog">
+    <p mat-dialog-title class="dialog-title">Reason for rejection
+      <mat-icon (click)="showedit()" *ngIf="!showeditText" class="float-right cursor-pointer">edit_square</mat-icon>
+    </p>
+    <mat-dialog-content>
+      <p class="margin-top-l margin-bottom-l" *ngIf="!showeditText">{{comment}}</p>
+      <mat-form-field class="w-full mt-5" appearance="outline" *ngIf="showeditText">
+        <textarea matInput class="reason-text-area" [(ngModel)]="comment" name="reason"
+          placeholder="Type the description in fewer than 100 characters" resizable="none" maxlength="100"
+          (input)="validateText($event.target.value)"></textarea>
+      </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions class="flex flex-wrap justify-end" *ngIf="showeditText">
+      <button mat-raised-button class="btn-success btn-responsive successbtn" [disabled]="!comment || htmlDetected"
+        [mat-dialog-close]="true">
+        <span class="text-white">Update</span></button>
+      <button mat-raised-button class="btn-success btn-responsive cancelbtn" matDialogClose>Cancel</button>
+    </mat-dialog-actions>
+  </form>
+</ng-template>
+

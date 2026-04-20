@@ -1,0 +1,66 @@
+<div class="p-4 bg-white max-w-full flex items-start justify-between training-plan-box" (click)="routeTrainingPlanDetails(plan)">
+  <!-- Left Section -->
+  <div class="flex-1">
+    <!-- Title -->
+    <div class="plan-name mb-2 text-ellipse cursor-pointer" [matTooltip]="plan?.name">{{ plan?.name }}</div>
+    <!-- Tags -->
+    <div class="flex gap-4 mb-8">
+      <!-- <ng-container *ngIf="plan?.orgScope === 'Single'">
+        <span class="text-white text-xs px-2 py-1 org-scope rounded">For Designations</span>
+      </ng-container> -->
+      <ng-container *ngIf="plan?.isApar">
+        <span class="text-white text-xs px-2 py-1 rounded font-medium is-apar-box">APAR</span>
+      </ng-container>
+
+      <ng-container *ngIf="plan?.contentType">
+        <div class="flex justify-between items-center">
+          <div class="course-type rounded-full">
+            <mat-icon class="document-icon">video_library </mat-icon>
+            <span class="content-type-text">
+              {{ plan?.contentType }}
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <!-- Date & Contents -->
+    <div class="grid grid-cols-2 gap-4 text-sm text-gray-500 mb-2">
+      <div class="flex flex-col gap-2">
+        <ng-container *ngIf="plan?.endDate">
+          <div class="flex items-center gap-1 trp-meta-texts">Due on {{ plan?.endDate ?? "" | date : "mediumDate" }}</div>
+        </ng-container>
+        <ng-container *ngIf="plan?.contentList">
+          <div class="flex items-center gap-1 trp-meta-texts">
+            {{ plan?.contentList?.length }} {{ plan?.contentList?.length | plural : "Content" : "Contents" }}
+          </div>
+        </ng-container>
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center gap-1 trp-meta-texts" *ngIf="plan?.createdByName">
+          By {{ userProfile?.firstName === plan?.createdByName ? "You" : plan?.createdByName }}
+        </div>
+        <div class="flex items-center gap-1 trp-meta-texts" *ngIf="plan?.createdAt">Created On {{ plan?.createdAt ?? "" |  date : "mediumDate" }}</div>
+      </div>
+    </div>
+  </div>
+  <!-- Right Section: Draft badge -->
+  <div *ngIf="plan?.status">
+    <ng-container *ngIf="plan?.status === 'Live' || plan?.status === 'live'; else elseStatus">
+      <div class="badge-wrapper live-badge">
+        <span class="badge-dot live-dot"></span>
+        Live
+      </div>
+    </ng-container>
+
+    <ng-template #elseStatus>
+      <div
+        class="badge-wrapper"
+        [ngClass]="{'retired-badge': plan?.status.toLowerCase() === 'retire', 'draft-badge': plan?.status.toLowerCase() === 'draft', }">
+        <span
+          class="badge-dot live-dot"
+          [ngClass]="{'retired-dot': plan?.status.toLowerCase() === 'retire', 'draft-dot': plan?.status.toLowerCase() === 'draft', }"></span>
+        {{ plan?.status | titlecase }}
+      </div>
+    </ng-template>
+  </div>
+</div>

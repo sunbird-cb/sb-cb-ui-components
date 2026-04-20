@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.lib.json",
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": false,
+    "strictInjectionParameters": false,
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": false
+  }
+}

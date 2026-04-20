@@ -81,7 +81,36 @@
     line-height: 16.8px;
     word-wrap: break-word;
     white-space: normal;
-    height: 51px;
+    height: auto;
+    max-height: 51px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+.provider-name {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    margin-bottom: 8px;
+    line-height: 16.8px;
+    word-wrap: break-word;
+    white-space: normal;
+    height: auto;
+    max-height: 51px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .view-provider-button {

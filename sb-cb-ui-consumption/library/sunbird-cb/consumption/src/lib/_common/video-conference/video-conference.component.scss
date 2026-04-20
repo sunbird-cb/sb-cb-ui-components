@@ -1,0 +1,124 @@
+.video-conference {
+    margin: auto;
+    @media screen and (max-width: 999px) {
+        margin-top: 185px;
+    }
+
+    // @media screen and (max-width: 768px) {
+    //     margin-top: 25%;
+    // }
+    // @media screen and (max-width: 576px) {
+    //     margin-top: 60%;
+    // }
+
+    .content {
+        position: relative;
+        text-align: center;
+        padding: 24px 0px;
+        @media screen and (max-width: 1200px) and (min-width: 1000px){
+            padding-left: 100px;
+        }
+
+        .title {
+            color: #ffffff;
+            text-align: center;
+            /* stylelint-disable */ 
+            font-family: Montserrat;
+            /* stylelint-enable */
+            font-style: normal;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 36px;
+        }
+
+        .text {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: normal;
+            @extend .title;
+        }
+
+        .date,
+        .time {
+            @extend .text;
+            color: #f08811;
+        }
+
+        button {
+            min-width: 114px;
+            padding: 4px 16px;
+            border-radius: 35px;
+            background: #F3962F;
+            margin-top: 24px;
+            border: none;
+            color: #000000;
+            transition: all ease 0.5s;
+            font-weight: 700;
+            font-size: 14px;
+            /* stylelint-disable */ 
+            font-family:'Lato' ;
+            /* stylelint-enable */
+
+            &:hover {
+                background: #f08811;
+            }
+        }
+
+
+        .image {
+            position: absolute;
+            left: 0%;
+            bottom: 0px;
+            width: 243px;
+            height: 336px;
+        }
+
+        .text-support {
+            @extend .text;
+            font-size: 14px;
+            margin-top: 16px;
+            /* stylelint-disable */ 
+            font-family: Lato;
+            /* stylelint-enable */
+            font-weight: 500;
+
+            .contachEmail {
+                text-decoration: underline;
+                color:#F3962F;
+            }
+        }
+
+    }
+
+    // @media screen and (min-width: 992px) {
+    //     .image {
+    //         left: 0% !important;
+    //     }
+    // }
+
+    // @media screen and (max-width:992px) {
+    //     .image {
+    //         left: 2% !important;
+    //         bottom: 0px;
+    //         width: 187px !important;
+    //         height: 269px !important;
+    //     }
+    // }
+
+    @media screen and (max-width: 999px) {
+        .image {
+            width: 133px !important;
+            height: auto !important;
+            left: calc(50% - 67px) !important;
+            // top: -73%;
+            bottom: 109% !important;
+        }
+
+        .text {
+            font-size: 16px !important;
+        }
+    }
+
+
+}
+

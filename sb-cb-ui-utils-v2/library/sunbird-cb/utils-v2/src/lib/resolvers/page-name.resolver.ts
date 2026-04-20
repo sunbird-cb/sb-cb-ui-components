@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core'
-import { ActivatedRouteSnapshot, Resolve } from '@angular/router'
+import { ActivatedRouteSnapshot } from '@angular/router'
 
 @Injectable({
   providedIn: 'root',
 })
-export class PageNameResolve implements Resolve<any> {
+export class PageNameResolve  {
   constructor(
   ) { }
   resolve(

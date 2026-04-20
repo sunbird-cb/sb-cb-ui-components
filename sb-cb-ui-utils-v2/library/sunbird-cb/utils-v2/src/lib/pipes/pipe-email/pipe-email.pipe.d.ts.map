@@ -1,0 +1,1 @@
+{"version":3,"file":"pipe-email.pipe.d.ts","sourceRoot":"ng://@sunbird-cb/utils-v2/","sources":["lib/pipes/pipe-email/pipe-email.pipe.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,aAAa,EAAE,MAAM,eAAe,CAAA;;AAEnD,qBAGa,aAAc,YAAW,aAAa;IAEjD,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,GAAG;yCAFlB,aAAa;uCAAb,aAAa;CAOzB"}

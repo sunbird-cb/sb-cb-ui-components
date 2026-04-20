@@ -1,6 +1,6 @@
 export namespace NsContent {
   export interface IContinueLearningData extends IContent {
-    continueData: any;
+    continueData: any
   }
 
   export interface IContinueLearningDataReq {
@@ -10,107 +10,107 @@ export namespace NsContent {
       contentIds: string[],
       batchId: string | undefined | null
       fields?: string[]
-    };
+    }
   }
 
   export interface IContent {
-    platform?: any;
-    addedOn: string;
-    appIcon: string;
-    artifactUrl: string;
-    averageRating?: any;
+    platform?: any
+    addedOn: string
+    appIcon: string
+    artifactUrl: string
+    averageRating?: any
     // this will be used to content form enrollment user list
-    batches?: any;
-    batch?: any;
-    body?: string;
-    certificationList?: IRelatedContentMeta[];
-    certificationStatus?: TCertificationStatus;
-    certificationSubmissionDate?: string;
-    certificationUrl: string;
-    childNodes?: string[];
-    children: IContent[];
-    childrenClassifiers?: string[];
-    clients?: IClient[];
-    collections?: IContent[];
-    completionPercentage?: number | null;
-    completionStatus?: number;
-    difficultyLevel: string;
-    contentId: string;
-    contentType: EContentTypes;
-    contentUrlAtSource: string;
-    creatorContacts: ICreator[];
+    batches?: any
+    batch?: any
+    body?: string
+    certificationList?: IRelatedContentMeta[]
+    certificationStatus?: TCertificationStatus
+    certificationSubmissionDate?: string
+    certificationUrl: string
+    childNodes?: string[]
+    children: IContent[]
+    childrenClassifiers?: string[]
+    clients?: IClient[]
+    collections?: IContent[]
+    completionPercentage?: number | null
+    completionStatus?: number
+    difficultyLevel: string
+    contentId: string
+    contentType: EContentTypes
+    contentUrlAtSource: string
+    creatorContacts: ICreator[]
 
-    creatorDetails: ICreator[];
-    creatorLogo: string;
-    creatorPosterImage: string;
-    creatorThumbnail: string;
+    creatorDetails: ICreator[]
+    creatorLogo: string
+    creatorPosterImage: string
+    creatorThumbnail: string
 
-    curatedTags: string[];
-    description: string;
-    displayContentType: EDisplayContentTypes; // For UI
-    downloadUrl?: string;
-    duration: number;
-    enrolledDate?: string;
-    exclusiveContent?: boolean;
-    expiryDate?: string;
-    equivalentCertifications?: IRelatedContentMeta[];
-    hasAccess: boolean;
-    hasAssessment?: string;
-    idealScreenSize?: string;
-    identifier: string;
-    introductoryVideo?: string;
-    introductoryVideoIcon?: string;
-    learningTrack?: string;
-    isExternal: boolean;
-    isIframeSupported: 'Yes' | 'No' | 'Maybe';
-    isInIntranet?: boolean;
-    keywords?: string[];
-    kArtifacts?: IRelatedContentMeta[];
-    lastContentAccessTime?: string;
-    lastUpdatedOn: string;
-    learningMode?: TLearningMode;
-    learningObjective: string;
-    labels?: string[];
-    locale?: string;
-    hasTranslations?: { identifier: string; locale: string }[];
-    isTranslationOf?: { identifier: string; locale: string }[];
-    me_totalSessionsCount: number;
-    mediaType: string;
-    mimeType: EMimeTypes;
-    msArtifactDetails?: IMSArtifactDetails;
-    mode?: ETagType;
-    name: string;
-    nextCertificationAttemptDate?: string;
-    playgroundInstructions?: string;
-    playgroundResources?: IResourcePlayground[];
-    postContents?: IPrePostContent[];
-    posterImage?: string;
-    preContents?: IPrePostContent[];
-    preRequisites: string;
+    curatedTags: string[]
+    description: string
+    displayContentType: EDisplayContentTypes // For UI
+    downloadUrl?: string
+    duration: number
+    enrolledDate?: string
+    exclusiveContent?: boolean
+    expiryDate?: string
+    equivalentCertifications?: IRelatedContentMeta[]
+    hasAccess: boolean
+    hasAssessment?: string
+    idealScreenSize?: string
+    identifier: string
+    introductoryVideo?: string
+    introductoryVideoIcon?: string
+    learningTrack?: string
+    isExternal: boolean
+    isIframeSupported: 'Yes' | 'No' | 'Maybe'
+    isInIntranet?: boolean
+    keywords?: string[]
+    kArtifacts?: IRelatedContentMeta[]
+    lastContentAccessTime?: string
+    lastUpdatedOn: string
+    learningMode?: TLearningMode
+    learningObjective: string
+    labels?: string[]
+    locale?: string
+    hasTranslations?: { identifier: string; locale: string }[]
+    isTranslationOf?: { identifier: string; locale: string }[]
+    me_totalSessionsCount: number
+    mediaType: string
+    mimeType: EMimeTypes
+    msArtifactDetails?: IMSArtifactDetails
+    mode?: ETagType
+    name: string
+    nextCertificationAttemptDate?: string
+    playgroundInstructions?: string
+    playgroundResources?: IResourcePlayground[]
+    postContents?: IPrePostContent[]
+    posterImage?: string
+    preContents?: IPrePostContent[]
+    preRequisites: string
     price?: {
       currency: string
       value: number
-    };
-    primaryCategory: EPrimaryCategory;
-    proctorUrl?: string;
-    progress?: IMarkAsCompleteProgress;
-    publishedOn: string;
-    recentCertificationAttemptScore?: number;
-    recommendationReasons?: string[];
-    region?: string[];
-    registrationUrl?: string;
-    registrationInstructions?: string;
-    resourceCategory?: string[];
-    resourceType: string;
-    size?: number;
-    skills: ISkill[];
-    softwareRequirements?: IResourceDetail[];
-    sourceName: string;
-    sourceShortName: string;
-    sourceIconUrl?: string;
-    sourceUrl?: string;
-    ssoEnabled?: boolean;
-    lastReadContentId?: string;
+    }
+    primaryCategory: EPrimaryCategory
+    proctorUrl?: string
+    progress?: IMarkAsCompleteProgress
+    publishedOn: string
+    recentCertificationAttemptScore?: number
+    recommendationReasons?: string[]
+    region?: string[]
+    registrationUrl?: string
+    registrationInstructions?: string
+    resourceCategory?: string[]
+    resourceType: string
+    size?: number
+    skills: ISkill[]
+    softwareRequirements?: IResourceDetail[]
+    sourceName: string
+    sourceShortName: string
+    sourceIconUrl?: string
+    sourceUrl?: string
+    ssoEnabled?: boolean
+    lastReadContentId?: string
     status:
     | 'Draft'
     | 'InReview'
@@ -120,218 +120,220 @@ export namespace NsContent {
     | 'Live'
     | 'Deleted'
     | 'MarkedForDeletion'
-    | 'Expired';
-    subTitle?: string;
-    subTitles?: ISubtitle[];
-    studyMaterials?: IRelatedContentMeta[];
-    systemRequirements?: string[];
-    tags: ITag[];
-    topics: IContentTopic[];
-    totalLikes?: { [key: string]: number };
-    totalRating?: number;
-    track: ITrack[];
-    uniqueLearners?: number;
-    viewCount?: { [key: string]: number };
-    reason?: string; // required for Knowledge board
-    trainingLHubCount?: number; // for LHub trainings
+    | 'Expired'
+    subTitle?: string
+    subTitles?: ISubtitle[]
+    studyMaterials?: IRelatedContentMeta[]
+    systemRequirements?: string[]
+    tags: ITag[]
+    topics: IContentTopic[]
+    totalLikes?: { [key: string]: number }
+    totalRating?: number
+    track: ITrack[]
+    uniqueLearners?: number
+    viewCount?: { [key: string]: number }
+    reason?: string // required for Knowledge board
+    trainingLHubCount?: number // for LHub trainings
     verifiers?: {
       // required for External Certifications
       name: string
       email: string
       id: string
-    }[];
-    references?: { url: string; title: string }[];
+    }[]
+    references?: { url: string; title: string }[]
     resumePage?: number; // For player WebModule in UI
-    [key: string]: any;
-    optionalReading: boolean;
-    additionalTags?: string[];
+    [key: string]: any
+    optionalReading: boolean
+    additionalTags?: string[]
+    cType: string
+    contentVersionInfo: any
   }
 
   export interface IContentResponse {
-    id: string;
-    params: any;
-    responseCode: string;
+    id: string
+    params: any
+    responseCode: string
     result: {
       content: IContent
-    };
-    ts: string;
-    ver: string;
+    }
+    ts: string
+    ver: string
   }
 
   export interface IBatch {
-    batchId: string;
-    createdBy: string;
-    endDate: string | null;
-    enrollmentType: string;
-    identifier: string;
-    name: string;
-    startDate: string;
-    status: number;
-    cert_templates?: null;
-    collectionId: string;
-    courseId: string;
-    createdDate: string;
-    createdFor: string[];
-    description?: null;
-    enrollmentEndDate: string | null;
-    id: string;
-    mentors?: string[] | null;
-    tandc?: null;
-    updatedDate?: string | null;
+    batchId: string
+    createdBy: string
+    endDate: string | null
+    enrollmentType: string
+    identifier: string
+    name: string
+    startDate: string
+    status: number
+    cert_templates?: null
+    collectionId: string
+    courseId: string
+    createdDate: string
+    createdFor: string[]
+    description?: null
+    enrollmentEndDate: string | null
+    id: string
+    mentors?: string[] | null
+    tandc?: null
+    updatedDate?: string | null
   }
 
   export interface IBatchListResponse {
-    content?: IBatch[];
-    count?: number;
-    enrolled?: boolean;
+    content?: IBatch[]
+    count?: number
+    enrolled?: boolean
     workFlow?: {
       wfInitiated?: boolean
       batch?: any
       wfItem?: any
-    };
+    }
   }
 
   export interface ICourse {
-    active: true;
-    addedBy: string;
-    batch: IBatch;
-    batchId: string;
-    certificates: [];
-    collectionId: string;
-    completedOn: string | null;
-    completionPercentage: number | null;
-    completionStatus?: number;
-    content: IContent;
-    contentId: string;
-    contentStatus: any;
-    courseId: string;
-    courseLogoUrl: string;
-    courseName: string;
-    dateTime: number;
-    description: string;
-    enrolledDate: string;
-    issuedCertificates: [];
-    lastContentAccessTime?: string;
-    lastReadContentId?: string;
-    lastReadContentStatus: string | null;
-    leafNodesCount: number;
-    progress: number;
-    status: number;
-    userId: string;
+    active: true
+    addedBy: string
+    batch: IBatch
+    batchId: string
+    certificates: []
+    collectionId: string
+    completedOn: string | null
+    completionPercentage: number | null
+    completionStatus?: number
+    content: IContent
+    contentId: string
+    contentStatus: any
+    courseId: string
+    courseLogoUrl: string
+    courseName: string
+    dateTime: number
+    description: string
+    enrolledDate: string
+    issuedCertificates: []
+    lastContentAccessTime?: string
+    lastReadContentId?: string
+    lastReadContentStatus: string | null
+    leafNodesCount: number
+    progress: number
+    status: number
+    userId: string
   }
 
   export interface IContentMinimal {
-    appIcon: string;
-    artifactUrl: string;
-    difficultyLevel: string;
-    contentType: EContentTypes;
-    description: string;
-    displayContentType?: EDisplayContentTypes;
-    duration: number;
-    identifier: string;
-    hasAccess?: boolean;
-    isInIntranet?: boolean;
-    learningMode?: TLearningMode;
-    mimeType: EMimeTypes;
-    name: string;
-    creatorDetails: ICreator[];
-    creatorContacts: ICreator[];
-    posterImage: string;
-    primaryCategory: EPrimaryCategory;
-    resourceType?: string;
-    totalRating?: number;
+    appIcon: string
+    artifactUrl: string
+    difficultyLevel: string
+    contentType: EContentTypes
+    description: string
+    displayContentType?: EDisplayContentTypes
+    duration: number
+    identifier: string
+    hasAccess?: boolean
+    isInIntranet?: boolean
+    learningMode?: TLearningMode
+    mimeType: EMimeTypes
+    name: string
+    creatorDetails: ICreator[]
+    creatorContacts: ICreator[]
+    posterImage: string
+    primaryCategory: EPrimaryCategory
+    resourceType?: string
+    totalRating?: number
   }
 
   export interface ICollectionHierarchyResponse {
-    data: IContent;
-    hasMore: boolean;
-    totalContents: number;
+    data: IContent
+    hasMore: boolean
+    totalContents: number
   }
 
   export interface IRelatedContentMeta {
-    identifier: string;
-    name: string;
+    identifier: string
+    name: string
   }
 
-  type TCertificationStatus = 'ongoing' | 'passed' | 'canAttempt' | 'cannotAttempt';
-  export type TLearningMode = 'Self-Paced' | 'Instructor-Led' | 'Open' | 'Closed';
+  type TCertificationStatus = 'ongoing' | 'passed' | 'canAttempt' | 'cannotAttempt'
+  export type TLearningMode = 'Self-Paced' | 'Instructor-Led' | 'Open' | 'Closed'
 
   interface IMarkAsCompleteProgress {
-    progressStatus: 'open' | 'started' | 'completed';
-    showMarkAsComplete: boolean;
-    markAsCompleteReason: string;
-    progressSupported: boolean;
-    progress: number | null;
+    progressStatus: 'open' | 'started' | 'completed'
+    showMarkAsComplete: boolean
+    markAsCompleteReason: string
+    progressSupported: boolean
+    progress: number | null
   }
 
   interface ITag {
-    id: string;
-    type: string;
-    value: string;
+    id: string
+    type: string
+    value: string
   }
   interface IMSArtifactDetails {
-    channelId: string;
-    videoId: string;
+    channelId: string
+    videoId: string
   }
   interface IClient {
-    displayName: string;
-    id: string;
-    name: string;
+    displayName: string
+    id: string
+    name: string
   }
   interface ISubtitle {
-    srclang: string;
-    label: string;
-    url: string;
+    srclang: string
+    label: string
+    url: string
   }
   interface IPrePostContent {
-    identifier: string;
-    name: string;
+    identifier: string
+    name: string
   }
   interface IResourceDetail {
-    title?: string;
-    url?: string;
+    title?: string
+    url?: string
   }
   interface IResourcePlayground {
-    appIcon: string;
-    artifactUrl: string;
-    identifier: string;
-    name: string;
+    appIcon: string
+    artifactUrl: string
+    identifier: string
+    name: string
   }
   interface ITrack {
-    id: string;
-    name: string;
-    status: string;
-    visibility: string;
+    id: string
+    name: string
+    status: string
+    visibility: string
   }
   interface ISkill {
-    id: string;
-    category: string;
-    skill: string;
-    name: string;
+    id: string
+    category: string
+    skill: string
+    name: string
   }
   export interface ICreator {
-    id: string;
-    name: string;
-    email: string;
+    id: string
+    name: string
+    email: string
   }
   export interface IContentTopic {
-    identifier: string;
-    name: string;
+    identifier: string
+    name: string
   }
   // API Based
 
   export interface IContact {
-    id: string;
-    name: string;
-    email: string;
+    id: string
+    name: string
+    email: string
   }
 
   export interface IViewerContinueLearningRequest {
-    resourceId: string;
-    contextPathId: string;
-    data: string;
-    dateAccessed: number;
-    contextType?: string;
+    resourceId: string
+    contextPathId: string
+    data: string
+    dateAccessed: number
+    contextType?: string
   }
   /**
     * @deprecated Enum EContentTypes should not be used in future
@@ -394,6 +396,8 @@ export namespace NsContent {
     MODERATED_COURSE = 'Moderated Course',
     STANDALONE_ASSESSMENT = 'Standalone Assessment',
     MODERATED_ASSESSEMENT = 'Moderated Assessment',
+    COMPREHENSIVE_ASSESSMENT_PROGRAM = 'Comprehensive Assessment Program',
+    MULTILINGUAL_COURSE = 'Multilingual Course'
   }
 
   export enum WFBlendedProgramStatus {
@@ -413,16 +417,16 @@ export namespace NsContent {
     TWO_STEP_PC_MDO = 'twoStepPCAndMDOApproval',
   }
 
-  export const  WFSTATUS_MSG_MAPPING: any = {
-    INITIATE:  '',
-    SEND_FOR_MDO_APPROVAL:  'BatchEnrollL1Msg',
-    SEND_FOR_PC_APPROVAL:  'BatchEnrollL2Msg',
-    APPROVED:  'BatchEnrollApprovedMsg',
-    REJECTED:  'BatchEnrollRejectedMsg',
+  export const WFSTATUS_MSG_MAPPING: any = {
+    INITIATE: '',
+    SEND_FOR_MDO_APPROVAL: 'BatchEnrollL1Msg',
+    SEND_FOR_PC_APPROVAL: 'BatchEnrollL2Msg',
+    APPROVED: 'BatchEnrollApprovedMsg',
+    REJECTED: 'BatchEnrollRejectedMsg',
     WITHDRAWN: 'BatchEnrollWithdrawMsg',
     REMOVED: 'BatchEnrollRemoveMsg',
     EXPIRED: 'BatchListExpiredMsg',
-  };
+  }
 
   export enum EResourcePrimaryCategories {
     LEARNING_RESOURCE = 'Learning Resource',
@@ -443,19 +447,19 @@ export namespace NsContent {
     EPrimaryCategory.BLENDED_PROGRAM,
     EPrimaryCategory.STANDALONE_ASSESSMENT,
     EMiscPlayerSupportedCollectionTypes.PLAYLIST,
-  ];
+  ]
   export const KB_SUPPORTED_CONTENT_TYPES: EPrimaryCategory[] = [
     EPrimaryCategory.COURSE,
     EPrimaryCategory.MODULE,
     EPrimaryCategory.PROGRAM,
     EPrimaryCategory.RESOURCE,
-  ];
+  ]
   export const PLAYLIST_SUPPORTED_CONTENT_TYPES: EPrimaryCategory[] = [
     EPrimaryCategory.COURSE,
     EPrimaryCategory.MODULE,
     EPrimaryCategory.PROGRAM,
     EPrimaryCategory.RESOURCE,
-  ];
+  ]
   export enum EMimeTypes {
     COLLECTION = 'application/vnd.ekstep.content-collection',
     ZIP = 'application/vnd.ekstep.html-archive',
@@ -531,6 +535,7 @@ export namespace NsContent {
     LEARNING_JOURNEY = 'Learning Journeys',
     BLENDED_PROGRAM = 'BLENDED PROGRAM',
     CURATED_PROGRAM = 'CURATED PROGRAM',
+    SAMUHIK_CHARCHA = 'Samuhik Charcha'
   }
   // for UI
   export enum EFilterCategory {
@@ -551,7 +556,7 @@ export namespace NsContent {
     // EMimeTypes.APPLICATION_JSON,
     // EMimeTypes.WEB_MODULE_EXERCISE,
 
-  ];
+  ]
   export const PUBLIC_SUPPORTED_CONTENT_TYPES: EMimeTypes[] = [
     EMimeTypes.APPLICATION_JSON,
     EMimeTypes.FINAL_ASSESSMENT,
@@ -566,5 +571,5 @@ export namespace NsContent {
     EMimeTypes.YOUTUBE,
     EMimeTypes.TEXT_WEB,
     EMimeTypes.SURVEY,
-  ];
+  ]
 }

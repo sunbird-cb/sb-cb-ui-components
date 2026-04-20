@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
 import { BtnPageBackComponent } from './btn-page-back.component'
 
@@ -6,7 +6,7 @@ describe('BtnPageBackComponent', () => {
   let component: BtnPageBackComponent
   let fixture: ComponentFixture<BtnPageBackComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [BtnPageBackComponent],
     })

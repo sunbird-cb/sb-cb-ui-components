@@ -1,0 +1,93 @@
+<div class="relative all-notifications">
+  <mat-tab-group animationDuration="0ms" class="mat-tab-labels w-full strips-tabgroup"
+    (selectedIndexChange)="onTabChange($event)" [selectedIndex]="dynamicTabIndex">
+    <mat-tab *ngFor="let tab of tabs">
+      <ng-template mat-tab-label>
+        <span>{{capitalize(tab?.name)}} &nbsp;</span>
+        <span>{{getCount(tab?.read, tab?.unread)}}</span>
+      </ng-template>
+      <div class="flex flex-row flex-wrap content-container mt-5: md:mt-0" *ngIf="notifications?.length">
+        <div class="notification-list w-full">
+          <div class="notification-item cursor-pointer {{notification?.read ? 'read' : 'unread'}}"
+            id="notification-{{notification?.notification_id}}" *ngFor="let notification of notifications">
+            <div class="flex gap-3 justify-between" (click)="redirectToNotification(notification)">
+              <div class="flex gap-3 item-center">
+                <div class="image" *ngIf="showIcon">
+                  <img [src]="getIconPath(notification?.category)" alt="notification" />
+                </div>
+                <div [ngClass]="{'item-title-mobile': isMobileView, 'item-title': !isMobileView}"
+                  [innerHTML]="notification?.message?.body"></div>
+              </div>
+              <div class="timestamp">{{getTimeAgo(notification?.created_at) || ''}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- skelton loaders -->
+      <div class="flex flex-row flex-wrap content-container mt-5" *ngIf="loading">
+        <div class="notification-list w-full">
+          <div class="notification-item ">
+            <div class="flex gap-3 justify-between">
+              <div class="flex gap-3 item-center">
+                <div class="image">
+                  <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'40px'"
+                    [height]="'32px'"></sb-uic-skeleton-loader>
+                </div>
+                <div class="item-title"><sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                    [width]="'440px'" [height]="'32px'"></sb-uic-skeleton-loader></div>
+              </div>
+              <div class="timestamp"><sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
+                  [height]="'32px'"></sb-uic-skeleton-loader></div>
+            </div>
+            <div class="item-description pt-1">
+              <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'700px'"
+                [height]="'32px'"></sb-uic-skeleton-loader>
+            </div>
+          </div>
+          <div class="notification-item ">
+            <div class="flex gap-3 justify-between">
+              <div class="flex gap-3 item-center">
+                <div class="image">
+                  <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'40px'"
+                    [height]="'32px'"></sb-uic-skeleton-loader>
+                </div>
+                <div class="item-title"><sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                    [width]="'440px'" [height]="'32px'"></sb-uic-skeleton-loader></div>
+              </div>
+              <div class="timestamp"><sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
+                  [height]="'32px'"></sb-uic-skeleton-loader></div>
+            </div>
+            <div class="item-description pt-1">
+              <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'700px'"
+                [height]="'32px'"></sb-uic-skeleton-loader>
+            </div>
+          </div>
+          <div class="notification-item ">
+            <div class="flex gap-3 justify-between">
+              <div class="flex gap-3 item-center">
+                <div class="image">
+                  <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'40px'"
+                    [height]="'32px'"></sb-uic-skeleton-loader>
+                </div>
+                <div class="item-title"><sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                    [width]="'440px'" [height]="'32px'"></sb-uic-skeleton-loader></div>
+              </div>
+              <div class="timestamp"><sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
+                  [height]="'32px'"></sb-uic-skeleton-loader></div>
+            </div>
+            <div class="item-description pt-1">
+              <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'700px'"
+                [height]="'32px'"></sb-uic-skeleton-loader>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+  <ng-container *ngIf="currentTab !== 'MANDATORY'">
+    <div class="mark-all mt-3 cursor-pointer z-1000" (click)="markAllAsRead($event)"
+    *ngIf="showMarkAllAsRead && unreadCount > 0">Mark all as
+    read</div>
+  </ng-container>
+  
+</div>

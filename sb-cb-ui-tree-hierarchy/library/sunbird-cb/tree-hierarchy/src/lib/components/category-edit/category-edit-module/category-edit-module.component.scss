@@ -1,0 +1,97 @@
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.modal-container {
+  padding: 12px 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  gap: 8px;
+}
+
+.cancel-btn {
+  margin-right: 8px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  
+  .static-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .custom-field {
+    ::ng-deep {
+      // Hide the floating label
+      .mdc-floating-label {
+        display: none;
+      }
+      
+      // Round the corners of the outline
+      .mdc-notched-outline {
+        border-radius: 8px;
+      }
+      
+       .mdc-notched-outline__leading {
+        display: none;
+       }
+      .mdc-notched-outline__trailing {
+        border-radius: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.12) !important;
+      }
+      
+      // Adjust padding
+      .mat-mdc-form-field-infix {
+        padding: 0.75em 0;
+        min-height: 40px;
+      }
+
+      .mat-mdc-form-field-error-wrapper {
+        padding: 0;
+      }
+
+      .mat-mdc-form-field-error {
+        font-size: 12px;
+        color: red;
+      }
+      
+      // Remove the notch
+      .mdc-notched-outline__notch {
+        border-top: none;
+      }
+    }
+  }
+}
+
+.required {
+  &::after {
+    color: red;
+    content: ' *';
+  }
+}

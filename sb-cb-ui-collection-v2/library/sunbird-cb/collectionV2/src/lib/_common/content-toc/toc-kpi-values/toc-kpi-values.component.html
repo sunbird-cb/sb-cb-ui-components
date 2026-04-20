@@ -1,0 +1,118 @@
+<div class="flex gap-2" [ngClass]="isMobile ? 'horizontal-strip' : 'flex-wrap'">
+    <div class="flex flex-col kpi-values items-center gap-2" *ngIf="content?.duration > 0">
+        <img src="/assets/icons/toc/timer.svg" width="20px" alt="web image" />
+        <div class="text-xs">{{ content?.duration | pipeDurationTransform: 'hms' }}</div>
+    </div>
+
+    <ng-container *ngIf="content?.children?.length">
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.course > 0">
+            <img src="/assets/icons/toc/course.svg" width="20px" alt="pdf image" />
+            <div class="text-xs">{{ tocStructure?.course }}
+                <span *ngIf="tocStructure?.course === 1">Course</span>
+                <span *ngIf="tocStructure?.course > 1">Courses</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.learningModule > 0">
+            <img src="/assets/icons/toc/module.svg" width="24px" alt="module image" />
+            <div class="text-xs">{{ tocStructure?.learningModule }}
+                <span *ngIf="tocStructure?.learningModule === 1">Module</span>
+                <span *ngIf="tocStructure?.learningModule > 1">Modules</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.video > 0">
+            <img src="/assets/icons/toc/video.svg" width="20px" alt="video image" />
+            <div class="text-xs">{{ tocStructure?.video }}
+                <span *ngIf="tocStructure?.video === 1">Video</span>
+                <span *ngIf="tocStructure?.video > 1">Videos</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.offlineSession > 0">
+            <img src="/assets/icons/toc/module.svg" width="20px" alt="offline session image" />
+            <div class="text-xs">{{ tocStructure?.offlineSession }}
+                <span *ngIf="tocStructure?.offlineSession === 1">Session</span>
+                <span *ngIf="tocStructure?.offlineSession > 1">Sessions</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.pdf > 0">
+            <img src="/assets/icons/toc/pdf.svg" width="20px" alt="pdf image" />
+            <div class="text-xs">{{ tocStructure?.pdf }}
+                <span *ngIf="tocStructure?.pdf === 1">Pdf</span>
+                <span *ngIf="tocStructure?.pdf > 1">Pdfs</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.podcast > 0">
+            <img src="/assets/icons/toc/audio.svg" width="20px" alt="podcast image" />
+            <div class="text-xs">{{ tocStructure?.podcast }}
+                <span *ngIf="tocStructure?.podcast === 1">Audio</span>
+                <span *ngIf="tocStructure?.podcast > 1">Audios</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.webPage > 0">
+            <img src="/assets/icons/toc/web.svg" width="20px" alt="web image" />
+            <div class="text-xs">{{ tocStructure?.webPage }}
+                <span *ngIf="tocStructure?.webPage === 1">Web Page</span>
+                <span *ngIf="tocStructure?.webPage > 1">Web Pages</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.interactivecontent > 0">
+            <img src="/assets/icons/toc/link.svg" width="20px" alt="interactive content image" />
+            <div class="text-xs">{{ tocStructure?.interactivecontent }}
+                <span *ngIf="tocStructure?.interactivecontent === 1">Interactive Content</span>
+                <span *ngIf="tocStructure?.interactivecontent > 1">Interactive Contents</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.finalTest > 0">
+            <img src="/assets/icons/toc/assessment.svg" width="20px" alt="assessment image" />
+            <div class="text-xs">{{ tocStructure?.finalTest }}
+                <span *ngIf="tocStructure?.finalTest === 1">Final test</span>
+                <span *ngIf="tocStructure?.finalTest > 1">Final tests</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.practiceTest > 0">
+            <img src="/assets/icons/toc/assessment.svg" width="20px" alt="practice test image" />
+            <div class="text-xs">{{ tocStructure?.practiceTest }}
+                <span *ngIf="tocStructure?.practiceTest === 1">Practice test</span>
+                <span *ngIf="tocStructure?.practiceTest > 1">Practice tests</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="tocStructure?.other > 0">
+            <img src="/assets/icons/toc/course.svg" width="20px" alt="other items image" />
+            <div class="text-xs">{{ tocStructure?.other }}
+                <span *ngIf="tocStructure?.other === 1">Other Item</span>
+                <span *ngIf="tocStructure?.other > 1">Other Items</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2">
+            <img src="/assets/icons/toc/free.svg" width="20px" alt="free course image" />
+            <div class="text-xs" *ngIf="!content?.exclusiveContent">Free </div>
+            <div class="text-xs" *ngIf="content?.exclusiveContent">Paid Content </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="contentReadData?.learningMode">
+            <img *ngIf="contentReadData?.learningMode?.toLowerCase() != 'instructor led'"
+                src="/assets/icons/toc/self-learning.svg" width="20px" alt="free course image" />
+            <img *ngIf="contentReadData?.learningMode?.toLowerCase() === 'instructor led'"
+                src="/assets/icons/toc/instructor-led.svg" width="20px" alt="instructor led image" />
+            <div class="text-xs">
+                <span *ngIf="contentReadData?.learningMode?.toLowerCase() === 'instructor led'">Instructor Led</span>
+                <span *ngIf="contentReadData?.learningMode?.toLowerCase() != 'instructor led'">Self learning</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col kpi-values items-center gap-2" *ngIf="contentReadData?.license">
+            <img src="/assets/icons/toc/key.svg" width="20px" alt="free course image" />
+            <div class="text-xs">{{ contentReadData?.license }} </div>
+        </div>
+    </ng-container>
+</div>

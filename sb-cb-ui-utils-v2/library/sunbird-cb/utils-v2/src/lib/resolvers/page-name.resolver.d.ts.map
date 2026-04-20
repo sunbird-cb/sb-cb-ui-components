@@ -1,0 +1,1 @@
+{"version":3,"file":"page-name.resolver.d.ts","sourceRoot":"ng://@sunbird-cb/utils-v2/","sources":["lib/resolvers/page-name.resolver.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,sBAAsB,EAAE,OAAO,EAAE,MAAM,iBAAiB,CAAA;;AAEjE,qBAGa,eAAgB,YAAW,OAAO,CAAC,GAAG,CAAC;;IAGlD,OAAO,CACL,KAAK,EAAE,sBAAsB,GAC5B,MAAM;yCALE,eAAe;6CAAf,eAAe;CA4B3B"}

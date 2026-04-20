@@ -1,6 +1,6 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 .card-channels-container {
     $card-padding: $size-m;
@@ -14,7 +14,7 @@
     min-height: 217px;
     height: 217px;
     max-height: 217px;
-    margin: 20px 8px;
+    margin: 8px 8px 8px;
     // margin: 0px 8px;
     background: #1a4ca1 ;
     border-radius: 12px;

@@ -1,0 +1,40 @@
+.community-search{
+    input {
+        border: 1px solid #00000029;
+    }
+}
+
+.info-text {
+    h2{
+        //styleName: Sub Heading 1;
+        font-family: Montserrat;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.5px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        span.higlight-text {
+            color: #1B4CA1;
+        }
+        .arrow-back-btn {
+            color: #1B4CA1;
+        }
+
+    }
+}
+
+
+.load-more-posts {
+    button {
+        color: #1B4CA1 !important;
+        font-family: Lato;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        border: 1px solid #1B4CA1;
+        border-radius: 24px;
+    }
+}

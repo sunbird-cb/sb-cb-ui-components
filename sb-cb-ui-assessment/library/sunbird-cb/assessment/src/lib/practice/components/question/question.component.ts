@@ -9,7 +9,7 @@ import { PracticeService } from '../../practice.service'
 // tslint:disable-next-line
 import _ from 'lodash'
 import { NsContent } from '../../../services/widget-content.model'
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material'
+import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarConfig as MatSnackBarConfig } from '@angular/material/legacy-snack-bar'
 @Component({
   selector: 'viewer-question',
   templateUrl: './question.component.html',
@@ -20,7 +20,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material'
 export class QuestionComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() artifactUrl = ''
   @Input() questionNumber = 0
-  @Input() total = 0
+  @Input() total = 1
   @Input() viewState = 'initial'
   @Input() primaryCategory = NsContent.EPrimaryCategory.PRACTICE_RESOURCE
   @Input() ePrimaryCategory: any
@@ -28,6 +28,7 @@ export class QuestionComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() showAnswer: any
   @Input() currentQuestion: any
   @Input() selectedAssessmentCompatibilityLevel = 2
+  @Input() questionParagraph? = ''
   @Input() question: NSPractice.IQuestion = {
     multiSelection: false,
     section: '',
@@ -44,6 +45,7 @@ export class QuestionComponent implements OnInit, OnChanges, AfterViewInit {
         isCorrect: false,
       },
     ],
+    choices: { options: [] },
   }
   @Input() itemSelectedList: string[] = []
   @Input() markedQuestions: Set<string> = new Set()
@@ -66,6 +68,7 @@ export class QuestionComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() showOnlyQuestion: any
   @Input() showMarkForReview: any = false
   @Input() assessmentType = ''
+  @Input() questionPreview = false
   expandedQuestionSetSubscription: any
 
   constructor(
@@ -91,6 +94,8 @@ export class QuestionComponent implements OnInit, OnChanges, AfterViewInit {
 
   init() {
     this.matchHintDisplay = []
+    // tslint:disable-next-line
+    console.log('this.question', this.question, this.showMarkForReview, this.questionNumber, this.showQuestionMarks, this.assessmentType)
     const res: string[] = this.question.question.match(/<img[^>]+src="([^">]+)"/g) || ['']
     for (const oldImg of res) {
       if (oldImg) {
@@ -106,6 +111,8 @@ export class QuestionComponent implements OnInit, OnChanges, AfterViewInit {
 
       }
     }
+    // tslint:disable-next-line
+    console.log('this.question', this.question, this.showMarkForReview, this.questionNumber, this.showQuestionMarks, this.assessmentType)
     this.practiceSvc.questionAnswerHash.subscribe(val => {
       this.itemSelectedList1 = val[this.question.questionId]
     })

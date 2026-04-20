@@ -1,0 +1,50 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+.sort-by-wrapper {
+    background-color: white;
+    border: 1px solid #00000029;
+    border-radius: 12px;
+    .card-title {
+        //styleName: Heading 2;
+        font-family: Montserrat;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24.38px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
+    .body-title {
+        //styleName: Sub Heading 1(Mobile);
+        font-family: Lato;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 19.2px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
+    .checkbox-label {
+        //styleName: Body 2;
+        font-family: Lato;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16.8px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
+}
+
+.option-value {
+    font-family: Lato;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16.8px;
+    letter-spacing: 0%;
+    color: #00000099;
+
+
+}

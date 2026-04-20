@@ -32,6 +32,7 @@ export class ConfigurationsService {
   hostPath = (window.location.host).replace(':', '_')
 
   userRoles: Set<string> | null = null
+  eventBufferTimeInMinutes: number | null = null
   userGroups: Set<string> | null = null
   restrictedFeatures: Set<string> | null = null
   restrictedWidgets: Set<string> | null = null
@@ -72,6 +73,7 @@ export class ConfigurationsService {
   activeLocaleGroup = ''
   completedActivity: string[] | null = null
   completedTour = false
+  competency: any
   profileSettings = ['profilePicture', 'learningTime', 'learningPoints']
 
   primaryNavBar: Partial<NsPage.INavBackground> = {
@@ -84,7 +86,6 @@ export class ConfigurationsService {
 
   private updateOrgReadData: BehaviorSubject<string> = new BehaviorSubject('')
   updateOrgReadDataObservable = this.updateOrgReadData.asObservable()
-
   updateOrgData(id: string) {
       this.updateOrgReadData.next(id)
   }

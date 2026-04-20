@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "access-settings": {
+      "projectType": "library",
+      "root": "library/sunbird-cb/access-settings",
+      "sourceRoot": "library/sunbird-cb/access-settings/src",
+      "prefix": "sb-uic",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "library/sunbird-cb/access-settings/tsconfig.lib.json",
+            "project": "library/sunbird-cb/access-settings/ng-package.json"
+          }
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "library/sunbird-cb/access-settings/tsconfig.lib.prod.json"
+            }
+          }
+},
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "library/sunbird-cb/access-settings/src/test.ts",
+            "tsConfig": "library/sunbird-cb/access-settings/tsconfig.spec.json",
+            "karmaConfig": "library/sunbird-cb/access-settings/karma.conf.js"
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "cli": {
+    "analytics": "ed11d5a4-411f-49e8-b228-59596e35616e",
+    "cache": {
+      "enabled": false
+    }
+  }
+}

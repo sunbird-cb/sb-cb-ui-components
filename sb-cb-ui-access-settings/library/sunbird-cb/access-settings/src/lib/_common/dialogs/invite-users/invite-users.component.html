@@ -1,0 +1,127 @@
+<div class="flex justify-between dialog-heading items-center">
+  <h2 mat-dialog-title class="mb-0">Users</h2>
+  <button mat-icon-button class="close-button" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content class="user-dialog-body">
+  <div class="">
+    <!-- Filter Options -->
+    <div class="filter-options">
+      <mat-radio-group [(ngModel)]="filterValue" aria-label="Filter options" (change)="onFilterChange($event)">
+        <mat-radio-button class="text-dark" value="add_karmayogis">Add Karmayogis</mat-radio-button>
+        <mat-radio-button class="text-dark" value="bulk_upload_karmayogis">Bulk Upload Karmayogis</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <ng-container *ngIf="filterValue === 'add_karmayogis'">
+    <!-- Search Box -->
+    <div class="search-container flex items-center gap-4 mb-4">
+      <div class="mat-full-radius flex-grow">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Search by Name, Email and Phone Number" [formControl]="searchControl" (keyup.enter)="search()" />
+        </mat-form-field>
+      </div>
+      <button mat-flat-button class="flex items-center rounded-full new-bg-color font-bold text-sm text-white search-button" (click)="search()">
+        Search
+      </button>
+    </div>
+
+    <div class="contents-wrapper">
+      <ng-container>
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" [(selectedIndex)]="activeTab" dynamicHeight>
+          <mat-tab label="All Learners" class="mb-3">
+            <ng-container *ngIf="usersLoading">
+              <div class="spinner-loader flex items-center justify-center">
+                <mat-spinner></mat-spinner>
+              </div>
+            </ng-container>
+            <div [ngClass]="{ hidden: usersLoading }">
+              <ng-container *ngIf="usersList && usersList.length > 0; else noData">
+                <sb-uic-list-table
+                  [data]="usersList"
+                  [count]="totalUsers"
+                  [initialPaginationSize]="pagination.limit"
+                  [tableConfig]="usersTableConfig['allLearners']"
+                  (selectedDataChange)="onSelectingUser($event)"
+                  (pageChange)="onPageChange($event)"
+                  (sortChange)="onSortChange($event)"
+                  [selected]="usersFinalList"
+                  [isDisabled]="data?.disabled"
+                  [currentPage]="currentPage"></sb-uic-list-table>
+              </ng-container>
+            </div>
+          </mat-tab>
+          <mat-tab label=" Selected Users" class="mb-3">
+            <ng-container *ngIf="usersLoading">
+              <div class="spinner-loader flex items-center justify-center">
+                <mat-spinner></mat-spinner>
+              </div>
+            </ng-container>
+            <div [ngClass]="{ hidden: usersLoading }">
+              <ng-container *ngIf="finalSelectedUsers && finalSelectedUsers.length > 0; else noData">
+                <sb-uic-list-table
+                  [data]="finalSelectedUsers"
+                  [count]="finalSelectedUsers.length || 0"
+                  [initialPaginationSize]="pagination.limit"
+                  [tableConfig]="usersTableConfig['selectedUsers']"
+                  (selectedDataChange)="onSelectingUserToApply($event)"
+                  (removeSelectedData)="removedUserData($event)"
+                  [isDisabled]="data?.disabled"
+                  [selected]="usersFinalList"></sb-uic-list-table>
+              </ng-container>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </ng-container>
+
+      <ng-template #noData>
+        <div class="no-data p-4 flex flex-column items-center justify-center">
+          <img src="/assets/icons/no-events.png" alt="no-data" />
+          <span class="font-bold">No information to display yet</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="filterValue === 'bulk_upload_karmayogis'">
+    <sb-uic-bulk-upload-karmayogi (appliedUser)="onApplyingUserBulkUpload($event)" [isDisabled]="data?.disabled"></sb-uic-bulk-upload-karmayogi>
+  </ng-container>
+</div>
+
+<mat-dialog-actions>
+  <ng-container *ngIf="filterValue === 'add_karmayogis'">
+    <ng-container *ngIf="activeTab === 0 && usersList.length">
+      <button
+        mat-flat-button
+        (click)="selectUsers()"
+        class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white w-full mt-2"
+        [disabled]="holdSelectedUsers?.length === 0 || data?.disabled">
+        Select Users
+      </button>
+    </ng-container>
+    <ng-container *ngIf="activeTab === 1 && usersFinalList.length && finalSelectedUsers.length">
+      <button
+        [disabled]="data?.disabled"
+        mat-flat-button
+        (click)="applySelections()"
+        class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white w-full mt-2">
+        Apply
+      </button>
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="filterValue === 'bulk_upload_karmayogis'">
+    <ng-container *ngIf="bulkUploadUserList?.length">
+      <button
+        [disabled]="data?.disabled"
+        mat-flat-button
+        (click)="applySelectionsBulk()"
+        class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white w-full mt-2">
+        Apply
+      </button>
+    </ng-container>
+  </ng-container>
+</mat-dialog-actions>

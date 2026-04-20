@@ -1,0 +1,82 @@
+<div class="community-card" *ngIf="!isLoading">
+    <div class="card-img-block">
+        <img src="{{community?.imageUrl || community?.data?.imageUrl }}" (error)="changeToDefaultThumbnailImg($event)"
+            alt="">
+        <div class="community-type flex items-center" *ngIf="community?.communityAccessLevel === 'private'">
+            <mat-icon class="mat-icon ">lock</mat-icon>
+            <span class="title nodtranslate">Private</span>
+        </div>
+    </div>
+    <div class="card-details-block">
+        <p class="community-title nodtranslate" dV2MultiLineElipsis>{{community?.communityName ||
+            community?.data?.communityName}}
+        </p>
+        <div class="flex items-center justify-between community-info">
+            <p>
+                <span class="mr-1 nodtranslate">{{community?.countOfPeopleJoined | numberShortener}}</span>
+                <span class="nodtranslate">{{ community?.countOfPeopleJoined | plural:'Member':'Members' }}</span>
+            </p>
+            <span class="mx-2">•</span>
+            <p>
+                <span class="mr-1 nodtranslate">{{community?.countOfPostCreated | numberShortener}}</span>
+                <span class="nodtranslate">{{ community?.countOfPostCreated | plural:'Post':'Posts' }}</span>
+            </p>
+        </div>
+        <div class="flex items-center justify-start community-owner-info">
+            <div class="owner-icon mr-2">
+                <img src="{{orgDetails[community?.orgId]?.logo || community?.orgName}}" alt=""
+                    (error)="changeToDefaultImg($event)">
+            </div>
+            <p class="owner-name margin-remove nodtranslate" dV2SingleLineTooltip>By {{community?.orgName ||
+                orgDetails[community?.orgId]?.orgname}}</p>
+        </div>
+        <div class="flex items-center justify-start community-action mt-4">
+            <button
+                class="btn mat-subheading-2  rounded-full cursor-pointer margin-remove w-full h-8 un-join-btn nodtranslate">View
+                Community</button>
+            <!-- <ng-container *ngIf="!checkCommunityPresence(community?.communityId)">
+                <button class="btn mat-subheading-2 btn rounded-full text-white cursor-pointer margin-remove w-full h-8"
+                (click)="joinCommunity(community); $event.stopPropagation()">Join</button>
+            </ng-container>
+            <ng-container *ngIf="checkCommunityPresence(community?.communityId)">
+                <button class="btn mat-subheading-2  rounded-full cursor-pointer margin-remove w-full h-8 un-join-btn"
+                (click)="unJoinCommunity(community); $event.stopPropagation()">Leave</button>
+            </ng-container> -->
+        </div>
+    </div>
+</div>
+<div class="community-card" *ngIf="isLoading">
+    <div class="card-img-block">
+        <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'96px'"
+            [bindingClass]="'flex rounded-tl-xl rounded-tr-xl'"></d-v2-widget-skeleton-loader>
+    </div>
+    <div class="card-details-block">
+        <p class="community-title">
+            <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'14px'"
+                [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+            <d-v2-widget-skeleton-loader [width]="'80%'" [height]="'14px'"
+                [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+        </p>
+        <div class="flex items-center justify-between community-info">
+            <p>
+                <d-v2-widget-skeleton-loader [width]="'50px'" [height]="'12px'"
+                    [bindingClass]="'flex rounded '"></d-v2-widget-skeleton-loader>
+            </p>
+            <span class="mx-2">•</span>
+            <p>
+                <d-v2-widget-skeleton-loader [width]="'50px'" [height]="'12px'"
+                    [bindingClass]="'flex rounded '"></d-v2-widget-skeleton-loader>
+            </p>
+        </div>
+        <div class="flex items-center justify-start community-owner-info">
+            <div class="owner-icon mr-2">
+                <d-v2-widget-skeleton-loader [width]="'18px'" [height]="'18px'"
+                    [bindingClass]="'flex rounded '"></d-v2-widget-skeleton-loader>
+            </div>
+            <p class="owner-name margin-remove">
+                <d-v2-widget-skeleton-loader [width]="'66px'" [height]="'12px'"
+                    [bindingClass]="'flex  '"></d-v2-widget-skeleton-loader>
+            </p>
+        </div>
+    </div>
+</div>

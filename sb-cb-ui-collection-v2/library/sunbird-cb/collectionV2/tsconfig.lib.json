@@ -1,0 +1,24 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../out-tsc/lib",
+    "declarationMap": true,
+    "declaration": true,
+    "inlineSources": true,
+    "types": ["node"],
+    "lib": ["dom", "es2018"],
+    "skipLibCheck": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": false,
+    "fullTemplateTypeCheck": false,
+    "strictInjectionParameters": false,
+    "enableResourceInlining": true,
+    "compilationMode": "partial",
+    "disableTypeScriptVersionCheck": true
+  },
+  "exclude": ["src/test.ts", "**/*.spec.ts"]
+}

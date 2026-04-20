@@ -56,6 +56,7 @@ export function viewerRouteGenerator(
   forPreview = false,
   primaryCategory?: string,
   batchId?: string,
+  courseName?: string,
 ): { url: string; queryParams: { [key: string]: any } } {
   let collId = collectionId
   let collType = collectionType
@@ -63,7 +64,10 @@ export function viewerRouteGenerator(
     collId = undefined
     collType = undefined
   }
-  const url = `${forPreview ? '/author' : ''}/viewer/${VIEWER_ROUTE_FROM_MIME(mimeType)}/${id}`
+  const url = `/viewer/${VIEWER_ROUTE_FROM_MIME(mimeType)}/${id}`
+  // tslint:disable-next-line
+  // console.log(url,'========>Route from MIME TYPE<==========')
+  const forcreator = window.location.href.includes('editMode=true')
   let queryParams = {}
   if (primaryCategory) {
     queryParams = {
@@ -75,6 +79,15 @@ export function viewerRouteGenerator(
   }
   if (batchId) {
     queryParams = { ...queryParams, batchId }
+  }
+  if (courseName) {
+    queryParams = { ...queryParams, courseName }
+  }
+  if (forPreview) {
+    queryParams = { ...queryParams, preview: true }
+  }
+  if (forcreator) {
+    queryParams = { ...queryParams, editMode: true }
   }
   return {
     queryParams,

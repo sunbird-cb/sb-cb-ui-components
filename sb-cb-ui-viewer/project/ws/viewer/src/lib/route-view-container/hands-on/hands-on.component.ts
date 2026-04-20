@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { NsContent } from '@ws-widget/collection'
+import { NsContent } from '@sunbird-cb/collection'
 
 @Component({
   selector: 'viewer-hands-on-container',
@@ -12,5 +12,5 @@ export class HandsOnComponent {
   @Input() handsOnData: NsContent.IContent | null = null
   @Input() handsOnManifest: any
   @Input() forPreview = false
-  constructor() {}
+  constructor() { }
 }

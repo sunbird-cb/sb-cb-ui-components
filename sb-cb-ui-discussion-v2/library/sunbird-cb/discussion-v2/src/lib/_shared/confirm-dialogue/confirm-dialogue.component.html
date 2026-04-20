@@ -1,0 +1,30 @@
+<mat-card class=" px-6 py-4">
+    <!-- <button mat-icon-button class="close-button" [mat-dialog-close]="false">
+        <mat-icon class="close-icon">close</mat-icon>
+    </button> -->
+    <mat-card-title>
+        <div class="flex">
+            <h1 class="mat-heading w-full flex items-center justify-center">
+                <mat-icon class="mat-icon flag-icon mr-2" color="#F3962F">error</mat-icon>
+            </h1>
+        </div>
+    </mat-card-title>
+    <mat-card-content class="no-padding">
+        <section class="flex items-center justify-center" *ngIf="!data?.question">
+            <h2 class="mat-heading nodtranslate">Are you sure you want to delete this post?</h2>
+            <p class="mat-body-1 nodtranslate"></p>
+        </section>
+        <section class="flex items-center justify-center" *ngIf="data?.question">
+            <p class="mat-body-1 nodtranslate">{{data?.question}}</p>
+        </section>
+
+    </mat-card-content>
+    <mat-card-actions class="flex flex-row-reverse gap-4">
+        <button mat-flat-button (click)="cancel()" class="secondary-button " [disabled]="false">
+            <span class="nodtranslate">{{data?.button?.cancel || 'Cancel'}}</span>
+        </button>
+        <button mat-flat-button color="secondary" (click)="submit()" class="primary-button " [disabled]="false">
+            <span class="nodtranslate">{{data?.button?.confirm || 'Confirm'}}</span>
+        </button>
+    </mat-card-actions>
+</mat-card>

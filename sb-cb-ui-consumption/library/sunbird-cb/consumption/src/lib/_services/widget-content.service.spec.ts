@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { WidgetContentService } from './widget-content.service';
+import { WidgetContentLibService } from './widget-content-lib.service';
 
-describe('WidgetContentService', () => {
+describe('WidgetContentLibService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: WidgetContentService = TestBed.get(WidgetContentService);
+    const service: WidgetContentLibService = TestBed.get(WidgetContentLibService);
     expect(service).toBeTruthy();
   });
 });

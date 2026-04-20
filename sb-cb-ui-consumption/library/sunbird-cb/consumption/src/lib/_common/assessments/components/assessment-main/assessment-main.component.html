@@ -1,0 +1,41 @@
+<div class="assessment-main-container">
+  <mat-stepper #stepper="matStepper" linear="true" [orientation]="'vertical'" class="assessment-stepper">
+    <!-- Step 1: Assessment Settings -->
+    <mat-step [completed]="isStepTwoEnabled" [editable]="true">
+      <ng-template matStepLabel>
+        <div class="flex flex-middle">
+          Assessment Settings <mat-icon class="margin-left-auto step-icon">{{ stepper.selectedIndex === 0 ?
+            'arrow_drop_up' : 'arrow_drop_down' }}</mat-icon>
+        </div>
+      </ng-template>
+
+      <div class="step-content">
+        <ng-container *ngIf="stepper.selectedIndex === 0 && isAssessmentLoaded">
+          <sb-uic-assessment-basic-info [config]="config" (saved)="saveAssessment($event)"
+            (updated)="updateAssessment($event)"></sb-uic-assessment-basic-info>
+        </ng-container>
+
+        <!-- <div class="step-actions">
+          <button mat-raised-button color="primary" (click)="enableStepTwo(); stepper.next()">
+            Next
+          </button>
+        </div> -->
+      </div>
+    </mat-step>
+
+    <!-- Step 2: Add Questions -->
+    <mat-step [editable]="isStepTwoEnabled">
+      <ng-template matStepLabel>
+        <div class="flex flex-middle">
+          Add Questions <mat-icon class="margin-left-auto step-icon">{{ stepper.selectedIndex === 1 ? 'arrow_drop_up' :
+            'arrow_drop_down' }}</mat-icon>
+        </div>
+      </ng-template>
+
+      <ng-container *ngIf="stepper.selectedIndex === 1">
+        <sb-uic-assessment-sessions (saved)="saveSectionData($event)" (updated)="updateSectionData($event)"
+          (updateQuestion)="updateQuestionData($event)"></sb-uic-assessment-sessions>
+      </ng-container>
+    </mat-step>
+  </mat-stepper>
+</div>

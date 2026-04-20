@@ -1,0 +1,10 @@
+<div class="comminity-guidelines">
+    <d-v2-card-toggle (hideCardBody)="hideCardBody = $event" [toggleViewBoolean]="expandCard">
+        <div headderBlock>
+            <div class="headding nodtranslate">Community Guidelines</div>
+        </div>
+        <div contentBodyBlock>
+            <p class="margin-top-s guidelines-info nodtranslate" [innerHTML]="communityGuidelines"></p>
+        </div>
+    </d-v2-card-toggle>
+</div>

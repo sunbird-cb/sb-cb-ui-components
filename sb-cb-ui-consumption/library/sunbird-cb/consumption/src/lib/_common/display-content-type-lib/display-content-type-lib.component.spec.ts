@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing'
 
 import { DisplayContentTypeLibComponent } from './display-content-type-lib.component'
 
@@ -6,7 +6,7 @@ describe('DisplayContentTypeLibComponent', () => {
   let component: DisplayContentTypeLibComponent
   let fixture: ComponentFixture<DisplayContentTypeLibComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [DisplayContentTypeLibComponent],
     })

@@ -1,0 +1,144 @@
+@use "@sunbird-cb/design-system/src/styles/ws-common";
+@use "@sunbird-cb/design-system/src/styles/ws-vars";
+@use "@sunbird-cb/design-system/src/styles/ws-mixins" as *;
+
+.min-wid {
+  min-width: 263px;
+}
+
+.outline-1 {
+  outline: unset !important;
+}
+
+.pad-l-4r {
+  padding-left: 2.75rem;
+}
+
+.img {
+  width: 184px;
+  // height: 74px;
+}
+
+.new-pill-ui {
+  height: 33px !important;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.new-pill-ui-active {
+  background: #1B4CA1 !important;
+  color: white !important;
+}
+
+.logo-cover {
+  width: 100px;
+  border: 1px solid #00000014;
+  overflow: hidden;
+  .img {
+    width: 100%;
+    object-fit: contain;
+  }
+}
+
+.max-width {
+  width: 190px;
+}
+
+.custom-class {
+  max-height: 300px;
+  overflow-y: auto;
+
+  /* width */
+  &::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 100vw;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+:host ::ng-deep {
+  .mat-expansion-panel {
+    --mat-expansion-header-expanded-state-height: 48px;
+    background-color: inherit !important;
+    border-radius: 0 !important;
+
+    .mat-list-item-content {
+      padding: 0 16px 0 32px !important;
+    }
+  }
+  .mat-expansion-panel:not([class*="mat-elevation-z"]) {
+    box-shadow: none !important;
+  }
+
+  .menu-text,
+  .mat-expansion-panel-header-title {
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16.8px;
+  }
+  .mat-expansion-panel-body {
+    background-color: #fff;
+    padding: 0px !important;
+    .mat-list-base {
+      padding-top: 0 !important ;
+    }
+  }
+  .mat-expansion-panel-header-title,
+  .mat-expansion-panel-header-description,
+  .mat-content.mat-content-hide-toggle {
+    margin-right: 0 !important;
+  }
+  .mat-expansion-panel-header-description {
+    justify-content: flex-end;
+  }
+}
+
+::ng-deep {
+  .menu-left {
+    max-width: 235px;
+    margin: auto;
+    .mat-expansion-panel-header {
+      padding: 0 16px !important;
+    }
+  }
+
+  .ws-active-route-menu {
+    border-radius: 8px;
+    background-color: #1b4ca1;
+    mat-icon,
+    .menu-text {
+      color: #fff !important;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: #1b4ca1 !important;
+    }
+  }
+
+  .menu-left mat-icon {
+    color: #1b4ca1;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}

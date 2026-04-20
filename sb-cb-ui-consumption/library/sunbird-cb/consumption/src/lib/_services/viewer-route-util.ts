@@ -1,66 +1,66 @@
-import { NsContent } from '../_models/widget-content.model';
+import { NsContent } from '../_models/widget-content.model'
 
 export const VIEWER_ROUTE_FROM_MIME = (mimeType: NsContent.EMimeTypes) => {
   switch (mimeType) {
     case NsContent.EMimeTypes.MP3:
-      return 'audio';
+      return 'audio'
     case NsContent.EMimeTypes.M4A:
-      return 'audio-native';
+      return 'audio-native'
     case NsContent.EMimeTypes.COLLECTION:
-      return 'html';
+      return 'html'
     case NsContent.EMimeTypes.CHANNEL:
     // case 'application/json' as any:
     //   return 'channel'
     case NsContent.EMimeTypes.CERTIFICATION:
-      return 'certification';
+      return 'certification'
     case NsContent.EMimeTypes.HTML_TEXT:
     case NsContent.EMimeTypes.HTML:
     case NsContent.EMimeTypes.ZIP:
       if (window.location.href.includes('mobile/html')) {
-        return 'mobile/html';
+        return 'mobile/html'
       }
-      return 'html';
+      return 'html'
     case NsContent.EMimeTypes.TEXT_WEB:
-      return 'youtube';
+      return 'youtube'
     case NsContent.EMimeTypes.SURVEY:
-      return 'survey';
+      return 'survey'
     case NsContent.EMimeTypes.IAP:
-      return 'iap';
+      return 'iap'
     case NsContent.EMimeTypes.ILP_FP:
-      return 'ilp-fp';
+      return 'ilp-fp'
     case NsContent.EMimeTypes.PDF:
-      return 'pdf';
+      return 'pdf'
     case NsContent.EMimeTypes.MP4:
     case NsContent.EMimeTypes.M3U8:
-      return 'video';
+      return 'video'
     case NsContent.EMimeTypes.YOUTUBE:
-      return 'youtube';
+      return 'youtube'
     // return 'html'
     case NsContent.EMimeTypes.WEB_MODULE:
-      return 'web-module';
+      return 'web-module'
     case NsContent.EMimeTypes.WEB_MODULE_EXERCISE:
-      return 'web-module';
+      return 'web-module'
     case NsContent.EMimeTypes.CLASS_DIAGRAM:
-      return 'class-diagram';
+      return 'class-diagram'
     case NsContent.EMimeTypes.HANDS_ON:
-      return 'hands-on';
+      return 'hands-on'
     case NsContent.EMimeTypes.RDBMS_HANDS_ON:
-      return 'rdbms-hands-on';
+      return 'rdbms-hands-on'
     case NsContent.EMimeTypes.HTML_PICKER:
-      return 'html-picker';
+      return 'html-picker'
     case NsContent.EMimeTypes.QUIZ:
     case NsContent.EMimeTypes.APPLICATION_JSON:
-      return 'quiz';
+      return 'quiz'
     case NsContent.EMimeTypes.PRACTICE_RESOURCE:
-      return 'practice';
+      return 'practice'
     case NsContent.EMimeTypes.COLLECTION_RESOURCE:
-      return 'resource-collection';
+      return 'resource-collection'
     case NsContent.EMimeTypes.OFFLINE_SESSION:
-      return 'offline-session';
+      return 'offline-session'
     default:
-      return 'html';
+      return 'html'
   }
-};
+}
 
 export function viewerRouteGenerator(
   id: string,
@@ -71,40 +71,44 @@ export function viewerRouteGenerator(
   primaryCategory?: string,
   batchId?: string,
   courseName?: string,
+  ML?: string,
+  MLId?: string,
 ): { url: string; queryParams: { [key: string]: any } } {
-  let collId = collectionId;
-  let collType = collectionType;
+  let collId = collectionId
+  let collType = collectionType
   if (collType && !NsContent.PLAYER_SUPPORTED_COLLECTION_TYPES.includes(collType)) {
-    collId = undefined;
-    collType = undefined;
+    collId = undefined
+    collType = undefined
   }
-  const url = `/viewer/${VIEWER_ROUTE_FROM_MIME(mimeType)}/${id}`;
+  const url = `/viewer/${VIEWER_ROUTE_FROM_MIME(mimeType)}/${id}`
   // tslint:disable-next-line
-  // console.log(url,'========>Route from MIME TYPE<==========')
-  const forcreator = window.location.href.includes('editMode=true');
-  let queryParams = {};
+  const forcreator = window.location.href.includes('editMode=true')
+  let queryParams = {}
   if (primaryCategory) {
     queryParams = {
       primaryCategory,
-    };
+    }
   }
   if (collectionId && collectionType) {
-    queryParams = { ...queryParams, collectionId: collId, collectionType: collType };
+    queryParams = { ...queryParams, collectionId: collId, collectionType: collType }
   }
   if (batchId) {
-    queryParams = { ...queryParams, batchId };
+    queryParams = { ...queryParams, batchId }
   }
   if (courseName) {
-    queryParams = { ...queryParams, courseName };
+    queryParams = { ...queryParams, courseName }
   }
   if (forPreview) {
-    queryParams = { ...queryParams, preview: true };
+    queryParams = { ...queryParams, preview: true }
   }
   if (forcreator) {
-    queryParams = { ...queryParams, editMode: true };
+    queryParams = { ...queryParams, editMode: true }
+  }
+  if (ML && MLId) {
+    queryParams = { ...queryParams, ML, MLId }
   }
   return {
     queryParams,
     url,
-  };
+  }
 }

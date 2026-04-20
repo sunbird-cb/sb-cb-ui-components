@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { UserContentRatingLibComponent } from './user-content-rating-lib.component';
 
@@ -6,7 +6,7 @@ describe('UserContentRatingLibComponent', () => {
   let component: UserContentRatingLibComponent;
   let fixture: ComponentFixture<UserContentRatingLibComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ UserContentRatingLibComponent ]
     })

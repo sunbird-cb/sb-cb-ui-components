@@ -2,37 +2,34 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 
 import {
-  MatCardModule,
-  MatDividerModule,
-  MatIconModule,
-  MatSnackBarModule,
-} from '@angular/material'
-
-import {
-  BtnContentDownloadModule,
-  BtnContentFeedbackModule,
+  // BtnContentDownloadModule,
+  // BtnContentFeedbackModule,
   BtnContentLikeModule,
-  BtnContentShareModule,
-  BtnGoalsModule,
+  // BtnContentShareModule,
+  // BtnGoalsModule,
   BtnPlaylistModule,
   DisplayContentTypeModule,
   UserImageModule,
   UserContentRatingModule,
   BtnContentFeedbackV2Module,
-} from '@ws-widget/collection'
+} from '@sunbird-cb/collection'
 
 import {
   PipeDurationTransformModule,
   PipeLimitToModule,
   PipePartialContentModule,
-} from '@ws-widget/utils'
+} from '@sunbird-cb/utils'
 
-import { WidgetResolverModule } from '@ws-widget/resolver'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 
 import { AudioComponent } from './audio.component'
 import { RouterModule } from '@angular/router'
 
 import { AudioModule as AudioViewContainerModule } from '../../route-view-container/audio/audio.module'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatDividerModule } from '@angular/material/divider'
+import { MatIconModule } from '@angular/material/icon'
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
 
 @NgModule({
   declarations: [AudioComponent],
@@ -43,17 +40,17 @@ import { AudioModule as AudioViewContainerModule } from '../../route-view-contai
     MatCardModule,
     MatDividerModule,
     MatSnackBarModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
     PipeLimitToModule,
     PipePartialContentModule,
     PipeDurationTransformModule,
-    BtnContentDownloadModule,
+    // BtnContentDownloadModule,
     BtnContentLikeModule,
-    BtnContentShareModule,
-    BtnGoalsModule,
+    // BtnContentShareModule,
+    // BtnGoalsModule,
     BtnPlaylistModule,
     UserImageModule,
-    BtnContentFeedbackModule,
+    // BtnContentFeedbackModule,
     DisplayContentTypeModule,
     UserContentRatingModule,
     BtnContentFeedbackV2Module,

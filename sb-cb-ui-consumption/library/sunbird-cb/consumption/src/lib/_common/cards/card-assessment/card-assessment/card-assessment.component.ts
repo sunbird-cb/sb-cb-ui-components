@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-// import { WidgetUserService } from '../../../../_services/widget-user.service';
+// import { WidgetUserServiceLib } from '../../../../_services/widget-user.service';
 import { ConfigurationsService, NsContent } from '@sunbird-cb/utils-v2';
-import { WidgetContentService } from '../../../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../../../_services/widget-content-lib.service';
 
 @Component({
   selector: 'sb-uic-card-assessment',
   templateUrl: './card-assessment.component.html',
-  styleUrls: ['./card-assessment.component.css']
+  styleUrls: ['./card-assessment.component.scss']
 })
 
 // @Directive({
@@ -14,12 +14,12 @@ import { WidgetContentService } from '../../../../_services/widget-content.servi
 // })
 export class CardAssessmentComponent implements OnInit {
   @Input() widgetData!: NsContent.IContent;
-  @Input() enrollmentMapData: any
   @Output() contentData = new EventEmitter<any>()
   @Input() isCardLoading: boolean = false
   stripData: any = []
   enrollList: any = []
   activeResource: any = []
+  eCourseCategory: any = NsContent.ECourseCategory
   defaultThumbnail: any
   defaultSLogo: any
   daysRemaining: number = 0;
@@ -31,7 +31,7 @@ export class CardAssessmentComponent implements OnInit {
   days: number;
   hours: number;
   minutes: number;
-  constructor(private configSvc: ConfigurationsService, private contSvc: WidgetContentService,) { }
+  constructor(private configSvc: ConfigurationsService, private contSvc: WidgetContentLibService,) { }
 
   ngOnInit(): void {
     const instanceConfig = this.configSvc.instanceConfig

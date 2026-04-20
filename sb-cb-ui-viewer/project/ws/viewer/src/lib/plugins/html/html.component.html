@@ -1,4 +1,4 @@
-<mat-card class="ws-mat-primary-lite-background-on-day margin-top-s"
+<!-- <mat-card class="ws-mat-primary-lite-background-on-day margin-top-s"
   *ngIf="showIframeSupportWarning || isIntranetUrl || htmlContent?.isInIntranet">
   <mat-card-content>
     <h2 class="mat-h2" *ngIf="
@@ -45,17 +45,17 @@
       This content can only be viewed in Intranet.
     </h2>
     <mat-divider></mat-divider>
-    <mat-progress-bar mode="determinate" *ngIf="progress > 0 && htmlContent?.isIframeSupported.toLowerCase() === 'no'"
+    <mat-progress-bar mode="determinate" *ngIf="progress > 0 && htmlContent?.isIframeSupported !== 'Yes'"
       [value]="progress"></mat-progress-bar>
 
     <div class="flex flex-between padding-top-s">
-      <!-- <a type="button" [ngClass]="mobAppSvc?.isMobile ? 'block' : 'hidden'" mat-button
-        [href]="this.htmlContent?.artifactUrl" target="_blank" #mobileOpenInNewTab>Open in New Tab</a> -->
+      <a type="button" [ngClass]="mobAppSvc?.isMobile ? 'block' : 'hidden'" mat-button
+        [href]="this.htmlContent?.artifactUrl" target="_blank" #mobileOpenInNewTab>Open in New Tab</a>
 
-      <!-- <button [ngClass]="!mobAppSvc?.isMobile ? 'block' : 'hidden'" mat-raised-button color="primary" type="button" i18n
+      <button [ngClass]="!mobAppSvc?.isMobile ? 'block' : 'hidden'" mat-raised-button color="primary" type="button" i18n
         mat-button (click)="openInNewTab()">
         Open in New Window
-      </button> -->
+      </button>
       <button type="button" *ngIf="
           htmlContent?.isIframeSupported === 'Maybe' ||
           (isIntranetUrl && htmlContent?.isIframeSupported === 'Yes') ||
@@ -81,7 +81,7 @@
     details
     page.
   </h2>
-</div>
+</div> -->
 <div class="container-v2">
   <!-- [hidden]="this.pageFetchStatus !== 'done'" *ngIf="
     htmlContent?.isIframeSupported !== 'No' &&

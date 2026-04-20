@@ -1,0 +1,152 @@
+<div class="question-container">
+  <h2 class="question-title">Survey Questions</h2>
+
+  <div class="form-container">
+    <div class="course-info">
+      <span class="course-label">Content : </span>
+      <span class="course-name">{{courseName}}</span>
+    </div>
+
+    <form [formGroup]="questionForm" class="question-form" *ngIf="systemGeneratedFields.length > 0">
+      <!-- Dynamic system-generated questions -->
+      <div class="question-block" *ngFor="let field of systemGeneratedFields; let i = index">
+        <div class="question-text">
+          <span class="question-number">{{i + 1}}.</span>
+          <label class="required">{{field.name}}</label>
+        </div>
+
+        <!-- Rating scale question -->
+        <div class="rating-scale" *ngIf="field.fieldType === 'numericRating'">
+          <span class="scale-label">{{field.minLabel}}</span>
+          <mat-radio-group [formControlName]="field.id" class="rating-group">
+            <mat-radio-button *ngFor="let option of getRatingValues(field)" [value]="option.key" class="rating-option"
+              [disabled]="true">
+              {{option.value}}
+            </mat-radio-button>
+          </mat-radio-group>
+          <span class="scale-label">{{field.maxLabel}}</span>
+        </div>
+
+        <!-- Textarea question -->
+        <div class="text-answer" *ngIf="field.fieldType === 'textarea'">
+          <textarea [formControlName]="field.id" class="answer-textarea" placeholder="Type your answer here..."
+            [maxlength]="300" (input)="updateCharCount(field.id, $event)" readonly></textarea>
+          <div class="char-count">{{charCounts[field.id] || 0}}/300</div>
+        </div>
+      </div>
+    </form>
+
+    <!-- Additional Questions Section -->
+    <div class="additional-questions-section">
+      <h3 class="additional-title flex flex-middle gap-1">Additional Question ({{additionalQuestionCount}}/2)
+        <mat-icon class="info-icon pt-1" matTooltip="You may add 2 more questions">info_outline</mat-icon>
+      </h3>
+
+      <!-- Saved Additional Questions -->
+      <div class="saved-questions" *ngIf="savedAdditionalQuestions.length > 0">
+        <div class="saved-question-item" *ngFor="let savedQ of savedAdditionalQuestions">
+          <div class="saved-question-header">
+            <span class="question-type-badge">{{savedQ.type === 'multiple-mcq' ? 'Multi Select' : savedQ.type ===
+              'single-mcq' ? 'Single Select' : 'Text'}}</span>
+            <button mat-icon-button (click)="deleteAdditionalQuestion(savedQ.id)" class="delete-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <p class="saved-question-text">{{savedQ.question}}</p>
+          <div class="saved-options">
+            <span class="saved-option" *ngFor="let opt of savedQ.options">{{opt}}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MCQ Editor -->
+      <div class="mcq-editor" *ngIf="showMcqEditor">
+        <form [formGroup]="mcqEditorForm">
+          <div class="editor-header">
+            <h4 class="editor-type-label">{{currentMcqType === 'multiple-mcq' ? 'Multiple selection-MCQs' :
+              currentMcqType === 'single-mcq' ? 'Single selection-MCQs' : 'Text'}}</h4>
+            <button mat-icon-button type="button" (click)="closeMcqEditor()" class="close-editor-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div class="form-section mat-full-radius">
+            <label class="field-label required">Question</label>
+            <mat-form-field appearance="outline" class="full-width">
+              <input matInput placeholder="Type here" formControlName="question">
+              <mat-error *ngIf="mcqEditorForm.get('question')?.hasError('required')">
+                Question is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="editor-row mat-full-radius">
+            <mat-form-field appearance="outline" class="selection-type-field">
+              <mat-select formControlName="selectionType">
+                <mat-option value="multiple-mcq">Multi Select</mat-option>
+                <mat-option value="single-mcq">Single Select</mat-option>
+                <mat-option value="text">Text</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div class="toggle-group">
+              <!-- <mat-slide-toggle formControlName="isRequired">
+                Required
+              </mat-slide-toggle> -->
+              <!-- <mat-slide-toggle formControlName="allowNA">
+                User can choose N/A option
+              </mat-slide-toggle> -->
+            </div>
+
+            <button mat-button class="btn-common btn-primary" [ngClass]="{'btn-disable': !mcqEditorForm.valid}"
+              type="button" (click)="saveMcqQuestion()" [disabled]="!mcqEditorForm.valid">
+              Save
+            </button>
+          </div>
+
+          <div class="options-container" formArrayName="options" *ngIf="currentMcqType !== 'text'">
+            <div class="option-row mat-full-radius" *ngFor="let option of mcqOptions.controls; let i = index">
+              <mat-form-field appearance="outline" class="option-field">
+                <input matInput [placeholder]="'Option ' + (i + 1)" [formControlName]="i">
+              </mat-form-field>
+              <button mat-icon-button type="button" (click)="removeOption(i)" class="remove-option-btn"
+                [disabled]="mcqOptions.length === 2">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="addOption()" class="add-option-btn"
+                *ngIf="i === mcqOptions.length - 1 && mcqOptions.length < 6">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="question-type-cards" *ngIf="!showMcqEditor && additionalQuestionCount < 2">
+        <div class="question-type-card" (click)="addQuestionType('multiple-mcq')">
+          <div class="card-content">
+            <h4 class="card-title margin-remove">Multiple selection-MCQs</h4>
+            <!-- <p class="card-description">Add new Files, Links or Videos to your course from library.</p> -->
+          </div>
+          <mat-icon class="card-arrow">chevron_right</mat-icon>
+        </div>
+
+        <div class="question-type-card" (click)="addQuestionType('single-mcq')">
+          <div class="card-content">
+            <h4 class="card-title margin-remove">Single selection-MCQs</h4>
+            <!-- <p class="card-description">Add new Files, Links or Videos to your course from library.</p> -->
+          </div>
+          <mat-icon class="card-arrow">chevron_right</mat-icon>
+        </div>
+
+        <div class="question-type-card" (click)="addQuestionType('text')">
+          <div class="card-content">
+            <h4 class="card-title margin-remove">Text</h4>
+            <!-- <p class="card-description">Add new Files, Links or Videos to your course from library.</p> -->
+          </div>
+          <mat-icon class="card-arrow">chevron_right</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

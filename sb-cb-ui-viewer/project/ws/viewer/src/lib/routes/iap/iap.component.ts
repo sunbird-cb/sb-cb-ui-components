@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { NsContent, NsDiscussionForum, WidgetContentService } from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
-import { EventService, SubapplicationRespondService, WsEvents } from '@ws-widget/utils'
+import { NsContent, NsDiscussionForum, WidgetContentService } from '@sunbird-cb/collection'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
+import { EventService, WsEvents } from '@sunbird-cb/utils'
 import { fromEvent, Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
 import { ViewerUtilService } from '../../viewer-util.service'
+import { SubapplicationRespondService } from '../../services/subapplication-responsd.service'
 
 @Component({
   selector: 'viewer-iap',
@@ -18,7 +19,7 @@ export class IapComponent implements OnInit, OnDestroy {
   forPreview = window.location.href.includes('/author/')
   isPreviewMode = false
   isFetchingDataComplete = false
-  iapData: NsContent.IContent | null = null
+  iapData: NsContent.IContent | any | null = null
   oldData: NsContent.IContent | null = null
   alreadyRaised = false
   discussionForumWidget: NsWidgetResolver.IRenderConfigWithTypedData<
@@ -106,8 +107,8 @@ export class IapComponent implements OnInit, OnDestroy {
       this.activatedRoute.snapshot.queryParams.collectionType
       && this.iapData) {
       await this.contentSvc.continueLearning(this.iapData.identifier,
-                                             this.activatedRoute.snapshot.queryParams.collectionId,
-                                             this.activatedRoute.snapshot.queryParams.collectionType,
+        this.activatedRoute.snapshot.queryParams.collectionId,
+        this.activatedRoute.snapshot.queryParams.collectionType,
       )
     } else if (this.iapData) {
       await this.contentSvc.continueLearning(this.iapData.identifier)

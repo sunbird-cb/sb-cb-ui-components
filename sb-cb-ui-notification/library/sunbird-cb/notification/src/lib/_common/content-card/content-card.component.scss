@@ -1,0 +1,166 @@
+.card-container {
+  position: relative;
+  width: 245px;
+  height: 100%;
+  min-height: 346px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  box-shadow: 0 10px 30px #9993;
+  overflow: hidden;
+  height: 346px;
+  margin: 20px 8px 8px;
+}
+
+.card-img {
+  min-width: 245px;
+  max-height: 140px;
+  min-height: 140px;
+  display: block;
+  object-fit: fill;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  width: 100%;
+}
+
+.duration-box {
+  background: #000;
+  position: absolute;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.duration-box.right-corner {
+  right: 4px;
+  bottom: 4px;
+}
+
+.duration-box .mat-icon {
+  vertical-align: middle;
+  color: #fff !important;
+  height: 14px !important;
+  width: 14px !important;
+  font-size: 14px;
+}
+
+.duration-box .duration {
+  font: 700 12px / 16px Lato;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+.course_widget {
+  margin-top: 10px;
+
+  .mat-icon {
+    vertical-align: middle;
+    color: #ef951e !important;
+  }
+
+  .course_v2 {
+    border: 1px solid #ef951e;
+    padding: 4px 8px;
+    align-items: end;
+    border-radius: 16px;
+  }
+
+  .main_icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+
+.mat-subheading-1 {
+  /* stylelint-disable */
+  font: 600 14px/24px Montserrat;
+  /* stylelint-enable */
+}
+
+.title-text {
+  margin: 12px 0;
+  position: relative;
+  overflow: hidden;
+  word-break: break-word;
+  white-space: initial;
+  margin: 8px 0;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 48px;
+}
+
+.course_logo_box {
+  width: 38px;
+  height: 38px;
+  background: #fff;
+  border-radius: 8px 8px;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 1px -1px rgb(0 0 0 / 20%), 0px 1px 1px 0px rgb(0 0 0 / 14%), 0px 1px 3px 0px rgb(0 0 0 / 12%);
+
+  img {
+    height: 28px;
+    width: 28px;
+    padding: 5px;
+    display: inline-block;
+  }
+
+  p {
+    display: inline-block;
+    vertical-align: top;
+  }
+}
+
+.org-text {
+  font-size: 12px;
+  font-weight: normal;
+  width: 75%;
+  padding-left: 10px;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: initial;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.rating-session {
+  mat-icon {
+    font-size: 16px;
+    height: 16px;
+    width: 12px;
+    padding-right: 3px;
+    color: #ef951e;
+  }
+
+  span {
+    font-size: 11px;
+  }
+
+}
+
+
+@media screen and (max-width: 767px) {
+  .card-container {
+    position: relative;
+    width: 245px;
+    height: 100%;
+    min-height: 346px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 1px 10px #9993;
+    overflow: hidden;
+    height: 346px;
+    margin: 20px 8px 8px;
+  }
+}

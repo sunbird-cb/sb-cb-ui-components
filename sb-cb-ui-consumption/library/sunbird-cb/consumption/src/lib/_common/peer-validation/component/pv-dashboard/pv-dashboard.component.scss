@@ -1,0 +1,363 @@
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as *;
+
+.dashboard-container {
+  padding: 24px;
+  background: #FAFAFA;
+  min-height: 100vh;
+}
+
+// Header Section
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: white;
+  padding: 24px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .header-content {
+    .title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .subtitle {
+      margin: 4px 0 0 0;
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}
+
+// Tabs Section
+::ng-deep .tabs {
+  background: white;
+  margin-bottom: 1px;
+  padding: 0 24px;
+
+  .mat-tab-label {
+    height: 48px;
+    min-width: 100px;
+    padding: 0 16px;
+    opacity: 1 !important;
+
+    .tab-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+
+      .tab-count {
+        color: #999;
+      }
+    }
+  }
+
+  .mat-tab-label-active {
+    .tab-label {
+      font-weight: 700;
+      color: #1B4CA1;
+
+      .tab-count {
+        color: #1B4CA1;
+      }
+    }
+  }
+
+  .mat-ink-bar {
+    background-color: #1B4CA1 !important;
+    height: 3px;
+  }
+
+  .mat-tab-header {
+    border-bottom: 1px solid #E5E5E5;
+  }
+}
+
+// Filters Section
+.filters {
+  background: white;
+  padding: 24px;
+  margin-bottom: 1px;
+
+  .filter-row {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+
+    .filter-item {
+      flex: 1;
+
+      .filter-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        color: #333;
+      }
+
+      .filter-field {
+        width: 100%;
+      }
+    }
+
+    .search-filter {
+      flex: 2;
+    }
+  }
+}
+
+::ng-deep .filter-field {
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  .mat-form-field-outline {
+    background: white;
+    border-radius: 4px;
+  }
+
+  .mat-form-field-flex {
+    align-items: center;
+  }
+
+  .mat-form-field-infix {
+    padding: 10px 0 !important;
+    border-top: 0;
+  }
+
+  .mat-form-field-prefix {
+    padding-right: 8px;
+    top: 0;
+
+    mat-icon {
+      color: #999;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  }
+
+  .mat-form-field-suffix {
+    top: 0;
+
+    .mat-datepicker-toggle {
+
+      mat-icon,
+      button {
+        vertical-align: middle;
+        line-height: 1;
+      }
+    }
+  }
+
+  input {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .mat-select {
+    font-size: 14px;
+  }
+
+  .mat-select-arrow-wrapper {
+    transform: translateY(0) !important;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  .mat-select-arrow {
+    margin: 0;
+  }
+
+  .mat-pseudo-checkbox::after {
+    color: black !important;
+  }
+}
+
+// Table Section
+.table-container {
+  background: white;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .download-note {
+    margin: 16px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid #F5DFCC;
+    background: #FDF3EA;
+    color: #C36A1D;
+    font-size: 12px;
+  }
+
+  .survey-table {
+    width: 100%;
+    background: white;
+
+    th.mat-header-cell {
+      background-color: #F5F5F5;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      padding: 16px;
+      border-bottom: 1px solid #E5E5E5;
+    }
+
+    td.mat-cell {
+      font-size: 14px;
+      color: #666;
+      padding: 16px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+
+    tr.mat-row:hover {
+      background-color: #FAFAFA;
+    }
+
+    .info-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+      margin-left: 4px;
+      vertical-align: middle;
+      color: #999;
+      cursor: pointer;
+    }
+  }
+}
+
+.download-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+
+  &.in-progress {
+    color: #E77A15;
+  }
+
+  &.ready {
+    color: #1B1B1B;
+
+    mat-icon {
+      color: #1F8B3A;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.download-action-btn {
+  color: #1B4CA1;
+
+  &[disabled] {
+    color: #B5B5B5;
+  }
+}
+
+// Status Badges
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.status-active {
+    background-color: #D1FAE5;
+    color: #065F46;
+  }
+
+  &.status-draft {
+    background-color: #FEF3C7;
+    color: #92400E;
+  }
+
+  &.status-ended {
+    background-color: #FEE2E2;
+    color: #991B1B;
+  }
+
+  &.status-archived {
+    background-color: #E5E7EB;
+    color: #374151;
+  }
+}
+
+// Paginator
+.paginator-container {
+  border-top: 1px solid #E5E5E5;
+  padding: 8px 16px;
+
+  ::ng-deep .mat-paginator {
+    background: transparent;
+
+    .mat-paginator-container {
+      justify-content: flex-end;
+      padding: 0;
+    }
+
+    .mat-paginator-page-size-label,
+    .mat-paginator-range-label {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+}
+
+// Responsive Design
+@include breakpoint-xs {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .filters {
+    .filter-row {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+
+    .survey-table {
+      min-width: 800px;
+    }
+  }
+}
+
+.course-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  img {
+    width: 85px;
+    height: 50px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  span {
+    flex: 1;
+    line-height: 1.4;
+  }
+}
+
+.download-thumbnail-placeholder {
+  width: 85px;
+  height: 50px;
+  border-radius: 4px;
+  border: 1px solid #D8D8D8;
+  background: #F3F3F3;
+  flex-shrink: 0;
+}

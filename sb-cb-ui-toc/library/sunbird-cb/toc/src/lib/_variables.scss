@@ -1,0 +1,19 @@
+// Import design-system variables
+@import '@sunbird-cb/design-system/src/styles/ws-vars';
+
+// Status Colors (not in design-system - defining here)
+$colorOrange: #FF9800;
+$colorRed: #F44336;
+$colorGreen: #4CAF50;
+
+// Additional layout variables not in design-system
+$new-max-width: 1200px;
+$card-compact-width: 200px;
+
+// Typography sizes
+$font-size-small: 12px;
+$font-size-medium: 14px;
+$font-size-large: 16px;
+$font-size-xlarge: 20px;
+
+$text-primary: #1b4ca1;

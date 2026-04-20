@@ -1,0 +1,12 @@
+@import '@sunbird-cb/design-system/src/styles/ws-vars';
+@import '@sunbird-cb/design-system/src/styles/ws-mixins';
+@import '../../_variables';
+
+
+
+.description {
+  position: relative;
+  overflow: hidden;
+  height: 4.2em;
+  line-height: 1.4em;
+}

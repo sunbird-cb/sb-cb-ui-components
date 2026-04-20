@@ -4,12 +4,14 @@
     "alwaysStrict": true,
     "baseUrl": "./",
     "declaration": false,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "importHelpers": true,
-    "lib": ["es2018", "dom"],
-    "module": "ESNext",
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "module": "esnext",
     "moduleResolution": "node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
@@ -20,8 +22,12 @@
     "noUnusedParameters": true,
     "outDir": "./dist/out-tsc",
     "paths": {
-      "@sunbird-cb/utils": ["library/sunbird-cb/utils"],
-      "@sunbird-cb/utils/*": ["library/sunbird-cb/utils/*"],
+      "@sunbird-cb/utils": [
+        "library/sunbird-cb/utils"
+      ],
+      "@sunbird-cb/utils/*": [
+        "library/sunbird-cb/utils/*"
+      ]
     },
     "removeComments": true,
     "sourceMap": true,
@@ -30,9 +36,13 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "target": "es2015",
-    "typeRoots": ["node_modules/@types", "./custom_typings"],
-    "plugins": [{
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types",
+      "./custom_typings"
+    ],
+    "plugins": [
+      {
         "name": "@angular/language-service"
       },
       {
@@ -42,6 +52,10 @@
         "configFile": "./tslint.json",
         "suppressWhileTypeErrorsPresent": false
       }
-    ]
+    ],
+    "useDefineForClassFields": false
+  },
+   "angularCompilerOptions": {
+    "compilationMode": "partial",
   }
 }

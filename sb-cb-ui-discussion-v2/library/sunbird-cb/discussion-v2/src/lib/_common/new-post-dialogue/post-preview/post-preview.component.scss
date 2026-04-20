@@ -1,0 +1,224 @@
+.card-l1 {
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #00000033;
+}
+
+
+.card-l2 {
+    background-color: rgba(0, 0, 255, 0.08);
+    border-radius: 0;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #00000033;
+}
+
+.card-l3 {
+    background-color: rgba(243, 150, 47, 0.06);
+    border-radius: 0;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #00000033;
+}
+
+.suspended {
+    opacity: 0.6;
+    cursor: none;
+    pointer-events: none;
+}
+
+.disabled {
+    cursor: none;
+    pointer-events: none;
+}
+
+.circleBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    min-width: 56px;
+    height: 40px;
+    border: 1px solid #00000014;
+    padding: 0 16px;
+    scale: .8;
+    .like-icon {
+        color: #666666;
+        &.user-liked {
+            color: #1D8923;
+        }
+    }
+}
+
+.source-tag{
+    display: flex;
+    height: 16px;
+    min-width: 70px;
+    border-radius: 16px;
+    border: 1px solid #1B4CA1;
+    background-color: #1B4CA11A;
+    color: #1B4CA1;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.verified {
+    color: #1D8923;
+    height: 14px;
+    width: 14px;
+    font-size: 14px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.comment-txt {
+    white-space: initial;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+
+}
+
+::ng-deep  .comment-txt .mention {
+    color: #1B4CA1;
+    background: none;
+}
+
+.expand {
+    -webkit-line-clamp: 3;
+}
+.un-expand {
+    -webkit-line-clamp: 0;
+}
+.more-or-less {
+    font-family: Lato;
+    color: #1b4ca1;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    font-weight: 600;
+    margin: 8px 0;
+}
+
+.mat-mdc-menu-item .mat-icon {
+    margin-right: 8px !important;
+}
+
+
+.discuss-input {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid #00000029;
+    border-bottom: none;
+    padding-right: 54px; // for emoji icon at right
+    &:focus-visible{
+        outline: none;
+    }
+}
+
+.emoji-picker{
+    position: absolute;
+    right: 24px;
+    top: 8px;
+    color: #FF8400;
+    cursor: pointer;
+}
+
+.emoji-mart {
+    top: 40px;
+    left: 16px;
+    max-width: 100%;
+    z-index: 1;
+}
+
+.edit-options {
+    background: #f4f6fa;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    // border: 1px solid #00000029;
+    border-top: none;
+    padding: 4px;
+    mat-icon {
+        cursor: pointer;
+        color: #666;
+    }
+}
+.load-more-comments {
+    button {
+        color: #1B4CA1;
+        font-family: Lato;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        border: 1px solid #1B4CA1;
+        border-radius: 24px;
+    }
+}
+
+.reply-icon {
+    color: #1B4CA1;
+}
+
+.h-divider{
+    height: 0;
+    border-bottom: 1px solid #00000033;
+}
+
+.doc-item {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+  }
+
+  .doc-icon {
+    font-size: 24px;
+  }
+
+  .pdf-icon {
+    color: #ff5252;
+  }
+
+  .doc-icon, .docx-icon {
+    color: #2196f3;
+  }
+
+  .doc-name {
+    font-size: 14px;
+    color: #333;
+    word-break: break-all;
+  }
+
+.doc-link {
+  text-decoration: none;
+  color: #1B4CA1;  // Using your app's primary blue color
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.bookmarkDiv{
+    align-self: center;
+    margin-left: auto;
+}
+
+.verified {
+    color: #1D8923;
+    height: 14px;
+    width: 14px;
+    font-size: 14px;
+}

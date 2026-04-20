@@ -1,0 +1,28 @@
+<div class="comminity-details">
+    <d-v2-card-toggle (hideCardBody)="hideCardBody = $event" [toggleViewBoolean]="expandCard">
+        <div headderBlock>
+            <div class="headding nodtranslate">Other Communities</div>
+        </div>
+        <div contentBodyBlock>
+            <div class="space-y-4 pt-4" *ngIf="communityData && communityData?.length; else noData">
+                <ng-container *ngFor="let community of communityData.slice(0,5)">
+                    <div class="flex gap-4 items-center comminity-details cursor-pointer"
+                        (click)="communicityClickMethod(community)">
+                        <d-v2-avatar-photo [size]="'discussion-s'" [name]="community?.communityName"
+                            [photoUrl]="community?.imageUrl || ''">
+                        </d-v2-avatar-photo>
+                        <div class="community-name " dV2SingleLineTooltip>
+                            <span class="nodtranslate">{{community?.communityName}}</span>
+                        </div>
+                    </div>
+                </ng-container>
+
+            </div>
+            <ng-template #noData>
+                <div class="mt-4">
+                    <d-v2-no-data [iconName]="'forum'" [noText]="'No Communities'"></d-v2-no-data>
+                </div>
+            </ng-template>
+        </div>
+    </d-v2-card-toggle>
+</div>

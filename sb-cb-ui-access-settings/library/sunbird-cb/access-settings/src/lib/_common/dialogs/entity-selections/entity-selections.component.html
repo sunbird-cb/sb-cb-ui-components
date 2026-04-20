@@ -1,0 +1,300 @@
+<div class="flex justify-between dialog-heading items-center">
+  <h2 mat-dialog-title class="mb-0">{{ getModalTitle() }}</h2>
+  <button mat-icon-button class="close-button" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div mat-dialog-content class="dialog-body-wrapper">
+  <ng-container
+    *ngIf="
+      selectionType === selectionTypeEnum.Designation ||
+      selectionType === selectionTypeEnum.Service ||
+      selectionType === selectionTypeEnum.Cadre ||
+      selectionType === selectionTypeEnum.Batch ||
+      selectionType === selectionTypeEnum.Organizations ||
+      selectionType === selectionTypeEnum.CustomField
+    "
+  >
+    <!-- Search Box -->
+    <ng-container *ngIf="selectionType !== selectionTypeEnum.CustomField">
+      <div class="search-container flex items-center gap-4">
+        <div class="mat-full-radius flex-grow">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput placeholder="Type here to search..." [formControl]="searchControl" (keyup.enter)="search()" />
+          </mat-form-field>
+        </div>
+        <button mat-flat-button [disabled]="!searchControl.value" class="flex items-center rounded-full new-bg-color font-bold text-sm text-white search-button" (click)="search()">Search</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectionType === selectionTypeEnum.Organizations">
+      <div class="lato-normal-text-line mt-2 ml-4">Select the Organizations only if this plan needs to be made visible to only selective organizations users.</div>
+    </ng-container>
+    <ng-container *ngIf="selectionType === selectionTypeEnum.Designation">
+      <div class="lato-normal-text-line mt-2 ml-4">Select the Designations only if this plan needs to be made visible to only selective designation users.</div>
+    </ng-container>
+
+    <div class="p-4 pl-0 mt-2">
+      <!-- Filter Options -->
+      <ng-container *ngIf="selectionType !== selectionTypeEnum.Group && selectionType !== selectionTypeEnum.VerificationStatus">
+        <div class="filter-options">
+          <mat-tab-group #tabGroup dynamicHeight mat-stretch-tabs="false" mat-align-tabs="start" (selectedTabChange)="onFilterChange($event)" [(selectedIndex)]="activeTab" [animationDuration]="100">
+            <mat-tab *ngFor="let item of radioSelections" [label]="item.label">
+              <div class="org-container">
+                <!-- A-Z Filter Bar -->
+                <ng-container *ngIf="isLoading">
+                  <div class="spinner-loader flex items-center justify-center">
+                    <mat-spinner></mat-spinner>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="!isLoading">
+                  <!-- Select all option  -->
+                  <ng-container
+                    *ngIf="
+                      ( selectionType === selectionTypeEnum.Cadre ||
+                        selectionType === selectionTypeEnum.CustomField ||
+                        selectionType === selectionTypeEnum.Service ||
+                        selectionType === selectionTypeEnum.Organizations ||
+                        selectionType === selectionTypeEnum.Batch) &&
+                      filterValue === 'all'
+                    "
+                  >
+                    <div class="px-2 py-4 options-checkbox">
+                      <ng-container *ngFor="let item of entityFilterOptions">
+                        <mat-checkbox
+                          class="mr-4"
+                          [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled"
+                          (change)="selectAvailableOptions($event)"
+                          [value]="item?.value"
+                          [checked]="item?.value === 'selectAll' ? areAllSelected() : isOptionSelected(item?.value)"
+                        >
+                          {{ item?.label }}
+                        </mat-checkbox>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <div class="alphabet-filter" *ngIf="selectionType !== selectionTypeEnum.Batch && selectionType !== selectionTypeEnum.CustomField && alphabet?.length">
+                    <ng-container *ngTemplateOutlet="alphabetFilterTemplate; context: { alphabet: alphabet }"></ng-container>
+                  </div>
+
+                  <div class="alphabet-filter" *ngIf="selectionType === selectionTypeEnum.Batch">
+                    <ng-container *ngFor="let letter of batchRanges; let i = index; let last = last">
+                      <button
+                        mat-button
+                        class="range-button px-4"
+                        (click)="scrollToSection(letter)"
+                        [ngClass]="{
+                          'active-range-btn': selectedCharacterRange === letter
+                        }"
+                      >
+                        {{ letter }}
+                      </button>
+                      <div class="divider-apl" *ngIf="!last"></div>
+                    </ng-container>
+                  </div>
+
+                  <!-- Selections for Service -->
+                  <ng-container *ngIf="selectionType === selectionTypeEnum.Service && (application === APPLICATION_ENUM.MDO || applyNewServiceSelections)">
+                    <ng-container *ngIf="filterValue === 'all' && selectionType === selectionTypeEnum.Service">
+                      <div class="flex gap-4 items-center px-2 my-3 options-radio">
+                        <mat-radio-group [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled" 
+                                       [(ngModel)]="selectedServiceType" 
+                                       (change)="onChangeServiceSelectionType($event)"
+                                       class="flex flex-wrap gap-4">
+                          <ng-container *ngFor="let type of serviceSelectionTypes">
+                            <mat-radio-button
+                              [value]="type"
+                              [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled"
+                              [checked]="selectedServiceType === type"
+                              class="service-radio-btn"
+                            >
+                              {{ type }}
+                            </mat-radio-button>
+                          </ng-container>
+                        </mat-radio-group>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="checkIfData; else noData">
+                      <ng-container *ngTemplateOutlet="entityListTemplate"></ng-container>
+                    </ng-container>
+                  </ng-container>
+
+                  <ng-container *ngIf="(selectionType !== selectionTypeEnum.Service)">
+                    <ng-container *ngIf="checkIfData; else noData">
+                      <ng-container *ngTemplateOutlet="entityListTemplate"></ng-container>
+                    </ng-container>
+                  </ng-container>
+
+                  <ng-template #noData>
+                    <div class="no-data p-4 flex flex-column items-center justify-center">
+                      <img src="/assets/icons/no-events.png" alt="no-data" />
+                      <span class="font-bold">No information to display yet</span>
+
+                      <ng-container *ngIf="selectionType === selectionTypeEnum.Designation && orgSelectionIds?.length && !searchControl.value">
+                        <ng-container *ngIf="selectedCharacterRange === '#' && application !== APPLICATION_ENUM.MDO">
+                          <div class="lato-normal-text-line text-center mt-2 mb-2">Designations are not available for the selected organizations.</div>
+                          <button (click)="loadMoreDesignation()" mat-flat-button class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white mt-2">
+                            Load Master Designations
+                          </button>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="selectionType === selectionTypeEnum.Group">
+    <ng-container *ngIf="isLoading">
+      <div class="spinner-loader flex items-center justify-center">
+        <mat-spinner></mat-spinner>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="!isLoading">
+      <div class="flex gap-16 items-center p-4 options-checkbox">
+        <ng-container *ngFor="let group of dataList">
+          <mat-checkbox [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled" [checked]="isSelected(group)" (change)="toggleSelection(group)" [title]="group">
+            {{ group }}
+          </mat-checkbox>
+        </ng-container>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="selectionType === selectionTypeEnum.VerificationStatus">
+    <div class="flex gap-16 items-center p-4 options-checkbox">
+      <ng-container *ngFor="let group of dataList">
+        <mat-checkbox
+          [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled || disabledVerifiedIfModerated(group)"
+          [checked]="isSelectedVerification(group)"
+          (change)="onVerificationChange(group)"
+          [title]="group?.label"
+        >
+          {{ group?.label }}
+        </mat-checkbox>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="selectionType === selectionTypeEnum.CentralDeputation">
+    <div class="flex items-start p-4 flex-column">
+      <div class="lato-normal-text-line">When ON, this training plan will be allocated to all AIS officials marked as on Central Deputation in their profiles.</div>
+      <div class="toggle-central-deputation flex gap-4 items-end">
+        <div class="toggle-central-deputation lato-normal-text-line">Central Deputation</div>
+        <div class="checkbox-toggle">
+          <input
+            [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled"
+            [(ngModel)]="selectedCentralDeputation"
+            (change)="onCentralDeputationChange($event)"
+            id="switch-onDeputation"
+            type="checkbox"
+          />
+          <label for="switch-onDeputation" [attr.data-disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled"></label>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<mat-dialog-actions>
+  <ng-container *ngIf="checkIfData || selectionType === selectionTypeEnum.CentralDeputation">
+    <div class="flex gap-4 items-center ml-auto mr-1 apply-button-container my-2">
+      <ng-container *ngIf="selectionType !== selectionTypeEnum.VerificationStatus && selectionType !== selectionTypeEnum.CentralDeputation">
+        <div class="text-xs">{{ filterValue === "all" ? selectedDataTemp?.length : selectedData?.length }} items selected</div>
+      </ng-container>
+      <ng-container
+        *ngIf="selectionType === selectionTypeEnum?.VerificationStatus || selectionType === selectionTypeEnum?.Group || selectionType === selectionTypeEnum?.CentralDeputation || activeTab === 1"
+      >
+        <button
+          mat-flat-button
+          [disabled]="(selectedData.length === 0 && selectedDataTemp.length === 0) || accessControlCriteriaSelection?.readOnly || data?.disabled"
+          (click)="applySelections()"
+          class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white mt-2"
+        >
+          Apply
+        </button>
+      </ng-container>
+      <ng-container
+        *ngIf="selectionType !== selectionTypeEnum?.VerificationStatus && selectionType !== selectionTypeEnum?.Group && selectionType !== selectionTypeEnum.CentralDeputation && activeTab === 0"
+      >
+        <button
+          mat-flat-button
+          [disabled]="selectedDataTemp.length === 0 || accessControlCriteriaSelection?.readOnly || data?.disabled"
+          (click)="setSelected()"
+          class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white mt-2"
+        >
+          {{ getModalTitle() }}
+        </button>
+      </ng-container>
+    </div>
+  </ng-container>
+</mat-dialog-actions>
+
+<ng-template #entityListTemplate>
+  <div class="flex overflow-x-auto" (scroll)="onScrollPaginate($event)">
+    <ng-container *ngFor="let group of groupedEntityData | keyvalue">
+      <div class="org-column p-2 mr-4" [attr.id]="'section-' + group.key">
+        <div class="org-list">
+          <div class="batch-range-columns">
+            <ng-container *ngIf="group.value && group.value.length">
+              <ng-container *ngFor="let column of group.value">
+                <div class="batch-column">
+                  <div *ngFor="let entity of column" class="org-card py-2">
+                    <ng-container
+                      *ngIf="
+                        selectionType === selectionTypeEnum.Designation ||
+                        selectionType === selectionTypeEnum.Organizations ||
+                        selectionType === selectionTypeEnum.Service ||
+                        selectionType === selectionTypeEnum.Cadre ||
+                        selectionType === selectionTypeEnum.CustomField
+                      "
+                    >
+                      <mat-checkbox
+                        [disabled]="accessControlCriteriaSelection?.readOnly || disableOrganisationIfModerated(entity) || data?.disabled"
+                        [checked]="isSelected(entity)"
+                        (change)="toggleSelection(entity)"
+                        [title]="entity?.fieldValue || entity?.name || entity?.designation || entity?.channel"
+                      >
+                        {{ entity?.fieldValue || entity?.name || entity?.designation || entity?.channel }}
+                      </mat-checkbox>
+                    </ng-container>
+                    <ng-container *ngIf="selectionType === selectionTypeEnum.Batch">
+                      <mat-checkbox [disabled]="accessControlCriteriaSelection?.readOnly || data?.disabled" [checked]="isSelected(entity)" (change)="toggleSelection(entity)" [title]="entity">
+                        {{ entity }}
+                      </mat-checkbox>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #alphabetFilterTemplate let-alphabet="alphabet">
+  <ng-container *ngFor="let letter of alphabet; let i = index; let last = last">
+    <button
+      mat-button
+      class="letter-button"
+      (click)="scrollToSection(letter)"
+      [ngClass]="{
+        'active-range-btn': selectedCharacterRange === letter
+      }"
+    >
+      {{ letter }}
+    </button>
+    <div class="divider-apl" *ngIf="!last"></div>
+  </ng-container>
+</ng-template>

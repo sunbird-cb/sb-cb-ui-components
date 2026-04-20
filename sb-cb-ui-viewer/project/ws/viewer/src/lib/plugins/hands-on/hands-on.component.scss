@@ -1,21 +1,18 @@
-@import '~@ws-widget/design-system/src/styles/_ws-vars.scss';
-@import '~@ws-widget/design-system/src/styles/_ws-mixins.scss';
+@import 'ws-vars';
+@import 'ws-common';
 
 .status {
   display: inline-block;
-
   &.error {
     padding-left: 10px;
     border-left: 5px solid orangered;
     color: red;
   }
-
   &.warning {
     padding-left: 10px;
     border-left: 5px solid orange;
     color: orange;
   }
-
   &.success {
     padding-left: 10px;
     border-left: 5px solid green;
@@ -24,7 +21,6 @@
 
 .code-container {
   min-height: 50vh;
-
   ace-editor {
     font-size: 14px;
   }

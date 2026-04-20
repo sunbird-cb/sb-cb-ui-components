@@ -1,0 +1,30 @@
+<ng-container *ngIf="data && data?.from === 'availableLanguages'">
+    <div class="confirmation-dialog-container">
+        <div class="dialog-header text-left flex justify-between align-items-center">
+            <p class="mat-subheading-1">Available Languages</p> 
+            <a (click)="dialogRef.close()">
+                <mat-icon class="close-icon">close</mat-icon>
+            </a>
+        </div>
+        <div class="lang-msg-wrapper">
+            <p *ngFor="let lang of data?.languageList" class="language-item">
+                <span class="language-name">{{ lang?.name }}</span>
+            </p>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="data && data?.from === 'languageSwitch'">
+    <div class="flex flex-col items-center justify-center text-center">
+        <div>
+            <mat-icon class="header-icon">{{data.icon}}</mat-icon>
+        </div>
+        <div class="mat-subheading-2 margin-bottom-xs whitespace-pre-wrap"> {{ data?.header}} </div>
+        <p class="mat-body-2 whitespace-pre-wrap" [innerHTML]="data?.message"> </p>
+
+        <mat-dialog-actions align="end">
+            <button mat-dialog-close class="close-btn submit-btn">{{ data.cancelButton}}</button>
+            <button [mat-dialog-close]="true" class="accept-btn submit-btn">{{ data.acceptButton}}</button>
+        </mat-dialog-actions>
+    </div>
+</ng-container>

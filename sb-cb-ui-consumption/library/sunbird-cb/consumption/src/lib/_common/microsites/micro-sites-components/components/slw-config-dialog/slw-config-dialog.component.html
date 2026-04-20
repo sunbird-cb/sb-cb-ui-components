@@ -1,0 +1,137 @@
+<h2 mat-dialog-title class="flex flex-middle padding-s margin-remove">Configure State Learning Week</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="slwForm" class="slw-config-form">
+    <!-- Enable Toggle -->
+    <div class="form-section">
+      <h4>Configuration</h4>
+      <div class="toggle-container flex flex-middle">
+        <mat-slide-toggle
+          id="slwEnabled"
+          formControlName="enabled"
+          class="slw-toggle"
+        >
+          <span class="toggle-label">Enable State Learning Week</span>
+        </mat-slide-toggle>
+      </div>
+    </div>
+    <!-- Date Range -->
+    <div class="form-section">
+      <h4>Date Range</h4>
+      <div class="date-range-container">
+        <mat-form-field appearance="outline" class="date-field">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="startDate"
+                 [min]="today" [disabled]="!slwForm.get('enabled')?.value">
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="slwForm.get('startDate')?.invalid">Start date is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="date-field">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate"
+                 [min]="slwForm.get('startDate')?.value || today" [disabled]="!slwForm.get('enabled')?.value">
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-error *ngIf="slwForm.get('endDate')?.hasError('required')">End date is required</mat-error>
+          <mat-error *ngIf="slwForm.get('endDate')?.hasError('dateRange')">End date must be after start date</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- English Content -->
+    <div class="form-section">
+      <h4>English Content</h4>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter title" 
+               aria-label="English title" maxlength="100">
+        <mat-hint align="end">{{slwForm.get('title')?.value?.length || 0}}/100</mat-hint>
+        <mat-error *ngIf="slwForm.get('title')?.invalid">Title is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="3" 
+                  placeholder="Enter description" aria-label="English description"
+                  maxlength="500"></textarea>
+        <mat-hint align="end">{{slwForm.get('description')?.value?.length || 0}}/500</mat-hint>
+        <mat-error *ngIf="slwForm.get('description')?.invalid">Description is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Hindi Content -->
+    <div class="form-section">
+      <h4>Hindi Content (Optional)</h4>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title (Hindi)</mat-label>
+        <input matInput formControlName="titleHi" placeholder="हिंदी शीर्षक दर्ज करें" 
+               aria-label="Hindi title" maxlength="100">
+        <mat-hint align="end">{{slwForm.get('titleHi')?.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Description (Hindi)</mat-label>
+        <textarea matInput formControlName="descriptionHi" rows="3" 
+                  placeholder="हिंदी विवरण दर्ज करें" aria-label="Hindi description"
+                  maxlength="500"></textarea>
+        <mat-hint align="end">{{slwForm.get('descriptionHi')?.value?.length || 0}}/500</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <!-- Button Configuration -->
+    <div class="form-section">
+      <h4>Button Configuration</h4>
+      <div class="button-config-container">
+        <mat-form-field appearance="outline" class="button-field">
+          <mat-label>Button Text</mat-label>
+          <input matInput formControlName="buttonText" placeholder="Enter button text" 
+                 aria-label="Button text" maxlength="50">
+          <mat-hint align="end">{{slwForm.get('buttonText')?.value?.length || 0}}/50</mat-hint>
+          <mat-error *ngIf="slwForm.get('buttonText')?.invalid">Button text is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="width-field">
+          <mat-label>Width</mat-label>
+          <input matInput formControlName="width" placeholder="e.g., 200px" 
+                 aria-label="Button width" pattern="^\d+(px|%|rem|em)$">
+          <mat-hint>Use units like px, %, rem, em</mat-hint>
+          <mat-error *ngIf="slwForm.get('width')?.hasError('pattern')">
+            Please use valid CSS units (px, %, rem, em)
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Organization Info -->
+    <div class="form-section">
+      <h4>Organization Information</h4>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Organization ID</mat-label>
+        <input matInput formControlName="orgId" placeholder="Enter organization ID" 
+               aria-label="Organization ID" maxlength="50">
+        <mat-hint>Unique identifier for the organization</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Organization Name</mat-label>
+        <input matInput formControlName="orgName" placeholder="Enter organization name" 
+               aria-label="Organization name" maxlength="100">
+        <mat-hint align="end">{{slwForm.get('orgName')?.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button class="btn-common btn-secondary" (click)="onCancel()" type="button" aria-label="Cancel configuration">
+    Cancel
+  </button>
+  <button mat-button class="btn-common btn-primary"  [disabled]="slwForm.invalid" 
+          (click)="onSave()" type="button" aria-label="Save configuration">
+    <mat-icon>save</mat-icon>
+    Save Configuration
+  </button>
+</mat-dialog-actions>

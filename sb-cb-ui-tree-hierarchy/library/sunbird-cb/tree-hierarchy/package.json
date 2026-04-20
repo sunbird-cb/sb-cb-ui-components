@@ -1,0 +1,35 @@
+{
+  "name": "@sunbird-cb/tree-hierarchy",
+  "version": "0.0.1-cbrelease-4.8.32",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^16.2.12",
+    "@angular/core": "^16.2.12",
+    "@angular/animations": "^16.2.12",
+    "@angular/cdk": "^16.2.14",
+    "@angular/compiler": "^16.2.12",
+    "@angular/forms": "^16.2.12",
+    "@angular/material": "^16.2.14",
+    "@angular/platform-browser": "^16.2.12",
+    "@angular/platform-browser-dynamic": "^16.2.12",
+    "@angular/router": "^16.2.12",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "4.0.0",
+    "@types/lodash": "4.14.168",
+    "@sunbird-cb/design-system": "0.0.2",
+    "@sunbird-cb/utils-v2": "0.0.22-ang-13-16",
+    "@sunbird-cb/resolver-v2": "0.0.7-ang-13-16",
+    "ngx-image-cropper": "^6.3.4",
+    "moment": "^2.29.1",
+    "d3": "7.8.5",
+    "leader-line": "^1.0.8"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.17",
+    "@types/uuid": "^10.0.0",
+    "@types/d3": "7.4.3"
+  }
+
+}

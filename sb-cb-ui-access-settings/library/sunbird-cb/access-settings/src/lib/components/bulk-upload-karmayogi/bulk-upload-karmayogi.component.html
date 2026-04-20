@@ -1,0 +1,177 @@
+<div class="bulk-upload-wrapper">
+  <div class="flex gap-4 py-4 px-5 wrapper-border">
+    <div class="instructions-download py-4 px-5 border-dotted flex-1">
+      <div class="mb-6 text-style">Open & follow these instruction</div>
+      <div class="instructions-list">
+        <ul class="numbered-list">
+          <ng-container *ngFor="let item of bulkUploadConfig?.uploadInstructions">
+            <li>{{ item }}</li>
+          </ng-container>
+        </ul>
+      </div>
+      <div class="download-sample mt-6">
+        <button mat-flat-button (click)="downloadSample()" class="rounded-full px-4 py-2 font-bold text-sm mat-btn-outline cursor-pointer">
+          Download Sample File
+        </button>
+      </div>
+    </div>
+
+    <div class="bulk-upload-select py-4 px-5 border-dotted flex-1">
+      <div class="right_upload_inner flex flex-col items-center justify-center" wsAuthDragDrop (fileDropped)="onDrop($event)">
+        <div class="flex flex-row items-center justify-center margin-bottom-s">
+          <mat-icon class="svg-ico" svgIcon="excel-sheet"></mat-icon>
+        </div>
+        <div class="items-center justify-center flex flex-col">
+          <a class="new-color cursor-pointer text-sm font-bold mb-1 mt-7" (click)="fileInput.click()">Browse files</a>
+          <p class="mt-2 text-sm">Or</p>
+          <p class="mt-2 ws-mat-black60-text text-base">Drag file to upload</p>
+          <p class="text-xs ws-mat-black87-text margin-remove">Max size: 100 MB</p>
+          <p class="text-xs ws-mat-black60-text margin-remove">Supported file types: CSV</p>
+        </div>
+        <input type="file" #fileInput class="inputfile" accept=".csv" (change)="onDrop($event.target.files[0]); fileInput.value = null" />
+        <div *ngIf="file" class="flex flex-middle justify-center flex-column position-relative pt-5 px-5">
+          <mat-icon class="ws-mat-primary-text" svgIcon="excel-sheet"> </mat-icon>
+          <p class="margin-left-xs mat-h3 font-weight-500 margin-remove-bottom break">
+            <ng-container *ngIf="file; else elseBlock">
+              <span class="flex-wrap"> {{ file?.name }}</span>
+            </ng-container>
+            <ng-template #elseBlock>
+              <span i18n>No file uploaded</span>
+            </ng-template>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="fileName">
+    <div class="filter-by-select my-4">
+      <div class="flex gap-4 items-center">
+        <div class="text-title">Filter By</div>
+        <div class="flex gap-2">
+          <button
+            mat-flat-button
+            (click)="onFilterChange('success')"
+            [ngClass]="currrentFilterType === 'success' ? 'new-bg-color text-white mat-btn-flat' : 'mat-btn-outline'"
+            class="rounded-full px-4 py-2 font-bold text-sm cursor-pointer">
+            Success
+          </button>
+          <button
+            (click)="onFilterChange('error')"
+            mat-flat-button
+            [ngClass]="currrentFilterType === 'error' ? 'new-bg-color text-white mat-btn-flat' : 'mat-btn-outline'"
+            class="rounded-full px-4 py-2 font-bold text-sm cursor-pointer">
+            Error
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="list-table-bulk-upload">
+      <ng-container *ngIf="currrentFilterType === 'success'">
+        <div class="flex items-center gap-2 selection-count mb-4 p-2">
+          <span class="">{{ holdSelectedUsers?.length }}</span>
+          <span class="text-sm font-normal">Items Selected</span>
+        </div>
+        <sb-uic-list-table
+          [data]="isSuccessUserlist"
+          [count]="1"
+          [initialPaginationSize]="bulkUploadConfig['bulkUploadTable']?.initialPaginationSize"
+          [tableConfig]="bulkUploadConfig['bulkUploadTable']"
+          (selectedDataChange)="onSelectingUser($event)"
+          [selected]="holdSelectedUsers"
+          [isDisabled]="isDisabled"
+          [bulkUploadEntriesCount]="{ totalCount: isSuccessUserlist?.length + isErrorUserlist?.length, success: isSuccessUserlist?.length }">
+        </sb-uic-list-table>
+
+        <!-- <ng-container *ngIf="isSuccessUserlist?.length && holdSelectedUsers?.length">
+          <div class="w-full mt-4">
+            <button
+              mat-flat-button
+              (click)="applySelections()"
+              class="flex items-center justify-center rounded-full new-bg-color font-bold text-sm text-white mt-2 w-full">
+              Apply
+            </button>
+          </div>
+        </ng-container> -->
+      </ng-container>
+
+      <ng-container *ngIf="currrentFilterType === 'error'">
+        <div class="wrapper-border rounded-sm p-4">
+          <div class="log-history-text">Log History</div>
+        </div>
+        <div class="information-list py-4 px-6">
+          <!-- <ng-container *ngFor="let item of isErrorUserlist"> -->
+          <ng-container *ngIf="isErrorUserlist?.length > 0; else noErrorList">
+            <div class="rounded-lg wrapper-border py-5 px-4 mb-4">
+              <div class="flex items-center justify-between">
+                <div class="error-log-title flex gap-2 items-center">
+                  <span class="text-title text-dark">File Information</span>
+                  <img src="/assets/icons/icon-wrapper.svg" alt="tooltip-icon" />
+                </div>
+                <button mat-flat-button (click)="downloadErrorFile()" class="rounded-full px-4 py-2 font-bold text-sm mat-btn-outline cursor-pointer">
+                  <mat-icon class="new-color">file_download</mat-icon>
+                  Download error log
+                </button>
+              </div>
+              <div class="my-4 meta-info">
+                <div class="flex gap-2 items-center">
+                  <span class="text-title text-dark">{{ fileName }}</span>
+                  <img src="/assets/icons/error-icon.svg" alt="error-icon" />
+                </div>
+                <div class="text-style text-dark">There's an error occurred while uploading this file.</div>
+              </div>
+              <div class="flex gap-x-6 gap-y-4 falied-records-info">
+                <div class="flex flex-column gap-4 flex-grow-1">
+                  <div>
+                    <p class="text-sm text-gray-500">Name</p>
+                    <p class="font-medium break-all text-dark">
+                      {{ fileName }}
+                    </p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500">Total Records</p>
+                    <p class="font-medium text-dark">{{ isSuccessUserlist?.length + isErrorUserlist?.length }}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 mt-2">Failed Records</p>
+                    <p class="font-medium text-dark">{{ isErrorUserlist?.length }}</p>
+                  </div>
+                </div>
+                <div class="flex flex-column gap-4 flex-grow-1">
+                  <div>
+                    <p class="text-sm text-gray-500">Status</p>
+                    <p class="text-red-600 font-normal">FAILED</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500">Created On</p>
+                    <p class="font-medium text-dark">{{ currentDate | date : "medium" }}</p>
+                  </div>
+                  <div>
+                    <p class="text-sm text-gray-500 mt-2">Updated On</p>
+                    <p class="font-medium text-dark">{{ currentDate | date : "medium" }}</p>
+                  </div>
+                </div>
+                <div class="flex flex-column gap-4 flex-grow-1">
+                  <div>
+                    <p class="text-sm text-gray-500">Success Records</p>
+                    <p class="font-medium text-dark">{{ isSuccessUserlist?.length }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noErrorList>
+            <div class="wrapper-border rounded-lg py-5 px-4 mb-4">
+              <div class="no-data p-4 flex flex-column items-center justify-center">
+                <img src="/assets/icons/no-events.png" alt="no-data" />
+                <span class="font-bold">No information to display yet</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

@@ -2,40 +2,37 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 
 import {
-  MatCardModule,
-  MatDividerModule,
-  MatButtonModule,
-  MatToolbarModule,
-  MatIconModule,
-  MatSnackBarModule,
-} from '@angular/material'
-
-import {
-  BtnContentDownloadModule,
-  BtnContentFeedbackModule,
+  // BtnContentDownloadModule,
+  // BtnContentFeedbackModule,
   BtnContentLikeModule,
-  BtnContentShareModule,
-  BtnGoalsModule,
+  // BtnContentShareModule,
+  // BtnGoalsModule,
   BtnPlaylistModule,
   DisplayContentTypeModule,
   UserImageModule,
   UserContentRatingModule,
   BtnContentFeedbackV2Module,
   BtnPageBackModule,
-} from '@ws-widget/collection'
+} from '@sunbird-cb/collection'
 
 import {
   PipeDurationTransformModule,
   PipeLimitToModule,
   PipePartialContentModule,
-} from '@ws-widget/utils'
+} from '@sunbird-cb/utils'
 
-import { WidgetResolverModule } from '@ws-widget/resolver'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 
 import { QuizComponent } from './quiz.component'
 import { QuizRoutingModule } from './quiz-routing.module'
 
 import { QuizModule as QuizViewContainerModule } from '../../route-view-container/quiz/quiz.module'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatDividerModule } from '@angular/material/divider'
+import { MatIconModule } from '@angular/material/icon'
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
+import { MatToolbarModule } from '@angular/material/toolbar'
 
 @NgModule({
   declarations: [QuizComponent],
@@ -49,18 +46,18 @@ import { QuizModule as QuizViewContainerModule } from '../../route-view-containe
     MatToolbarModule,
     MatIconModule,
     MatSnackBarModule,
-    BtnContentDownloadModule,
-    BtnContentFeedbackModule,
+    // BtnContentDownloadModule,
+    // BtnContentFeedbackModule,
     BtnContentLikeModule,
-    BtnContentShareModule,
-    BtnGoalsModule,
+    // BtnContentShareModule,
+    // BtnGoalsModule,
     BtnPlaylistModule,
     DisplayContentTypeModule,
     UserImageModule,
     PipeDurationTransformModule,
     PipeLimitToModule,
     PipePartialContentModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
     UserContentRatingModule,
     BtnContentFeedbackV2Module,
     BtnPageBackModule,

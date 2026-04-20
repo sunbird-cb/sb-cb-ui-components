@@ -1,7 +1,8 @@
 
 <section class="horizontal-scroll-container h-full" [id]="id"
 [ngClass]="{'px-4': sliderConfig.showNavs && sliderConfig.showNavsSpacing, 'mt-5':sliderConfig.cerificateCardMargin}">
-    <div name="horizontal-scroll-content-strip" class="horizontal-scroll-content" #horizontalScrollElem>
+    <div name="horizontal-scroll-content-strip" class="horizontal-scroll-content" 
+    [ngClass]="{'justify-center': sliderConfig.justifyCenter}" #horizontalScrollElem>
         <ng-content></ng-content>
     </div>
     <div class="navigation {{isMobile? sliderConfig?.responsive?.arrowsPlacement : sliderConfig?.arrowsPlacement}}">
@@ -23,10 +24,20 @@
     <!-- <div class="nextLoading" *ngIf="loadStatus === 'fetching'">
         <mat-spinner></mat-spinner>
     </div> -->    
+    <ng-container *ngIf="extraMeta?.value === sakshamAIEnum.SakshamAI">
+        <div class="flex items-center justify-center">
+            <img src="/assets/images/sakshamAI/ai-icon.svg" alt="loader" width="16" height="16"
+              class="mr-2">
+            <span class="text-xs">{{ 'home.recommendedAIText' | translate }} &nbsp;</span>
+        </div>
+    </ng-container>
 </section>
 
-<div class="dots-container {{isMobile? sliderConfig?.responsive?.dotsAlign : sliderConfig?.dotsAlign}}" 
-*ngIf="(isMobile && sliderConfig?.responsive?.showDots) || (!isMobile && sliderConfig?.showDots)">
-    <!-- <span class="dot" [ngClass]="{ active: j === currentIndex }" -->
-    <span class="dot" [ngClass]="{ active: j === activeNav }" *ngFor="let slide of bottomDotsArray; let j = index" (click)="slideTo(j)"></span>
-</div>
+<ng-container *ngIf="bottomDotsArray.length > 0">
+    <div class="dots-container {{isMobile? sliderConfig?.responsive?.dotsAlign : sliderConfig?.dotsAlign}}"
+        *ngIf="(isMobile && sliderConfig?.responsive?.showDots) || (!isMobile && sliderConfig?.showDots)">
+        <!-- <span class="dot" [ngClass]="{ active: j === currentIndex }" -->
+        <span class="dot" [ngClass]="{ active: j === activeNav }" *ngFor="let slide of bottomDotsArray; let j = index"
+            (click)="slideTo(j)"></span>
+    </div>
+</ng-container>

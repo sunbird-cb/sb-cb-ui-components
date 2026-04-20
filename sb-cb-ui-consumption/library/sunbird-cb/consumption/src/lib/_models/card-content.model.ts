@@ -1,24 +1,28 @@
-import { NsContent } from './widget-content.model';
+import { NsContent } from './widget-content.model'
 
 export namespace NsCardContent {
   export interface ICard {
-    content: NsContent.IContent;
-    cardSubType: TCardSubType;
-    context: { pageSection: string; position?: number };
-    intranetMode?: 'greyOut' | 'hide';
-    deletedMode?: 'greyOut' | 'hide';
-    likes?: number;
-    contentTags?: IContentTags;
-    stateData: any;
-    cardCustomeClass?: any;
+    content: NsContent.IContent
+    cardSubType: TCardSubType
+    context: { pageSection: string; position?: number }
+    intranetMode?: 'greyOut' | 'hide'
+    deletedMode?: 'greyOut' | 'hide'
+    likes?: number
+    contentTags?: IContentTags
+    stateData: any
+    cardCustomeClass?: any
+    sakshamAIGenerated?: string
+    publicCard?: any
+    isiGOTSpecialization?: any
+    retired?: boolean
   }
 
   export interface IContentTags {
-    daysSpan?: number;
-    excludeContentType?: NsContent.EContentTypes[];
-    excludeMimeType?: string[];
-    tag: string;
-    criteriaField?: string;
+    daysSpan?: number
+    excludeContentType?: NsContent.EContentTypes[]
+    excludeMimeType?: string[]
+    tag: string
+    criteriaField?: string
   }
 
   export type TCardSubType =
@@ -30,7 +34,7 @@ export namespace NsCardContent {
     | 'basic-details'
     | 'card-description-back'
     | 'network-card'
-    | 'user-card';
+    | 'user-card'
 
   export enum EContentStatus {
     LIVE = 'Live',

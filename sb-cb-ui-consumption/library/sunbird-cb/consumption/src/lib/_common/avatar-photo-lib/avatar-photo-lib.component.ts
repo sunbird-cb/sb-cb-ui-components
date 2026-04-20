@@ -78,6 +78,10 @@ export class AvatarPhotoLibComponent implements OnInit, OnChanges {
   }
   private createInititals(): void {
     let initials = ''
+    if(!this.name) {
+      this.initials = ''
+      return
+    }
     const array = `${this.name} `.toString().split(' ')
     if (array[0] !== 'undefined' && typeof array[1] !== 'undefined') {
       initials += array[0].charAt(0)

@@ -1,5 +1,5 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 $banner-min-height: 243px;
 
@@ -10,7 +10,29 @@ $banner-min-height: 243px;
   position: relative;
   margin: auto;
   // border-radius: 12px;
-  padding-bottom: 40px;
+  // padding-bottom: 40px;
+  &.inline-meta{
+    padding-bottom: 0 !important;
+  }
+
+  &.flat {
+    // .banner-overlay {
+      .banner {
+        .banner-image{
+          border-radius: 0 !important;
+        }
+      }
+    // }
+  }
+}
+
+.keybanner {
+  // max-height: 442px;
+  //min-height: $banner-min-height;
+  // overflow-y: hidden;
+  position: relative;
+  margin: auto;
+  // border-radius: 12px;
   &.inline-meta{
     padding-bottom: 0 !important;
   }
@@ -82,10 +104,12 @@ $banner-min-height: 243px;
   &.left {
     left: 0;
     transform: translateX(0);
+    z-index: 998;
   }
   &.right{
     left: 100%;
     transform: translateX(-100%);
+    z-index: 998;
   }
   &.top-center{
     left: 0;
@@ -242,9 +266,11 @@ $banner-min-height: 243px;
   &.middle-inline {
     .prev {
       left: 30px;
+      z-index: 998;
     }
     .next {
       right: 30px;
+      z-index: 998;
     }
   }
 }
@@ -299,6 +325,41 @@ $banner-min-height: 243px;
     width: 100%;
     .default-title {
       width: unset !important;
+    }
+  }
+}
+
+.keybanner {
+  .prev {
+    background-color: #F3962F!important;
+    color: white;
+    top: 50%;
+    font-size: 12px;
+    height: 26px !important;
+    width: 26px !important;
+  }
+  .next {
+    top: 50%;
+    background-color: #F3962F!important;
+    color: white;
+    font-size: 12px;
+    height: 26px !important;
+    width: 26px !important;
+  }
+
+  @media screen and (max-width: 768px) { 
+    .prev {
+      top: 50px;
+      left: 0;
+      background-color: #F3962F!important;
+    color: white;
+    }
+    .next {
+      right: 0px;
+      margin-right: -16px;
+      top: 50px;
+      background-color: #F3962F!important;
+    color: white;
     }
   }
 }

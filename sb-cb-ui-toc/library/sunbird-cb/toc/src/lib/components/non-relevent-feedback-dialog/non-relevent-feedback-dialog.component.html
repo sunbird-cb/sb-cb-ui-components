@@ -1,0 +1,15 @@
+<div class="feedback-dialog">
+  <h2 mat-dialog-title>Feedback</h2>
+  <mat-dialog-content>
+    <form [formGroup]="feedbackForm">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Please tell us why this content is not relevant</mat-label>
+        <textarea matInput formControlName="feedback" rows="4"></textarea>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!feedbackForm.valid">Submit</button>
+  </mat-dialog-actions>
+</div>

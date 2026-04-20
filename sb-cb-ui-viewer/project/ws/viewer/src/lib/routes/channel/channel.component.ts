@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { Subscription } from 'rxjs'
-import { NsContent } from '@ws-widget/collection'
+import { NsContent } from '@sunbird-cb/collection'
 import { ActivatedRoute } from '@angular/router'
-import { HttpClient } from '@angular/common/http'
+import { HttpBackend, HttpClient } from '@angular/common/http'
 import { ViewerUtilService } from '../../viewer-util.service'
 
 @Component({
@@ -14,12 +14,12 @@ export class ChannelComponent implements OnInit, OnDestroy {
   private routeDataSubscription: Subscription | null = null
   isFetchingDataComplete = false
   isErrorOccured = false
-  channelData: NsContent.IContent | null = null
+  channelData: NsContent.IContent | null | any = null
   channelManifest: any
   forPreview = window.location.href.includes('/author/')
   constructor(
     private activatedRoute: ActivatedRoute,
-    private http: HttpClient,
+    private httpBackend: HttpBackend,
     private viewerSvc: ViewerUtilService,
   ) { }
 
@@ -52,8 +52,9 @@ export class ChannelComponent implements OnInit, OnDestroy {
   private async transformHandsOn(_content: NsContent.IContent) {
     let manifestFile = null
     if (this.channelData && this.channelData.artifactUrl) {
-      manifestFile = await this.http
-        .get<any>(this.viewerSvc.getAuthoringUrl(this.channelData.artifactUrl))
+      const newHttpClient = new HttpClient(this.httpBackend)
+      manifestFile = await newHttpClient
+        .get<any>(this.channelData.artifactUrl)
         .toPromise()
         .catch((_err: any) => { })
     }

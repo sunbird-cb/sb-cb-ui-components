@@ -1,0 +1,1 @@
+{"version":3,"file":"pipe-ordinal.pipe.d.ts","sourceRoot":"ng://@sunbird-cb/utils-v2/","sources":["lib/pipes/pipe-ordinal/pipe-ordinal.pipe.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,aAAa,EAAE,MAAM,eAAe,CAAA;;AAEnD,qBAGa,eAAgB,YAAW,aAAa;IAEnD,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;yCAFrB,eAAe;uCAAf,eAAe;CAQ3B"}

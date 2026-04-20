@@ -1,0 +1,238 @@
+.strip-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+
+  .section-title-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 400;
+      color: #333;
+    }
+
+    .title-edit-container {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 4px;
+
+      .title-input {
+        padding: 6px 12px;
+        font-size: 16px;
+        border: 1px solid #1976d2;
+        border-radius: 4px;
+        outline: none;
+        min-width: 200px;
+
+        &:focus {
+          border-color: #1976d2;
+          box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+      }
+
+      .char-counter {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.6);
+        align-self: flex-end;
+      }
+    }
+
+    .edit-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      button {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        min-width: auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+          line-height: 1;
+        }
+      }
+
+      .save-btn {
+        mat-icon {
+          color: #4caf50;
+        }
+
+        &:hover {
+          background-color: rgba(76, 175, 80, 0.08);
+        }
+      }
+
+      .cancel-btn {
+        mat-icon {
+          color: #f44336;
+        }
+
+        &:hover {
+          background-color: rgba(244, 67, 54, 0.08);
+        }
+      }
+    }
+
+    .edit-icon-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      min-width: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 1;
+        color: #1976d2;
+      }
+
+      &:hover {
+        background-color: rgba(25, 118, 210, 0.08);
+      }
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #1976d2;
+      text-transform: none;
+      padding: 8px 16px;
+      min-width: auto;
+      height: 36px;
+      border-radius: 4px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 1;
+      }
+
+      &:hover {
+        background-color: rgba(25, 118, 210, 0.04);
+      }
+    }
+
+    .hide-section-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .hide-section-label {
+        font-size: 14px;
+        color: #333;
+      }
+    }
+
+    .delete-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      min-width: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        line-height: 1;
+        color: #d32f2f;
+      }
+
+      &:hover {
+        background-color: rgba(211, 47, 47, 0.08);
+      }
+    }
+  }
+}
+
+// Tabs Section
+.tabs-container {
+  margin-top: 16px;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+
+  .tab-label-text {
+    font-size: 16px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .tab-remove-btn {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    min-width: auto;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      line-height: 1;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  .tab-content {
+    padding: 20px;
+    min-height: 200px;
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+
+      p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 16px;
+      }
+    }
+  }
+}

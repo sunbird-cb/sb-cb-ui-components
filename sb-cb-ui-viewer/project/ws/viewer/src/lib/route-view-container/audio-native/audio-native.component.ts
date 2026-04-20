@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { NsContent, NsDiscussionForum } from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
+import { NsContent, NsDiscussionForum } from '@sunbird-cb/collection'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ActivatedRoute } from '@angular/router'
-import { ConfigurationsService } from '@ws-widget/utils'
+import { ConfigurationsService } from '@sunbird-cb/utils-v2'
 
 @Component({
   selector: 'viewer-audio-native-container',

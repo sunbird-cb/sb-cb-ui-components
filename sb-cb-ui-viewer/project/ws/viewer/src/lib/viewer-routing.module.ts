@@ -16,7 +16,9 @@ import { VideoComponent } from './routes/video/video.component'
 import { VideoModule } from './routes/video/video.module'
 import { YoutubeComponent } from './routes/youtube/youtube.component'
 import { YoutubeModule } from './routes/youtube/youtube.module'
-
+import { OfflineSessionComponent } from './route-view-container/offline-session/offline-session.component'
+import { SurveyModule } from './routes/survey/survey.module'
+// import { ViewerPreviewPopupComponent } from './viewer-preview-popup/viewer-preview-popup.component'
 const routes: Routes = [
   {
     path: 'audio/:resourceId',
@@ -43,36 +45,32 @@ const routes: Routes = [
     data: {
       resourceType: 'certification',
     },
-    loadChildren: './routes/certification/certification.module#CertificationModule',
-    // () =>
-    //   import('./routes/certification/certification.module').then(u => u.CertificationModule),
+    loadChildren: () =>
+      import('./routes/certification/certification.module').then(u => u.CertificationModule),
   },
   {
     path: 'class-diagram',
     data: {
       resourceType: 'class-diagram',
     },
-    loadChildren: './routes/class-diagram/class-diagram.module#ClassDiagramModule',
-    // () =>
-    //   import('./routes/class-diagram/class-diagram.module').then(u => u.ClassDiagramModule),
+    loadChildren: () =>
+      import('./routes/class-diagram/class-diagram.module').then(u => u.ClassDiagramModule),
   },
   {
     path: 'dnd-quiz',
     data: {
       resourceType: 'dnd-quiz',
     },
-    loadChildren: './routes/dnd-quiz/dnd-quiz.module#DndQuizModule',
-    // () =>
-    //   import('./routes/dnd-quiz/dnd-quiz.module').then(u => u.DndQuizModule),
+    loadChildren: () =>
+      import('./routes/dnd-quiz/dnd-quiz.module').then(u => u.DndQuizModule),
   },
   {
     path: 'hands-on',
     data: {
       resourceType: 'hands-on',
     },
-    loadChildren: './routes/hands-on/hands-on.module#HandsOnModule',
-    //  () =>
-    //   import('./routes/hands-on/hands-on.module').then(u => u.HandsOnModule),
+    loadChildren: () =>
+      import('./routes/hands-on/hands-on.module').then(u => u.HandsOnModule),
   },
   {
     path: 'html/:resourceId',
@@ -89,9 +87,8 @@ const routes: Routes = [
     data: {
       resourceType: 'html-picker',
     },
-    loadChildren: './routes/html-picker/html-picker.module#HtmlPickerModule',
-    // () =>
-    //   import('./routes/html-picker/html-picker.module').then(u => u.HtmlPickerModule),
+    loadChildren: () =>
+      import('./routes/html-picker/html-picker.module').then(u => u.HtmlPickerModule),
   },
   {
     path: 'channel/:resourceId',
@@ -108,18 +105,16 @@ const routes: Routes = [
     data: {
       resourceType: 'iap',
     },
-    loadChildren: './routes/iap/iap.module#IapModule',
-    // () =>
-    //   import('./routes/iap/iap.module').then(u => u.IapModule),
+    loadChildren: () =>
+      import('./routes/iap/iap.module').then(u => u.IapModule),
   },
   {
     path: 'interactive-exercise',
     data: {
       resourceType: 'interactive-exercise',
     },
-    loadChildren: './routes/interactive-exercise/interactive-exercise.module#InteractiveExerciseModule',
-    // () =>
-    //   import('./routes/interactive-exercise/interactive-exercise.module').then(u => u.InteractiveExerciseModule),
+    loadChildren: () =>
+      import('./routes/interactive-exercise/interactive-exercise.module').then(u => u.InteractiveExerciseModule),
   },
   {
     path: 'pdf/:resourceId',
@@ -136,27 +131,29 @@ const routes: Routes = [
     data: {
       resourceType: 'quiz',
     },
-    loadChildren: './routes/quiz/quiz.module#QuizModule',
-    // () =>
-    //   import('./routes/quiz/quiz.module').then(u => u.QuizModule),
+    loadChildren: () =>
+      import('./routes/quiz/quiz.module').then(u => u.QuizModule),
   },
   {
-    path: 'rdbms-hands-on',
+    path: 'practice',
+    // component: PracticeTestComponent,
     data: {
-      resourceType: 'rdbms-hands-on',
+      resourceType: 'practice',
+      module: 'Learn',
+      pageId: 'practice',
     },
-    loadChildren: './routes/rdbms-hands-on/rdbms-hands-on.module#RdbmsHandsOnModule',
-    //  () =>
-    //   import('./routes/rdbms-hands-on/rdbms-hands-on.module').then(u => u.RdbmsHandsOnModule),
+    resolve: {
+      content: ViewerResolve,
+    },
+    loadChildren: () => import('./routes/practice-test/practice-test.module').then(p => p.PracticeTestModule),
   },
   {
     path: 'resource-collection',
     data: {
       resourceType: 'resource-collection',
     },
-    loadChildren: './routes/resource-collection/resource-collection.module#ResourceCollectionModule',
-    // () => import('./routes/resource-collection/resource-collection.module')
-    //   .then(u => u.ResourceCollectionModule),
+    loadChildren: () => import('./routes/resource-collection/resource-collection.module')
+      .then(u => u.ResourceCollectionModule),
   },
   {
     path: 'video/:resourceId',
@@ -173,9 +170,8 @@ const routes: Routes = [
     data: {
       resourceType: 'web-module',
     },
-    loadChildren: './routes/web-module/web-module.module#WebModuleModule',
-    // () =>
-    //   import('./routes/web-module/web-module.module').then(u => u.WebModuleModule),
+    loadChildren: () =>
+      import('./routes/web-module/web-module.module').then(u => u.WebModuleModule),
   },
   {
     path: 'youtube/:resourceId',
@@ -197,16 +193,39 @@ const routes: Routes = [
       content: ViewerResolve,
     },
   },
+
   {
-    path: '**',
+    path: 'offline-session/:resourceId',
+    component: OfflineSessionComponent,
     data: {
-      resourceType: 'error',
+      resourceType: 'offline-session',
+      module: 'Learn',
+      pageId: 'offline-session/:resourceId',
     },
     resolve: {
       content: ViewerResolve,
     },
+    // loadChildren: () => import('./routes/offline-session/offline-session.module').then(p => p.OfflineSessionModule),
+  },
+  {
+    path: 'survey',
+    // component: SurveyComponent,
+    data: {
+      resourceType: 'survey',
+      module: 'Learn',
+      pageId: 'survey',
+    },
+    resolve: {
+      content: ViewerResolve,
+      // configData: ConfigurationsService,
+      // profileData: ProfileResolverService,
+    },
+    loadChildren: () => import('./routes/survey/survey.module').then(u => u.SurveyModule),
   },
 ]
+
+// loadChildren: () =>
+//   import('./routes/survey/survey.module').then(u => u.SurveyModule),
 
 @NgModule({
   imports: [
@@ -217,6 +236,7 @@ const routes: Routes = [
     VideoModule,
     YoutubeModule,
     ChannelModule,
+    SurveyModule,
     RouterModule.forChild([
       {
         path: '',

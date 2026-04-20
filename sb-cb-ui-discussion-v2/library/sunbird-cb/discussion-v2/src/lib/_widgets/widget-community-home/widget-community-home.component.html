@@ -1,0 +1,342 @@
+<div class="container mx-auto ">
+    <div class="default-view" [ngClass]="{'hidden-view': isExpandedView}">
+        <div class="flex items-center gap-8 joined-community-container mb-2 cursor-pointer flex-col md:flex-row"
+            (click)="toggleExpandedView()">
+            <div class="joined-community-image">
+                <img src="{{communityData.posterImageUrl}}" alt="" (error)="changeToDefaultThumbnailImg($event)">
+            </div>
+            <div class="community-basic-info  flex flex-wrap justify-between items-start ">
+                <div class="community-info flex-1">
+                    <ng-container [ngTemplateOutlet]="communityName"
+                        [ngTemplateOutletContext]="{'data':{'showCompetency':true}}"></ng-container>
+                </div>
+                <div class="community-action flex gap-2 items-center ">
+                    <div class="hidden md:block">
+                        <!-- <button *ngIf="userJoinedCommunity" class="btn rounded-full text-white w-32 h-8 cursor-pointer un-join-btn" (click)="unJoinCommunity()">Un Join</button> -->
+                        <div class="flex items-center" (click)="$event.stopPropagation()">
+                            <button *ngIf="!userJoinedCommunity"
+                                class="btn rounded-full text-white w-full md:w-32  h-8 cursor-pointer mr-2 "
+                                (click)="joinCommunityPopUp();$event.stopPropagation()">Join</button>
+                            <mat-icon class="cursor-pointer share-icon mr-2"
+                                (click)="enableShare = true; $event.stopPropagation()">share</mat-icon>
+                            <mat-icon *ngIf="userJoinedCommunity" class=" cursor-pointer"
+                                [matMenuTriggerFor]="menu">more_vert</mat-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="expanded-view" [ngClass]="{'active': isExpandedView, 'hidden-view': !isExpandedView}">
+        <div class="banner-container px-4 md:px-0">
+            <img src="{{communityData.posterImageUrl}}" alt="" (error)="changeToDefaultThumbnailImg($event)">
+        </div>
+        <div class="community-basic-info p-4 md:p-0 mb-4 md:mb-8 flex flex-wrap justify-between items-start mt-2">
+            <div class="community-info flex-1">
+                <ng-container [ngTemplateOutlet]="communityName"
+                    [ngTemplateOutletContext]="{'data':{'showCompetency':false}}"></ng-container>
+            </div>
+            <div class="community-action flex gap-2 items-center ">
+                <div class="hidden md:block">
+                    <!-- <button *ngIf="userJoinedCommunity" class="btn rounded-full text-white w-32 h-8 cursor-pointer un-join-btn" (click)="unJoinCommunity()">Un Join</button> -->
+                    <div class="flex items-center">
+                        <button *ngIf="!userJoinedCommunity"
+                            class="btn rounded-full text-white w-full md:w-32  h-8 cursor-pointer mr-2 "
+                            (click)="joinCommunityPopUp()">Join</button>
+                        <mat-icon class="cursor-pointer share-icon mr-2" (click)="enableShare = true">share</mat-icon>
+                        <mat-icon *ngIf="userJoinedCommunity" class=" cursor-pointer"
+                            [matMenuTriggerFor]="menu">more_vert</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="block  md:hidden">
+            <div class="community-action flex gap-2 items-center ">
+                <button *ngIf="!userJoinedCommunity"
+                    class="btn rounded-full text-white w-full md:w-32  h-8 cursor-pointer nodtranslate"
+                    (click)="joinCommunityPopUp()">Join</button>
+            </div>
+        </div>
+        <div class="about-community p-4 md:p-0">
+            <h2 class="nodtranslate">About the community</h2>
+            <p class="margin-top-xs nodtranslate">{{communityData?.description}}</p>
+        </div>
+
+        <div class="mt-8 p-4 md:p-0">
+            <ng-container *ngIf="!strip?.loaderWidgets?.length || !competenciesObject">
+                <div class="flex flex-col">
+                    <div class="pt-mweb-4 mat-subheading-1 flex items-center gap-2 nodtranslate">
+                        {{ 'apptocsinglepage.competencies' | translate }}
+                        <mat-icon
+                            class="cursor-pointer ws-mat-black60-text info-icon mat-icon notranslate material-icons mat-icon-no-color nodtranslate"
+                            [matTooltipPosition]="'below'" #tooltip="matTooltip" (click)="tooltip.toggle()"
+                            matTooltip="{{ 'apptocsinglepage.competenciesTooltip' | translate }}">info_outline</mat-icon>
+                    </div>
+                    {{ 'apptocsinglepage.noCompetencyFound' | translate }}
+                </div>
+            </ng-container>
+            <ng-container *ngIf="strip?.loaderWidgets?.length > 0">
+                <div class="flex flex-col gap-3">
+                    <div class="pt-mweb-4 mat-subheading-1 flex items-center gap-2 nodtranslate">
+                        {{ 'apptocsinglepage.competencies' | translate }}
+                        <mat-icon
+                            class="cursor-pointer ws-mat-black60-text info-icon mat-icon notranslate material-icons mat-icon-no-color nodtranslate"
+                            [matTooltipPosition]="'below'" #tooltip="matTooltip" (click)="tooltip.toggle()"
+                            matTooltip="{{ 'apptocsinglepage.competenciesTooltip' | translate }}">info_outline</mat-icon>
+                    </div>
+                    <div class="flex flex-row gap-3 sm:gap-4 mb-3">
+                        <ng-container *ngFor="let item of competenciesObject">
+                            <div class="themes-button nodtranslate"
+                                [ngClass]="{'theme-activated': competencySelected === item.key}"
+                                (click)="handleShowCompetencies(item, 'selected')">{{ item.key }}</div>
+                        </ng-container>
+                    </div>
+                    <ng-container *ngFor="let item of competenciesObject">
+                        <div *ngIf="item?.key === competencySelected">
+
+                            <ws-utils-horizontal-scroller-v2 [loadStatus]="'done'" [stripConfig]="strip?.stripConfig">
+                                <ng-container *ngFor="let widget of strip?.loaderWidgets;">
+                                    <d-v2-competency-card class="mr-2"
+                                        [widgetData]="widget?.widgetData"></d-v2-competency-card>
+                                </ng-container>
+
+                            </ws-utils-horizontal-scroller-v2>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+    <mat-tab-group class="custom-discuss-tab-container " (selectedTabChange)="onTabChange($event)"
+        [mat-stretch-tabs]="false" mat-align-tabs="center">
+        <ng-container *ngFor="let tab of communityWidgetData?.tabs">
+            <mat-tab [label]="tab.label">
+                <ng-template matTabContent>
+                    <!-- <div class="mt-2">
+                        <ng-container [ngTemplateOutlet]="layout"  [ngTemplateOutletContext]="{'tab':tab}"></ng-container>
+                    </div> -->
+                </ng-template>
+            </mat-tab>
+        </ng-container>
+    </mat-tab-group>
+    <div class="container mx-auto  mt-6">
+        <div class="grid grid-cols-1 px-4 md:px-0 md:grid-cols-12 gap-0 md:gap-4">
+            <!-- Column 1 -->
+            <div class=" rounded-lg col-span-1 md:col-span-3">
+                <div class="hidden  md:block" *ngIf="loadedCommunitiesData">
+                    <d-v2-similar-community-card
+                        (communityClick)="similarCommunity($event)"></d-v2-similar-community-card>
+                </div>
+            </div>
+            <!-- 282,372 -->
+            <!-- Column 2 (Double Width on Large Screens) -->
+            <div class=" rounded-lg col-span-1 md:col-span-6">
+                <div class="">
+                    <ng-container *ngIf="selectedTabName === 'Feeds'">
+                        <d-v2-feed [userJoinedCommunity]="userJoinedCommunity" [discussionId]="discussionId"
+                            [community]="communityData" [widgetData]="feedWidgetData"></d-v2-feed>
+                    </ng-container>
+
+                    <ng-container *ngIf="selectedTabName === 'Links'">
+                        <d-v2-feed [postCategoryTypeFilter]="{'categoryType':['link']}"
+                            [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [selectedTab]="selectedTabName" [widgetData]="feedWidgetData"
+                            [showNewPost]="false"></d-v2-feed>
+                    </ng-container>
+
+                    <ng-container *ngIf="selectedTabName === 'Docs'">
+                        <d-v2-feed [postCategoryTypeFilter]="{'categoryType':['document']}"
+                            [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [selectedTab]="selectedTabName" [widgetData]="feedWidgetData"
+                            [showNewPost]="false"></d-v2-feed>
+                    </ng-container>
+                    <ng-container *ngIf="selectedTabName === 'Members'">
+                        <d-v2-member-details [communityId]="communityId"></d-v2-member-details>
+                    </ng-container>
+                    <ng-container *ngIf="selectedTabName === 'Your Post'">
+                        <d-v2-feed [postCategoryTypeFilter]="{'createdBy': userId}" [selectedTab]="selectedTabName"
+                            [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                    </ng-container>
+                    <ng-container *ngIf="selectedTabName === 'Bookmarked'">
+                        <d-v2-bookmark-list [userJoinedCommunity]="userJoinedCommunity" [communityId]="communityId"
+                            [communityData]="communityData" [widgetData]="feedWidgetData"></d-v2-bookmark-list>
+                    </ng-container>
+                </div>
+                <!-- <mat-tab-group class="custom-discuss-tab-container " (selectedTabChange)="onTabChange($event)"  [mat-stretch-tabs]="false"  mat-align-tabs="start">
+                    <ng-container *ngFor="let tab of communityWidgetData?.tabs">
+                        <mat-tab [label]="tab.label">
+                            <ng-template matTabContent>
+                                <div class="mt-2">
+                                    <ng-container *ngIf="tab?.value === 'feeds'">
+                                        <d-v2-feed [userJoinedCommunity]="userJoinedCommunity" [community]="communityData" [widgetData]="feedWidgetData"></d-v2-feed>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="tab?.value === 'links'">
+                                        <d-v2-feed [postCategoryTypeFilter]="{'categoryType':['link']}"
+                                        [userJoinedCommunity]="userJoinedCommunity" [community]="communityData" [selectedTab]="tab?.value" [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="tab?.value === 'docs'">
+                                        <d-v2-feed [postCategoryTypeFilter]="{'categoryType':['document']}"
+                                        [userJoinedCommunity]="userJoinedCommunity" [community]="communityData" [selectedTab]="tab?.value" [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                                    </ng-container>
+                                    <ng-container *ngIf="tab?.value === 'members'">
+                                        <d-v2-member-details [communityId]="communityId"></d-v2-member-details>
+                                    </ng-container>
+                                    <ng-container *ngIf="tab?.value === 'yourPost'">
+                                        <d-v2-feed [postCategoryTypeFilter]="{'createdBy': userId}" [selectedTab]="tab?.value"
+                                        [userJoinedCommunity]="userJoinedCommunity" [community]="communityData" [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                                    </ng-container>
+                                    <ng-container *ngIf="tab?.value === 'bookmarked'">
+                                        <d-v2-bookmark-list [userJoinedCommunity]="userJoinedCommunity" [communityId]="communityId" [communityData]="communityData" [widgetData]="feedWidgetData"></d-v2-bookmark-list>
+                                    </ng-container>
+                                </div>
+                            </ng-template>
+                        </mat-tab>
+                    </ng-container>
+                </mat-tab-group> -->
+            </div>
+
+            <!-- Column 3 -->
+            <div class=" rounded-lg col-span-1 md:col-span-3">
+                <div class="hidden  md:block">
+                    <ng-container *ngIf="communityData?.communityGuideLines">
+                        <div class="mb-4">
+                            <d-v2-community-guidelines
+                                [communityGuidelines]="communityData?.communityGuideLines"></d-v2-community-guidelines>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="loadedCommunitiesData">
+                        <d-v2-trending-discussions (discussionIdEmit)="trendingDiscussionIdEmit($event)" [emitId]="true"
+                            (discussionId)="getDiscussionId($event)" [communityId]="communityId" [expandCard]="true"
+                            [showCommunity]="false"></d-v2-trending-discussions>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<d-v2-share-discussion *ngIf="enableShare" [shareType]="'copy'" [rootOrgId]="rootOrgId" [content]="communityData"
+    (resetEnableShare)="resetEnableShare($event)"></d-v2-share-discussion>
+
+
+<mat-menu #menu="matMenu" class="comment-card-menu" xPosition="after">
+    <!-- <button mat-menu-item (click)="getAllFlagList()" >
+        <mat-icon class="material material-icons-outlined report-icons">flag</mat-icon><span>Report</span>
+    </button> -->
+    <button mat-menu-item (click)="unJoinCommunity()" *ngIf="userJoinedCommunity">
+        <mat-icon class="report-icons">logout</mat-icon><span class="nodtranslate">Leave</span>
+    </button>
+
+</mat-menu>
+<ng-template #layout let-tab="tab">
+    <div class="container mx-auto  mt-6">
+        <div class="grid grid-cols-1 p-4 md:p-0 md:grid-cols-12 gap-4">
+            <!-- Column 1 -->
+            <div class=" rounded-lg col-span-1 md:col-span-3">
+                <!-- <d-v2-shortcuts [data]="shortCutData"></d-v2-shortcuts> -->
+                <d-v2-similar-community-card (communityClick)="similarCommunity($event)"></d-v2-similar-community-card>
+            </div>
+            <!-- Column 2 (Double Width on Large Screens) -->
+            <div class=" rounded-lg col-span-1 md:col-span-6">
+                <div class="">
+                    <ng-container *ngIf="tab?.value === 'feeds'">
+                        <d-v2-feed [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [widgetData]="feedWidgetData"></d-v2-feed>
+                    </ng-container>
+
+                    <ng-container *ngIf="tab?.value === 'links'">
+                        <d-v2-feed [postCategoryTypeFilter]="{'categoryType':['link']}"
+                            [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                    </ng-container>
+
+                    <ng-container *ngIf="tab?.value === 'docs'">
+                        <d-v2-feed [postCategoryTypeFilter]="{'categoryType':['document']}"
+                            [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                    </ng-container>
+                    <ng-container *ngIf="tab?.value === 'members'">
+                        <d-v2-member-details [communityId]="communityId"></d-v2-member-details>
+                    </ng-container>
+                    <ng-container *ngIf="tab?.value === 'yourPost'">
+                        <d-v2-feed [postCategoryTypeFilter]="{'createdBy': userId}"
+                            [userJoinedCommunity]="userJoinedCommunity" [community]="communityData"
+                            [widgetData]="feedWidgetData" [showNewPost]="false"></d-v2-feed>
+                    </ng-container>
+                    <ng-container *ngIf="tab?.value === 'bookmarked'">
+                        <d-v2-bookmark-list [userJoinedCommunity]="userJoinedCommunity" [communityId]="communityId"
+                            [communityData]="communityData" [widgetData]="feedWidgetData"></d-v2-bookmark-list>
+                    </ng-container>
+                </div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class=" rounded-lg col-span-1 md:col-span-3">
+                <ng-container *ngIf="communityData?.communityGuideLines">
+                    <div class="mb-4">
+                        <d-v2-community-guidelines
+                            [communityGuidelines]="communityData?.communityGuideLines"></d-v2-community-guidelines>
+                    </div>
+                </ng-container>
+                <d-v2-trending-discussions (discussionIdEmit)="trendingDiscussionIdEmit($event)"
+                    [communityId]="communityId" [expandCard]="true" [showCommunity]="false"></d-v2-trending-discussions>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #communityName let-data="data">
+    <div class="flex justify-between">
+        <h2 [ngClass]="{'cursor-pointer hoverColor': !data?.showCompetency}" (click)="toggleExpandedView()">{{communityData?.communityName}}</h2>
+        <div class="community-action flex  gap-2 items-start ">
+            <div class="block md:hidden">
+                <div class="flex items-center " (click)="$event.stopPropagation()">
+                    <mat-icon class="cursor-pointer share-icon"
+                        (click)="enableShare = true; $event.stopPropagation()">share</mat-icon>
+                    <mat-icon *ngIf="userJoinedCommunity" class=" cursor-pointer"
+                        [matMenuTriggerFor]="menu">more_vert</mat-icon>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="community-metrix mt-2 gap-y-4 flex-wrap">
+        <span class="flex items-center mr-2">
+            <mat-icon class="mr-1">group</mat-icon>
+            <span class="mr-1 nodtranslate">{{communityData?.countOfPeopleJoined | numberShortener}}</span>
+            <span class="nodtranslate">{{ communityData?.countOfPeopleJoined | plural:'Member':'Members' }}</span>
+        </span>
+        <span class="mx-2 self-end">•</span>
+        <span class="flex items-center mr-2">
+            <mat-icon class="mr-1">list_alt</mat-icon>
+            <span class="mr-1 nodtranslate">{{ communityData?.countOfPostCreated | numberShortener}}</span>
+            <span class="nodtranslate">{{ communityData?.countOfPostCreated | plural:'Post':'Posts' }}</span>
+        </span>
+        <span class="mx-2 self-end">•</span>
+        <span class="flex items-center mr-2">
+            <mat-icon class="mr-1">thumb_up</mat-icon>
+            <span class="mr-1 nodtranslate">{{communityData?.countOfPeopleLiked| numberShortener}}</span>
+            <span class="nodtranslate">{{ communityData?.countOfPeopleLiked | plural:'Like':'Likes' }}</span>
+        </span>
+        <span class="mx-2 self-end">•</span>
+        <span class="flex items-center mr-2">
+            <mat-icon class="mr-1">chat_bubble</mat-icon>
+            <span class="mr-1 nodtranslate">{{communityData?.countOfAnswerPost | numberShortener}}</span>
+            <span class="nodtranslate">{{ communityData?.countOfAnswerPost | plural:'Comment':'Comments' }}</span>
+        </span>
+        <ng-container *ngIf="data?.showCompetency">
+            <span class="mx-2 self-end">•</span>
+            <span class="flex items-center mr-2">
+                <mat-icon class="mr-1">menu_book</mat-icon>
+                <span class="mr-1 nodtranslate">{{communityData?.competencies_v6?.length || 0}}</span>
+                <span class="nodtranslate">{{ 'Competencies' }}</span>
+            </span>
+        </ng-container>
+
+    </div>
+</ng-template>

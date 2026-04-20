@@ -1,0 +1,29 @@
+.shortcuts-wrapper {
+    background-color: white;
+    border: 1px solid #00000029;
+    border-radius: 12px;
+    .shortcuts-list {
+        padding: 16px;
+        .list-data {
+            cursor: pointer;
+            mat-icon {
+                color: #1B4CA1;
+                width: 24px;
+                height: 24px;
+                font-size: 24px;
+            }
+            span {
+                //styleName: Body 2;
+                font-family: Lato;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 16.8px;
+                text-align: left;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                color: #212529;
+
+            }
+        }
+    }
+}

@@ -1,0 +1,16 @@
+<mat-card class="card-toggle-wrapper">
+    <mat-card-header>
+        <mat-card-title><ng-content select="[headderBlock]"></ng-content></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <ng-container *ngIf="toggleViewBoolean">
+            <ng-content select="[contentBodyBlock]"></ng-content>
+        </ng-container>
+        <div class="flex items-center justify-end" [ngClass]="{'pt-2': toggleViewBoolean}">
+            <a (click)="toggleViewMethod()" class="toggle-btn nodtranslate">
+                {{toggleViewBoolean ? 'Collapse' : 'View'}}
+            </a>
+        </div>
+    </mat-card-content>
+
+</mat-card>

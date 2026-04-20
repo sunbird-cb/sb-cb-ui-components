@@ -1,0 +1,54 @@
+<div class="mcq-container">
+  <!-- Options List -->
+  <div class="options-list">
+    <div class="option-item" *ngFor="let option of optionsList; let i = index">
+      <!-- Correct Answer Selector -->
+      <div class="correct-selector">
+        <!-- Radio for MCQ-SCA and MCQ-SCA-TF -->
+        <div *ngIf="isMCQSCA() || isMCQTrueFalse()" class="radio-wrapper">
+          <input type="radio" [name]="'correct-answer'" [id]="'correct-' + option.id" [value]="option.id"
+            [(ngModel)]="correctAnswer" (change)="onCorrectAnswerChange(option.id)" [disabled]="isReadOnly">
+          <label [for]="'correct-' + option.id" class="correct-label">Correct</label>
+        </div>
+
+        <!-- Checkbox for MCQ-MCA -->
+        <div *ngIf="isMCQMCA()" class="checkbox-wrapper">
+          <input type="checkbox" [id]="'correct-' + option.id" [(ngModel)]="option.isCorrect"
+            (change)="onCorrectAnswerToggle(option)" [disabled]="isReadOnly">
+          <label [for]="'correct-' + option.id" class="correct-label">Correct</label>
+        </div>
+
+        <!-- Weight input for MCQ-MCA-W -->
+        <div *ngIf="isMCQWeighted()" class="weight-wrapper">
+          <mat-form-field appearance="outline" class="weight-field">
+            <mat-label>Weight</mat-label>
+            <input matInput type="number" min="0" max="100" [id]="'weight-' + option.id" [(ngModel)]="option.weight"
+              (ngModelChange)="onWeightChange(option, $event)" placeholder="0" [disabled]="isReadOnly">
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Option Content -->
+      <div class="option-content">
+        <!-- True/False Display -->
+        <div *ngIf="isMCQTrueFalse()" class="true-false-label">
+          <strong>{{ option.value }}</strong>
+        </div>
+
+        <!-- Rich Text Editor for Option -->
+        <div *ngIf="!isMCQTrueFalse()" class="option-editor">
+          <sb-uic-assessment-rich-text [textToBeShown]="option.text" (getContent)="onOptionTextChange(option, $event)"
+            [showAudioVideoToolBar]="false" [readOnly]="isReadOnly">
+          </sb-uic-assessment-rich-text>
+        </div>
+      </div>
+
+      <!-- Remove Option Button (only for non-True/False) -->
+      <div *ngIf="!isMCQTrueFalse() && optionsList.length > 2 && !isReadOnly" class="option-actions">
+        <button mat-icon-button (click)="removeOption(i)" class="remove-btn" matTooltip="Remove Option">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

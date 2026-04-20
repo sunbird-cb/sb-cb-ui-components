@@ -1,77 +1,77 @@
 <div class="widget-card-content-new">
-    <ng-container *ngIf="widgetData && (((widgetData?.deletedMode || 'none') === 'hide' && !!!isLiveOrMarkForDeletion)
+  <ng-container *ngIf="widgetData && (((widgetData?.deletedMode || 'none') === 'hide' && !!!isLiveOrMarkForDeletion)
     ? false
     : !((widgetData?.intranetMode || 'none') === 'hide' && !!showIntranetContent))"
-      [ngSwitch]="( (widgetData && widgetData?.cardSubType) || 'cardPortraitLib')">
-      <ng-container *ngSwitchDefault [ngTemplateOutlet]="cardPortraitLib"></ng-container>
-      <ng-container *ngSwitchCase="'user-card'" [ngTemplateOutlet]="cardUser"></ng-container>
-      <ng-container *ngSwitchCase="'card-portrait-lib-skeleton'" [ngTemplateOutlet]="cardPortraitLibSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-portrait-lib'" [ngTemplateOutlet]="cardPortraitLib"></ng-container>
-      <ng-container *ngSwitchCase="'card-landscape-lib-skeleton'" [ngTemplateOutlet]="cardLandscapeLibSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-landscape-lib'" [ngTemplateOutlet]="cardLandscapeLib"></ng-container>
-      <ng-container *ngSwitchCase="'card-wide-lib-skeleton'" [ngTemplateOutlet]="cardWideLibSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-wide-lib'" [ngTemplateOutlet]="cardWideLib"></ng-container>
-      <ng-container *ngSwitchCase="'card-wide-v2'" [ngTemplateOutlet]="cardWideV2"></ng-container>
-      <ng-container *ngSwitchCase="'card-wide-v2-skeleton'" [ngTemplateOutlet]="cardWideV2Skeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-mdo-lib'" [ngTemplateOutlet]="cardMdo"></ng-container>
-      <ng-container *ngSwitchCase="'card-mdo-home-lib'" [ngTemplateOutlet]="cardMdoHome"></ng-container>
-      <ng-container *ngSwitchCase="'card-mdo-home-lib-skeleton'" [ngTemplateOutlet]="cardMdoHomeSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-mdo-lib-skeleton'" [ngTemplateOutlet]="cardMdoSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-scheduled-assessment'" [ngTemplateOutlet]="cardScheduledAssessment"></ng-container>
-      <ng-container *ngSwitchCase="'card-scheduled-assessment-skeleton'" [ngTemplateOutlet]="cardScheduledAssessmentSkelton"></ng-container>
-      <ng-container *ngSwitchCase="'card-karma-program-lib'" [ngTemplateOutlet]="cardKarmaProgram"></ng-container>
-      <ng-container *ngSwitchCase="'card-karma-program-lib-skeleton'" [ngTemplateOutlet]="cardKarmaProgramSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-progress-portrait-lib'" [ngTemplateOutlet]="cardProgressLib"></ng-container>
-      <ng-container *ngSwitchCase="'card-progress-portrait-lib-skeleton'" [ngTemplateOutlet]="cardProgressLibSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-karma-program-lib-v2'" [ngTemplateOutlet]="cardKarmaProgramV2"></ng-container>
-      <ng-container *ngSwitchCase="'card-karma-program-lib-v2-skeleton'" [ngTemplateOutlet]="cardKarmaProgramV2"></ng-container>
-      <ng-container *ngSwitchCase="'card-providers-lib'" [ngTemplateOutlet]="cardProvider"></ng-container>
-      <ng-container *ngSwitchCase="'card-providers-lib-skeleton'" [ngTemplateOutlet]="cardProviderSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-portrait-ext-lib-skeleton'" [ngTemplateOutlet]="cardPortraitExtLibSkeleton"></ng-container>
-      <ng-container *ngSwitchCase="'card-portrait-ext-lib'" [ngTemplateOutlet]="cardPortraitExtLib"></ng-container>
+    [ngSwitch]="( (widgetData && widgetData?.cardSubType) || 'cardPortraitLib')">
+    <ng-container *ngSwitchDefault [ngTemplateOutlet]="cardPortraitLib"></ng-container>
+    <ng-container *ngSwitchCase="'user-card'" [ngTemplateOutlet]="cardUser"></ng-container>
+    <ng-container *ngSwitchCase="'card-portrait-lib-skeleton'"
+      [ngTemplateOutlet]="cardPortraitLibSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-portrait-lib'" [ngTemplateOutlet]="cardPortraitLib"></ng-container>
+    <ng-container *ngSwitchCase="'card-landscape-lib-skeleton'"
+      [ngTemplateOutlet]="cardLandscapeLibSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-landscape-lib'" [ngTemplateOutlet]="cardLandscapeLib"></ng-container>
+    <ng-container *ngSwitchCase="'card-wide-lib-skeleton'" [ngTemplateOutlet]="cardWideLibSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-wide-lib'" [ngTemplateOutlet]="cardWideLib"></ng-container>
+    <ng-container *ngSwitchCase="'card-wide-v2'" [ngTemplateOutlet]="cardWideV2"></ng-container>
+    <ng-container *ngSwitchCase="'card-wide-v2-skeleton'" [ngTemplateOutlet]="cardWideV2Skeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-mdo-lib'" [ngTemplateOutlet]="cardMdo"></ng-container>
+    <ng-container *ngSwitchCase="'card-mdo-home-lib'" [ngTemplateOutlet]="cardMdoHome"></ng-container>
+    <ng-container *ngSwitchCase="'card-mdo-home-lib-skeleton'" [ngTemplateOutlet]="cardMdoHomeSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-mdo-lib-skeleton'" [ngTemplateOutlet]="cardMdoSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-scheduled-assessment'"
+      [ngTemplateOutlet]="cardScheduledAssessment"></ng-container>
+    <ng-container *ngSwitchCase="'card-scheduled-assessment-skeleton'"
+      [ngTemplateOutlet]="cardScheduledAssessmentSkelton"></ng-container>
+    <ng-container *ngSwitchCase="'card-karma-program-lib'" [ngTemplateOutlet]="cardKarmaProgram"></ng-container>
+    <ng-container *ngSwitchCase="'card-karma-program-lib-skeleton'"
+      [ngTemplateOutlet]="cardKarmaProgramSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-progress-portrait-lib'" [ngTemplateOutlet]="cardProgressLib"></ng-container>
+    <ng-container *ngSwitchCase="'card-progress-portrait-lib-skeleton'"
+      [ngTemplateOutlet]="cardProgressLibSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-karma-program-lib-v2'" [ngTemplateOutlet]="cardKarmaProgramV2"></ng-container>
+    <ng-container *ngSwitchCase="'card-karma-program-lib-v2-skeleton'"
+      [ngTemplateOutlet]="cardKarmaProgramV2"></ng-container>
+    <ng-container *ngSwitchCase="'card-providers-lib'" [ngTemplateOutlet]="cardProvider"></ng-container>
+    <ng-container *ngSwitchCase="'card-providers-lib-skeleton'"
+      [ngTemplateOutlet]="cardProviderSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-portrait-ext-lib-skeleton'"
+      [ngTemplateOutlet]="cardPortraitExtLibSkeleton"></ng-container>
+    <ng-container *ngSwitchCase="'card-portrait-ext-lib'" [ngTemplateOutlet]="cardPortraitExtLib"></ng-container>
 
-    </ng-container>
+  </ng-container>
 </div>
 
 <ng-template #cardPortraitLibSkeleton>
   <sb-uic-card-portrait [widgetData]="widgetData" [isCardLoading]="true"></sb-uic-card-portrait>
 </ng-template>
 <ng-template #cardPortraitLib>
-  <sb-uic-card-portrait 
-  [cbPlanMapData]="cbPlanMapData"
-  (contentData)="getRedirectUrlData($event)" [widgetData]="widgetData" [isCardLoading]="false"></sb-uic-card-portrait>
+  <sb-uic-card-portrait [cbPlanMapData]="cbPlanMapData" (contentData)="getRedirectUrlData($event)"
+    [widgetData]="widgetData" [isCardLoading]="false"></sb-uic-card-portrait>
 </ng-template>
 <ng-template #cardLandscapeLibSkeleton>
-  <sb-uic-card-landscape [widgetData]="widgetData" 
-  [cbPlanMapData]="cbPlanMapData" [isCardLoading]="true"></sb-uic-card-landscape>
+  <sb-uic-card-landscape [widgetData]="widgetData" [cbPlanMapData]="cbPlanMapData"
+    [isCardLoading]="true"></sb-uic-card-landscape>
 </ng-template>
 <ng-template #cardLandscapeLib>
-  <sb-uic-card-landscape
-    (contentData)="getRedirectUrlData($event)"
-    (triggerTelemetry)="raiseCardClick($event)"
-    [widgetData]="widgetData"
-    [cbPlanMapData]="cbPlanMapData"
-    [isCardLoading]="false">
+  <sb-uic-card-landscape (contentData)="getRedirectUrlData($event)" (triggerTelemetry)="raiseCardClick($event)"
+    [widgetData]="widgetData" [cbPlanMapData]="cbPlanMapData" [isCardLoading]="false">
   </sb-uic-card-landscape>
 </ng-template>
 
 <ng-template #cardWideLib>
-  <sb-uic-card-wide (contentData)="getRedirectUrlData($event)"  [widgetData]="widgetData"></sb-uic-card-wide>
+  <sb-uic-card-wide (contentData)="getRedirectUrlData($event)" [widgetData]="widgetData"></sb-uic-card-wide>
 </ng-template>
 <ng-template #cardWideLibSkeleton>
   <sb-uic-card-wide [widgetData]="widgetData"></sb-uic-card-wide>
 </ng-template>
 
 <ng-template #cardWideV2Skeleton>
-  <sb-uic-card-wide-v2 [widgetData]="widgetData" [isCardLoading]="true" ></sb-uic-card-wide-v2>
+  <sb-uic-card-wide-v2 [widgetData]="widgetData" [isCardLoading]="true"></sb-uic-card-wide-v2>
 </ng-template>
 <ng-template #cardWideV2>
-  <sb-uic-card-wide-v2
-    (contentData)="getRedirectUrlData($event)"
-    (triggerTelemetry)="raiseCardClick($event)"
-    [cbPlanMapData]="cbPlanMapData"
-    [isCardLoading]="false"
-    [widgetData]="widgetData">
+  <sb-uic-card-wide-v2 (contentData)="getRedirectUrlData($event)" (triggerTelemetry)="raiseCardClick($event)"
+    [cbPlanMapData]="cbPlanMapData" [isCardLoading]="false" [widgetData]="widgetData">
   </sb-uic-card-wide-v2>
 </ng-template>
 
@@ -85,41 +85,42 @@
   <sb-uic-card-mdo-channel-v1 [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-card-mdo-channel-v1>
 </ng-template>
 <ng-template #cardMdo>
-  <sb-uic-card-mdo-channel [isCardLoading]="true"  [widgetData]="widgetData"></sb-uic-card-mdo-channel>
+  <sb-uic-card-mdo-channel [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-card-mdo-channel>
 </ng-template>
 <ng-template #cardMdoSkeleton>
-  <sb-uic-card-mdo-channel [isCardLoading]="true"  [widgetData]="widgetData"></sb-uic-card-mdo-channel>
+  <sb-uic-card-mdo-channel [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-card-mdo-channel>
 </ng-template>
 <ng-template #cardKarmaProgramSkeleton>
-  <sb-uic-card-karma-programs [randomColorApply]="true" 
-  [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-card-karma-programs>
+  <sb-uic-card-karma-programs [randomColorApply]="true" [isCardLoading]="true"
+    [widgetData]="widgetData"></sb-uic-card-karma-programs>
 </ng-template>
 <ng-template #cardKarmaProgram>
-  <sb-uic-card-karma-programs [randomColorApply]="true" 
-  [isCardLoading]="false" [widgetData]="widgetData"></sb-uic-card-karma-programs>
+  <sb-uic-card-karma-programs [randomColorApply]="true" [isCardLoading]="false"
+    [widgetData]="widgetData"></sb-uic-card-karma-programs>
 </ng-template>
 <ng-template #cardScheduledAssessmentSkelton>
   <sb-uic-card-assessment [widgetData]="widgetData" [isCardLoading]="true"></sb-uic-card-assessment>
 </ng-template>
 <ng-template #cardScheduledAssessment>
-  <sb-uic-card-assessment [widgetData]="widgetData" (contentData)="getRedirectUrlData($event)" [isCardLoading]="false" [enrollmentMapData]="enrollmentMapData"></sb-uic-card-assessment>
+  <sb-uic-card-assessment [widgetData]="widgetData" (contentData)="getRedirectUrlData($event)"
+    [isCardLoading]="false"></sb-uic-card-assessment>
 </ng-template>
 <ng-template #cardProgressLibSkeleton>
-  <sb-uic-card-progress-portrait-lib 
-  [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-card-progress-portrait-lib>
+  <sb-uic-card-progress-portrait-lib [isCardLoading]="true"
+    [widgetData]="widgetData"></sb-uic-card-progress-portrait-lib>
 </ng-template>
 <ng-template #cardProgressLib>
-  <sb-uic-card-progress-portrait-lib 
-  [isCardLoading]="false" (contentData)="getRedirectUrlData($event)" [widgetData]="widgetData"></sb-uic-card-progress-portrait-lib>
+  <sb-uic-card-progress-portrait-lib [isCardLoading]="false" (contentData)="getRedirectUrlData($event)"
+    (redirectToNewVersion)="redirectToNewVersion($event)" [widgetData]="widgetData"></sb-uic-card-progress-portrait-lib>
 </ng-template>
 <ng-template #cardKarmaProgramV2>
   <!-- <sb-uic-card-karma-programs-v2 [widgetData]="widgetData"><sb-uic-card-karma-programs-v2> -->
 </ng-template>
 <ng-template #cardProvider>
-  <sb-uic-provider-card  [isCardLoading]="false" [widgetData]="widgetData"></sb-uic-provider-card>
+  <sb-uic-provider-card [isCardLoading]="false" [widgetData]="widgetData"></sb-uic-provider-card>
 </ng-template>
 <ng-template #cardProviderSkeleton>
-  <sb-uic-provider-card  [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-provider-card>
+  <sb-uic-provider-card [isCardLoading]="true" [widgetData]="widgetData"></sb-uic-provider-card>
 </ng-template>
 
 <!-- cios card -->
@@ -127,7 +128,6 @@
   <sb-uic-card-portrait-ext [widgetData]="widgetData" [isCardLoading]="true"></sb-uic-card-portrait-ext>
 </ng-template>
 <ng-template #cardPortraitExtLib>
-  <sb-uic-card-portrait-ext 
-  [cbPlanMapData]="cbPlanMapData"
-  (contentData)="getRedirectUrlData($event)" [widgetData]="widgetData" [isCardLoading]="false"></sb-uic-card-portrait-ext>
+  <sb-uic-card-portrait-ext [cbPlanMapData]="cbPlanMapData" (contentData)="getRedirectUrlData($event)"
+    [widgetData]="widgetData" [isCardLoading]="false"></sb-uic-card-portrait-ext>
 </ng-template>

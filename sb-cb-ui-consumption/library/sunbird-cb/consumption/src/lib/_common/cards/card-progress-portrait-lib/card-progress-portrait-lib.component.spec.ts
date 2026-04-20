@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CardProgressPortraitLibComponent } from './card-progress-portrait-lib.component';
 
@@ -6,7 +6,7 @@ describe('CardProgressPortraitLibComponent', () => {
   let component: CardProgressPortraitLibComponent;
   let fixture: ComponentFixture<CardProgressPortraitLibComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CardProgressPortraitLibComponent ]
     })

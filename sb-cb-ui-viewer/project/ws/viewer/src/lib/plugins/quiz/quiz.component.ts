@@ -7,15 +7,17 @@ import {
   SimpleChanges,
   ViewChild, ViewChildren,
 } from '@angular/core'
-import { MatDialog, MatSidenav } from '@angular/material'
+
 import { interval, Subscription } from 'rxjs'
 import { map } from 'rxjs/operators'
 import { NSQuiz } from './quiz.model'
 import { QuestionComponent } from './components/question/question.component'
 import { SubmitQuizDialogComponent } from './components/submit-quiz-dialog/submit-quiz-dialog.component'
 import { OnConnectionBindInfo } from 'jsplumb'
-import { QuizService } from './quiz.service'
-import { EventService } from '../../../../../../../library/ws-widget/utils/src/public-api'
+// import { QuizService } from './quiz.service'
+import { EventService } from '@sunbird-cb/utils'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatSidenav } from '@angular/material/sidenav'
 export type FetchStatus = 'hasMore' | 'fetching' | 'done' | 'error' | 'none'
 
 @Component({
@@ -51,8 +53,8 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
     isAssessment: false,
   }
   @ViewChildren('questionsReference') questionsReference: QueryList<QuestionComponent> | null = null
-  @ViewChild('sidenav', { static: false }) sideNav: MatSidenav | null = null
-  @ViewChild('submitModal', { static: false }) submitModal: ElementRef | null = null
+  @ViewChild('sidenav') sideNav: MatSidenav | null = null
+  @ViewChild('submitModal') submitModal: ElementRef | null = null
   currentQuestionIndex = 0
   currentTheme = ''
   fetchingResultsStatus: FetchStatus = 'none'
@@ -78,7 +80,7 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private events: EventService,
     public dialog: MatDialog,
-    private quizSvc: QuizService,
+    // private quizSvc: QuizService,
   ) { }
 
   ngOnInit() {
@@ -133,13 +135,16 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
     this.markedQuestions = new Set([])
     this.questionAnswerHash = {}
     this.currentQuestionIndex = 0
-    this.timeLeft = this.quizJson.timeLimit
-    if (this.quizJson.timeLimit > -1) {
+    // tslint:disable-next-line: prefer-template
+    this.timeLeft = parseInt(this.quizJson.timeLimit + '', 10)
+    // tslint:disable-next-line: prefer-template
+    if (parseInt(this.quizJson.timeLimit + '', 10) > -1) {
       this.timerSubscription = interval(100)
         .pipe(
           map(
             () =>
-              this.startTime + this.quizJson.timeLimit - Date.now(),
+              // tslint:disable-next-line: prefer-template
+              this.startTime + parseInt(this.quizJson.timeLimit + '', 10) - Date.now(),
           ),
         )
         .subscribe(_timeRemaining => {
@@ -150,7 +155,7 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
             if (this.timerSubscription) {
               this.timerSubscription.unsubscribe()
             }
-            this.submitQuiz()
+            // this.submitQuiz()
           }
         })
     }
@@ -203,78 +208,79 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.submitQuiz()
+          // this.submitQuiz()
         }
       })
     }
   }
 
   submitQuiz() {
-    this.raiseTelemetry('quiz', null, 'submit')
+    // this.raiseTelemetry('quiz', null, 'submit')
     this.isSubmitted = true
     this.ngOnDestroy()
-    if (!this.quizJson.isAssessment) {
+    // if (!this.quizJson.isAssessment) {
+    if (this.quizJson.isAssessment) {
       this.viewState = 'review'
       this.calculateResults()
     } else {
       this.viewState = 'answer'
     }
-    const submitQuizJson = JSON.parse(JSON.stringify(this.quizJson))
-    this.fetchingResultsStatus = 'fetching'
-    const requestData: NSQuiz.IQuizSubmitRequest = this.quizSvc.createAssessmentSubmitRequest(
-      this.identifier,
-      this.name,
-      {
-        ...submitQuizJson,
-        timeLimit: this.quizJson.timeLimit * 1000,
-      },
-      this.questionAnswerHash,
-    )
+    // const submitQuizJson = JSON.parse(JSON.stringify(this.quizJson))
+    // this.fetchingResultsStatus = 'fetching'
+    // const requestData: NSQuiz.IQuizSubmitRequest = this.quizSvc.createAssessmentSubmitRequest(
+    //   this.identifier,
+    //   this.name,
+    //   {
+    //     ...submitQuizJson,
+    //     timeLimit: this.quizJson.timeLimit * 1000,
+    //   },
+    //   this.questionAnswerHash,
+    // )
 
-    const sanitizedRequestData: NSQuiz.IQuizSubmitRequest = this.quizSvc.sanitizeAssessmentSubmitRequest(requestData)
+    // const sanitizedRequestData: NSQuiz.IQuizSubmitRequest = this.quizSvc.sanitizeAssessmentSubmitRequest(requestData)
 
-    this.quizSvc.submitQuizV2(sanitizedRequestData).subscribe(
-      (res: NSQuiz.IQuizSubmitResponse) => {
-        if (this.quizJson.isAssessment) {
-          this.isIdeal = true
-        }
-        this.fetchingResultsStatus = 'done'
-        this.numCorrectAnswers = res.correct
-        this.numIncorrectAnswers = res.inCorrect
-        this.numUnanswered = res.blank
-        this.passPercentage = res.passPercent
-        this.result = res.result
-        if (this.result >= this.passPercentage) {
-          this.isCompleted = true
-        }
-        // const result = {
-        //   result: (this.numCorrectAnswers * 100.0) / this.processedContent.quiz.questions.length,
-        //   total: this.processedContent.quiz.questions.length,
-        //   blank: res.blank,
-        //   correct: res.correct,
-        //   inCorrect: res.inCorrect,
-        //   passPercentage: res.passPercent,
-        // }
-        // this.quizSvc.firePlayerTelemetryEvent(
-        //   this.processedContent.content.identifier,
-        //   this.collectionId,
-        //   MIME_TYPE.quiz,
-        //   result,
-        //   this.isCompleted,
-        //   'DONE',
-        //   this.isIdeal,
-        //   true,
-        // )
-        const top = document.getElementById('quiz-end')
-        if (top !== null) {
-          top.scrollIntoView({ behavior: 'smooth', block: 'start' })
-        }
-      },
-      (_error: any) => {
-        this.fetchingResultsStatus = 'error'
-      },
-    )
-    // this.fetchingResultsStatus = 'done'
+    // this.quizSvc.submitQuizV2(sanitizedRequestData).subscribe(
+    //   (res: NSQuiz.IQuizSubmitResponse) => {
+    //     if (this.quizJson.isAssessment) {
+    //       this.isIdeal = true
+    //     }
+    //     this.fetchingResultsStatus = 'done'
+    //     this.numCorrectAnswers = res.correct
+    //     this.numIncorrectAnswers = res.inCorrect
+    //     this.numUnanswered = res.blank
+    //     this.passPercentage = res.passPercent
+    //     this.result = res.result
+    //     if (this.result >= this.passPercentage) {
+    //       this.isCompleted = true
+    //     }
+    // const result = {
+    //   result: (this.numCorrectAnswers * 100.0) / this.processedContent.quiz.questions.length,
+    //   total: this.processedContent.quiz.questions.length,
+    //   blank: res.blank,
+    //   correct: res.correct,
+    //   inCorrect: res.inCorrect,
+    //   passPercentage: res.passPercent,
+    // }
+    // this.quizSvc.firePlayerTelemetryEvent(
+    //   this.processedContent.content.identifier,
+    //   this.collectionId,
+    //   MIME_TYPE.quiz,
+    //   result,
+    //   this.isCompleted,
+    //   'DONE',
+    //   this.isIdeal,
+    //   true,
+    // )
+    const top = document.getElementById('quiz-end')
+    if (top !== null) {
+      top.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    //   },
+    //       (_error: any) => {
+    //   this.fetchingResultsStatus = 'error'
+    // },
+    // )
+    this.fetchingResultsStatus = 'done'
   }
 
   showAnswers() {
@@ -300,114 +306,114 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   calculateResults() {
-    const correctAnswers = this.quizJson.questions.map(
-      (question: NSQuiz.IQuestion) => {
-        return {
-          questionType: question.questionType,
-          questionId: question.questionId,
-          correctOptions: question.options
-            .filter(option => option.isCorrect)
-            .map(option =>
-              question.questionType === 'fitb' ? option.text : option.optionId,
-            ),
-          correctMtfOptions: question.options
-            .filter(option => option.isCorrect)
-            .map(option =>
-              question.questionType === 'mtf' ? option : undefined,
-            ),
-        }
-      },
-    )
-    // logger.log(correctAnswers);
-    this.numCorrectAnswers = 0
-    this.numIncorrectAnswers = 0
-    correctAnswers.forEach(answer => {
-      const correctOptions = answer.correctOptions
-      const correctMtfOptions = answer.correctMtfOptions
-      let selectedOptions: any =
-        this.questionAnswerHash[answer.questionId] || []
-      if (
-        answer.questionType === 'fitb' &&
-        this.questionAnswerHash[answer.questionId] &&
-        this.questionAnswerHash[answer.questionId][0]
-      ) {
-        selectedOptions =
-          this.questionAnswerHash[answer.questionId][0].split(',') || []
-        let correctFlag = true
-        let unTouched = false
-        if (selectedOptions.length < 1) {
-          unTouched = true
-        }
-        if (correctOptions.length !== selectedOptions.length) {
-          correctFlag = false
-        }
-        if (correctFlag && !unTouched) {
-          for (let i = 0; i < correctOptions.length; i += 1) {
-            if (
-              correctOptions[i].trim().toLowerCase() !==
-              selectedOptions[i].trim().toLowerCase()
-            ) {
-              correctFlag = false
-            }
-          }
-        }
-        if (correctFlag && !unTouched) {
-          this.numCorrectAnswers += 1
-        } else if (!unTouched) {
-          this.numIncorrectAnswers += 1
-        }
-        this.showFitbAnswers()
-      } else if (answer.questionType === 'mtf') {
-        let unTouched = false
-        let correctFlag = true
-        if (selectedOptions.length < 1 || selectedOptions[0].length < 1) {
-          unTouched = true
-        } else if (selectedOptions[0].length < correctMtfOptions.length) {
-          correctFlag = false
-        }
-        if (selectedOptions && selectedOptions[0]) {
-          // logger.log(selectedOptions)
-          // logger.log(correctOptions)
-          (selectedOptions[0] as any[]).forEach(element => {
-            const b = element.sourceId
-            if (correctMtfOptions) {
-              const option = correctMtfOptions[(b.slice(-1) as number) - 1] || { match: '' }
-              const match = option.match
-              if (match && match.trim() === element.target.innerHTML.trim()
-              ) {
-                element.setPaintStyle({
-                  stroke: '#357a38',
-                })
-                this.setBorderColor(element, '#357a38')
-              } else {
-                element.setPaintStyle({
-                  stroke: '#f44336',
-                })
-                correctFlag = false
-                this.setBorderColor(element, '#f44336')
-              }
-            }
-          })
-        }
-        if (correctFlag && !unTouched) {
-          this.numCorrectAnswers += 1
-        } else if (!unTouched) {
-          this.numIncorrectAnswers += 1
-        }
-      } else {
-        if (
-          correctOptions.sort().join(',') === selectedOptions.sort().join(',')
-        ) {
-          this.numCorrectAnswers += 1
-        } else if (selectedOptions.length > 0) {
-          this.numIncorrectAnswers += 1
-        }
-      }
-    })
-    this.numUnanswered =
-      this.quizJson.questions.length -
-      this.numCorrectAnswers -
-      this.numIncorrectAnswers
+    // const correctAnswers = this.quizJson.questions.map(
+    //   (question: Partial<NSQuiz.IQuestion>) => {
+    //     return {
+    //       questionType: question.questionType,
+    //       questionId: question.questionId,
+    //       correctOptions: question.options || []
+    //         .filter(option => option.isCorrect)
+    //         .map(option =>
+    //           question.questionType === 'fitb' ? option.text : option.optionId,
+    //         ),
+    //       correctMtfOptions: question.options
+    //         .filter(option => option.isCorrect)
+    //         .map(option =>
+    //           question.questionType === 'mtf' ? option : undefined,
+    //         ),
+    //     }
+    //   },
+    // )
+    // // logger.log(correctAnswers);
+    // this.numCorrectAnswers = 0
+    // this.numIncorrectAnswers = 0
+    // correctAnswers.forEach(answer => {
+    //   const correctOptions = answer.correctOptions
+    //   const correctMtfOptions = answer.correctMtfOptions
+    //   let selectedOptions: any =
+    //     this.questionAnswerHash[answer.questionId] || []
+    //   if (
+    //     answer.questionType === 'fitb' &&
+    //     this.questionAnswerHash[answer.questionId] &&
+    //     this.questionAnswerHash[answer.questionId][0]
+    //   ) {
+    //     selectedOptions =
+    //       this.questionAnswerHash[answer.questionId][0].split(',') || []
+    //     let correctFlag = true
+    //     let unTouched = false
+    //     if (selectedOptions.length < 1) {
+    //       unTouched = true
+    //     }
+    //     if (correctOptions.length !== selectedOptions.length) {
+    //       correctFlag = false
+    //     }
+    //     if (correctFlag && !unTouched) {
+    //       for (let i = 0; i < correctOptions.length; i += 1) {
+    //         if (
+    //           correctOptions[i].trim().toLowerCase() !==
+    //           selectedOptions[i].trim().toLowerCase()
+    //         ) {
+    //           correctFlag = false
+    //         }
+    //       }
+    //     }
+    //     if (correctFlag && !unTouched) {
+    //       this.numCorrectAnswers += 1
+    //     } else if (!unTouched) {
+    //       this.numIncorrectAnswers += 1
+    //     }
+    //     this.showFitbAnswers()
+    //   } else if (answer.questionType === 'mtf') {
+    //     let unTouched = false
+    //     let correctFlag = true
+    //     if (selectedOptions.length < 1 || selectedOptions[0].length < 1) {
+    //       unTouched = true
+    //     } else if (selectedOptions[0].length < correctMtfOptions.length) {
+    //       correctFlag = false
+    //     }
+    //     if (selectedOptions && selectedOptions[0]) {
+    //       // logger.log(selectedOptions)
+    //       // logger.log(correctOptions)
+    //       (selectedOptions[0] as any[]).forEach(element => {
+    //         const b = element.sourceId
+    //         if (correctMtfOptions) {
+    //           const option = correctMtfOptions[(b.slice(-1) as number) - 1] || { match: '' }
+    //           const match = option.match
+    //           if (match && match.trim() === element.target.innerHTML.trim()
+    //           ) {
+    //             element.setPaintStyle({
+    //               stroke: '#357a38',
+    //             })
+    //             this.setBorderColor(element, '#357a38')
+    //           } else {
+    //             element.setPaintStyle({
+    //               stroke: '#f44336',
+    //             })
+    //             correctFlag = false
+    //             this.setBorderColor(element, '#f44336')
+    //           }
+    //         }
+    //       })
+    //     }
+    //     if (correctFlag && !unTouched) {
+    //       this.numCorrectAnswers += 1
+    //     } else if (!unTouched) {
+    //       this.numIncorrectAnswers += 1
+    //     }
+    //   } else {
+    //     if (
+    //       correctOptions.sort().join(',') === selectedOptions.sort().join(',')
+    //     ) {
+    //       this.numCorrectAnswers += 1
+    //     } else if (selectedOptions.length > 0) {
+    //       this.numIncorrectAnswers += 1
+    //     }
+    //   }
+    // })
+    // this.numUnanswered =
+    //   this.quizJson.questions.length -
+    //   this.numCorrectAnswers -
+    //   this.numIncorrectAnswers
   }
 
   setBorderColor(connection: OnConnectionBindInfo, color: string) {
@@ -437,18 +443,18 @@ export class QuizComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  raiseTelemetry(action: string, optionId: string | null, event: string) {
+  raiseTelemetry(action: any, optionId: string | null, event: string) {
     if (optionId) {
       this.events.raiseInteractTelemetry(
         action,
         event,
         {
-          optionId,
+          //  optionId,
         },
       )
     } else {
       this.events.raiseInteractTelemetry(action, event, {
-        contentId: this.identifier,
+        // contentId: this.identifier,
       })
     }
   }

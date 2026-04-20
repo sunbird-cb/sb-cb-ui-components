@@ -1,0 +1,337 @@
+<div class=" p-4">
+  <div class="flex user-info">
+    <div>
+      <div class="mr-4">
+        <d-v2-avatar-photo [size]="'ml'" [name]="data?.currentUser?.firstName"
+          [photoUrl]="data?.currentUser?.profileImageUrl" [color]="
+                data?.currentUser?.firstName ? '#006400' : '#000'
+            ">
+        </d-v2-avatar-photo>
+      </div>
+    </div>
+
+    <div class="flex items-start justify-center  flex-1 flex-col">
+      <div class="flex items-center">
+        <span class="mat-body-1 bold mr-1 nodtranslate"> {{data?.currentUser?.firstName}} </span>
+        <mat-icon class="icon verified mr-1"
+          *ngIf="data?.currentUser?.profileDetails?.profileStatus?.toLowerCase() === 'verified'" i18n-aria-label
+          aria-label="verified">check_circle</mat-icon>
+      </div>
+      <div class="ws-mat-black60-text mat-body-2 nodtranslate"
+        *ngIf="data?.currentUser?.professionalDetails[0]?.designation">
+        {{data?.currentUser?.professionalDetails[0]?.designation}}
+      </div>
+    </div>
+    <button mat-icon-button (click)="dialogRef.close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+<div class=" h-divider"></div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+  <div class="form-section md:col-span-7">
+    <form [formGroup]="uploadForm" class="p-4">
+      <!-- Community Dropdown -->
+      <div class="flex flex-col items-start gap-2 mb-6 md:flex-row md:items-center md:gap-4 md:mb-4 " *ngIf="isGlobal">
+        <label class="text-gray-700 text-sm font-medium whitespace-nowrap flex items-center gap-1 nodtranslate">
+          Posting in
+          <mat-icon
+            class="cursor-pointer ws-mat-black60-text info-icon mat-icon notranslate material-icons mat-icon-no-color custom-info"
+            [matTooltipPosition]="'below'" #tooltip="matTooltip" (click)="tooltip.toggle()"
+            [matTooltip]="communityInfoText">info_outline</mat-icon>
+          <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="flex-1 w-full custom-mat-form-field">
+          <input type="text" matInput [formControl]="communityCtrl" [matAutocomplete]="auto"
+            placeholder="Search and select community" class="nodtranslate">
+          <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" class="community-autocomplete">
+            <ng-container *ngFor="let community of filteredCommunities">
+              <mat-option [value]="community">
+                {{community?.communityName}}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+          <mat-error *ngIf="communityCtrl.invalid" class="custom-mat-error">Please select a valid community</mat-error>
+        </mat-form-field>
+      </div>
+      <ng-container *ngIf="!isGlobal">
+        <p class="mat-body-1 nodtranslate"> Posting in community - <span
+            class="mat-h3 nodtranslate">{{data?.community?.communityName}}</span>
+        </p>
+      </ng-container>
+
+      <!-- Title -->
+      <!-- <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-medium mb-2">
+          Title <span class="text-red-500">*</span>
+        </label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput formControlName="title" placeholder="Enter your question title" maxlength="100">
+          <mat-hint align="end">{{uploadForm.get('title')?.value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+      </div> -->
+
+      <!-- Question Description -->
+      <div class="flex flex-col w-full">
+        <!-- <label class="block text-gray-700 text-sm font-medium mb-2">
+          Description <span class="text-red-500">*</span>
+        </label> -->
+        <ckeditor [editor]="Editor" formControlName="description" [config]="editorConfig" (ready)="onReady($event)"
+          (change)="onEditorChange($event)" (keyup)="checkCharacterLimit($event)" (focus)="onFocus()">
+        </ckeditor>
+        <!-- <div class="main-container">
+          <div class="editor-container editor-container_classic-editor editor-container_include-word-count" #editorContainerElement>
+            <div class="editor-container__editor">
+              <div #editorElement>
+                <ckeditor [editor]="Editor" formControlName="description" [config]="editorConfig" (ready)="onReady($event)" />
+              </div>
+            </div>
+            <div class="editor_container__word-count" #editorWordCountElement></div>
+          </div>
+        </div> -->
+        <!-- <p class="text-sm text-gray-500 mt-1">Only (a-z/A-Z, 0-9, . - _ $ / : [ ] ' !) characters are supported</p> -->
+        <div class="flex ">
+          <p class="text-sm text-gray-500 mt-1 flex-1 nodtranslate" [ngClass]="{
+                'text-red-500': getEditorTextLength(uploadForm.get('description')?.value) > 3000
+              }">
+            {{getEditorTextLength(uploadForm.get('description')?.value) || 0}}/3000
+            <span class="nodtranslate" *ngIf="getEditorTextLength(uploadForm.get('description')?.value) < 3">(Minimum 3
+              characters
+              required)</span>
+          </p>
+          <div class="relative">
+
+            <!-- <button mat-icon-button color="primary" class="postIcon image-icon mr-2" (click)="toggleEmojiPicker()" > -->
+            <mat-icon class="icon emoji-picker cursor-pointer mr-2" aria-hidden="false" i18n-aria-label
+              aria-label="Emoji" (click)="toggleEmojiPicker()">sentiment_satisfied</mat-icon>
+            <!-- </button> -->
+            <ng-container *ngIf="showEmojiPicker">
+              <br />
+
+              <emoji-mart class="emoji-mart absolute custom-place" set="google" *ngIf="showEmojiPicker"
+                (emojiSelect)="addEmoji($event)" title="Pick your emoji…"></emoji-mart>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-card p-3 flex items-center mb-4 gap-2">
+        <mat-icon class="note-icon" i18n-aria-label aria-label="Note">info</mat-icon>
+        <span class="note-text">This content is being moderated and may be removed if it violates community
+          guidelines.</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-2 mb-4">
+        <!-- <button mat-stroked-button type="button" (click)="createPoll()">
+          <mat-icon>poll</mat-icon>
+          Create a poll
+        </button> -->
+        <button mat-stroked-button type="button" (click)="addMedia()">
+          <mat-icon>image</mat-icon>
+          Add media
+        </button>
+        <button mat-stroked-button type="button" (click)="addFile()">
+          <mat-icon>attach_file</mat-icon>
+          Add file
+        </button>
+        <!-- <button mat-stroked-button type="button" (click)="createLink()">
+          <mat-icon>link</mat-icon>
+          Add link
+        </button> -->
+      </div>
+
+      <ng-container *ngIf="uploadControlVisibility['image']">
+        <!-- File Upload Section (Initially Hidden) -->
+        <div class="mb-4">
+          <div class="flex items-center justify-center w-full">
+            <label for="fileUpload"
+              class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <mat-icon class="text-gray-500 mb-2">cloud_upload</mat-icon>
+                <p class="mb-2 text-sm text-gray-500">
+                  <span class="font-semibold nodtranslate">Click to upload</span> or drag and drop
+                </p>
+                <p class="text-xs text-gray-500 nodtranslate">Supported files: JPG, PNG</p>
+              </div>
+              <input id="fileUpload" #imageUpload type="file" class="hidden" multiple [attr.max]="MAX_TOTAL_FILES"
+                (change)="onFileInputChange($event, 'image')" accept=".jpg,.jpeg,.png">
+            </label>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="uploadControlVisibility['document']">
+        <!-- File Upload Section (Initially Hidden) -->
+        <div class="mb-4">
+          <div class="flex items-center justify-center w-full">
+            <label for="fileUpload"
+              class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+              <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                <mat-icon class="text-gray-500 mb-2">cloud_upload</mat-icon>
+                <p class="mb-2 text-sm text-gray-500 nodtranslate">
+                  <span class="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p class="text-xs text-gray-500 nodtranslate">Supported files: PDF, DOC, DOCX</p>
+              </div>
+              <input id="fileUpload" #fileUpload type="file" class="hidden" multiple [attr.max]="MAX_TOTAL_FILES"
+                (change)="onFileInputChange($event, 'document')" accept=".pdf,.doc,.docx">
+            </label>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- <ng-container *ngIf="uploadControlVisibility['link']">
+        <div class="mb-4">
+          <div class="flex gap-4 items-center">
+            <mat-form-field appearance="outline" class="flex-1 mat">
+              <input matInput [(ngModel)]="linkInput" [ngModelOptions]="{standalone: true}" placeholder="Enter URL"
+              [name]="'linkInput'">
+            </mat-form-field>
+            <button mat-raised-button color="" class="primary-button"  (click)="addNewUrl()" [disabled]="!linkInput">
+              <mat-icon>add</mat-icon>
+              Add
+            </button>
+          </div>
+        </div>
+      </ng-container> -->
+
+      <!-- For displaying all the media -->
+      <ng-container>
+        <div class="mb-4" *ngIf="categoryType.length > 0">
+          <h3 class="text-gray-700 text-sm font-medium mb-2 nodtranslate">Uploads</h3>
+          <ng-container *ngFor="let cat of categoryType">
+            <ng-container *ngIf="cat === 'link'">
+              <!-- Preview URLs list -->
+              <div class="flex flex-col gap-2">
+                <div *ngFor="let link of selectedFilesFinal['link']; let i = index" class="flex flex-1 gap-2">
+                  <div class="relative flex flex-1 items-center justify-center doc-item items-center gap-2">
+                    <mat-icon class="doc-icon">
+                      link
+                    </mat-icon>
+                    <a [href]="link.previewUrl" target="_blank" rel="noopener noreferrer"
+                      class="flex-1 doc-name doc-link nodtranslate">
+                      {{link.previewUrl}}
+                    </a>
+                    <!-- <button mat-icon-button class="custom-delete " (click)="removeUrl(i)">
+                       <mat-icon>delete</mat-icon>
+                     </button> -->
+                    <button mat-icon-button class="remove-image-btn" (click)="removeFileNew(i, cat)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <ng-container *ngFor="let file of selectedFilesFinal[cat]; let i = index">
+                <ng-container *ngIf="cat !== 'link'">
+                  <div class="md:col-span-4 relative flex items-center doc-item justify-between mb-2">
+                    <!-- Preview images list -->
+                    <ng-container *ngIf="cat === 'image'">
+                      <!-- <span [ngClass]="{'success': file.uploaded}">{{ file.name }}</span>
+                      <button mat-icon-button (click)="removeFileNew(i, cat)">
+                        <mat-icon>delete</mat-icon>
+                      </button> -->
+                      <div class="relative flex doc-height">
+                        <img i18n-alt alt="{{file.name}}" [src]="file.previewUrl" class="doc-height" />
+                        <!-- <button mat-icon-button class="custom-delete absolute-imp" (click)="removeFileNew(i, cat)">
+                          <mat-icon>delete</mat-icon>
+                        </button> -->
+                        <button mat-icon-button class="remove-image-btn absolute-imp" (click)="removeFileNew(i, cat)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </div>
+                    </ng-container>
+                    <!-- Preview files list -->
+                    <ng-container *ngIf="cat === 'document'">
+                      <!-- <span [ngClass]="{'success': file.uploaded}">{{ file.name }}</span>
+                      <button mat-icon-button (click)="removeFileNew(i, cat)">
+                        <mat-icon>delete</mat-icon>
+                      </button> -->
+                      <div class="relative flex flex-col items-center justify-center doc-item items-center gap-2">
+                        <mat-icon class="doc-icon" [ngClass]="{
+                              'pdf-icon': getFileExtension(file.previewUrl) === 'pdf',
+                              'doc-icon': getFileExtension(file.previewUrl) === 'doc',
+                              'docx-icon': getFileExtension(file.previewUrl) === 'docx'
+                          }">
+                          {{getFileIcon(file.previewUrl)}}
+                        </mat-icon>
+                        <a [href]="" target="_blank" rel="noopener noreferrer" class="doc-name doc-link nodtranslate">
+                          {{getFileName(file.previewUrl)}}
+                        </a>
+                        <!-- <button mat-icon-button class="custom-delete absolute-imp" (click)="removeFileNew(i, cat)">
+                          <mat-icon>delete</mat-icon>
+                        </button> -->
+                        <button mat-icon-button class="remove-image-btn absolute-imp" (click)="removeFileNew(i, cat)">
+                          <mat-icon>close</mat-icon>
+                        </button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+
+
+      <!-- Tags -->
+      <!-- <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-medium mb-2">
+              Tags <span class="text-red-500">*</span>
+            </label>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-chip-grid #chipGrid aria-label="Tag selection">
+                <mat-chip-row *ngFor="let tag of selectedTags" (removed)="removeTag(tag)">
+                  {{tag}}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              </mat-chip-grid>
+              <input placeholder="Add tags..."
+                     [matChipInputFor]="chipGrid"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addTag($event)">
+            </mat-form-field>
+          </div> -->
+
+      <!-- Submit Button -->
+      <div class="mt-4">
+        <button mat-raised-button color="" class="w-full primary-button"
+          [disabled]="!uploadForm.valid || uploadForm.get('description')?.errors?.['maxLength'] || uploadForm.get('description')?.errors?.['minLength']"
+          (click)="onSubmit()">
+          <ng-container *ngIf="!data.editMode">
+            <span class="nodtranslate"> {{data?.config?.postBtn?.text || 'Post'}} </span>
+          </ng-container>
+          <ng-container *ngIf="data.editMode">
+            <span class="nodtranslate">{{'Update'}}</span>
+          </ng-container>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="preview-section md:col-span-5">
+    <div class="flex flex-col">
+      <div class="preview p-2">
+        <d-v2-post-preview [cardType]="widgetData?.levelConfigs[data?.levelKey]?.cardConfig?.cardType"
+          [cardConfig]="widgetData" [post]="postPreview" [levelKey]="data?.levelKey"
+          [currentLevel]="data?.currentLevel"></d-v2-post-preview>
+      </div>
+      <div class="text-center">
+        <p class="mat-body-1 nodtranslate">Post preview</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="calculate-overlay calculate-overlay flex flex-col items-center justify-center" *ngIf="loading">
+  <div>
+    <mat-spinner [diameter]="50"></mat-spinner>
+  </div>
+  <div>
+    <span class="mat-heading nodtranslate" i18n>{{loaderMsg}}</span>
+  </div>
+</div>

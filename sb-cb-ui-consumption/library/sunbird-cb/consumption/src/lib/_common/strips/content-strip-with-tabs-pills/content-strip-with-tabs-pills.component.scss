@@ -1,4 +1,5 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use "@sunbird-cb/design-system/src/styles/ws-mixins" as *;
+@use "@sunbird-cb/design-system/src/styles/ws-vars";
 
 .view-more {
   display: flex;
@@ -20,7 +21,7 @@
 }
 
 .margin-bottom-custom {
-  margin-bottom: 60px;
+  // margin-bottom: 60px;
 }
 
 .view-more:hover {
@@ -35,8 +36,8 @@
 ::ng-deep.strips-tabgroup .mat-tab-header {
   border-bottom: 2px solid rgba(0, 0, 0, 0.12);
 }
-::ng-deep.strips-tabgroup .mat-tab-body {
-  padding: 20px 0 20px 0 !important;
+::ng-deep.strips-tabgroup.padding-bottom-tabs .mat-tab-body {
+  padding: 0 0 0 0 !important;
   box-sizing: border-box;
   overflow-y: initial!important;
 
@@ -78,6 +79,13 @@
     font-weight: 700 !important;
   }
 }
+
+// Scoped to :host so the display:none does NOT leak globally
+// and hide pagination arrows on other mat-tab-group instances
+:host ::ng-deep .mat-tab-header-pagination {
+  display: none !important;
+}
+
 .click-here {
   color: rgb(27, 76, 161);
 }
@@ -102,4 +110,75 @@
   .pill-name {
     color: white !important;
 }
+}
+
+.saksham-load-text {
+  line-height: 16.8px;
+}
+
+.lato {
+  /* stylelint-disable */
+  font-family: Lato;
+  /* stylelint-enable */
+}
+.wrapper-saksham {
+  position: relative;
+}
+
+.overlay-max-height {
+  min-height: 348px;
+}
+
+.greet-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(3px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 999;
+  background: $blackAlpha56;
+  border-radius: 12px;
+}
+
+.overlay-text {
+  /* stylelint-disable */
+  font-family: Montserrat;
+  /* stylelint-enable */
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 19.5px;
+  max-width: 454px;
+}
+
+.overlay-button {
+  margin-top: 20px;
+  color: $dark !important;
+  height: 40px;
+  border-radius: 41px;
+  font-size: 14px;
+  font-weight: 700 !important;
+}
+
+.overlay-button-transparent {
+  @extend .overlay-button;
+  background: transparent !important;
+  border: 1px solid $white;
+  color: $white !important;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  border-radius: 4px;
+}
+
+::ng-deep .request-id-toolTip.mat-icon {
+  width: 16px !important;
+  margin-top: -3px !important;
+  vertical-align: middle;
+  height: 16px;
 }

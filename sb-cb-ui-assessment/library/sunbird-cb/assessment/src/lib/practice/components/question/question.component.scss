@@ -1,6 +1,6 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-// @import 'ws-mixins';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 .app-class .mat-list-option {
   padding-top: $size-m;
@@ -116,8 +116,13 @@
     margin-top: -5px;
   }
 
-  // width:98%;
-  word-wrap: break-word;
+  width:98%;
+  word-break: break-word;
+}
+
+.paragraph {
+  width: 98%;
+  word-break: break-word;
 }
 
 .mtf-flag {
@@ -357,4 +362,17 @@
     margin: 0 5px;
   }
 
+}
+
+video {
+  width: 360px !important;
+}
+
+@media only screen and (min-width : 240px) and (max-width: 767px) {
+  video {
+      width: 98% !important;
+  }
+}
+.ques-padding-top {
+  padding-top: 2px
 }

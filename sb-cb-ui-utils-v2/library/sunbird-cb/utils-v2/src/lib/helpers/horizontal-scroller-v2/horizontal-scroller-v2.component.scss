@@ -1,4 +1,4 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as *;
 
 $size-m: 16px;
 $size-xs: 8px;
@@ -123,8 +123,8 @@ $spaceFromEnd: 0;
 @media screen  and (max-width: '768px') {
   .nextBtn {
     right: -16px;
-  } 
+  }
   .prevBtn {
     left: -16px;
-  }  
+  }
 }

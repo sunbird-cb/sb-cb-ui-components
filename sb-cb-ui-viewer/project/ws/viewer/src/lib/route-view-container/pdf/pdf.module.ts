@@ -2,15 +2,6 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 
 import {
-  MatCardModule,
-  MatDividerModule,
-  MatIconModule,
-  MatSnackBarModule,
-  MatChipsModule,
-  MatButtonModule,
-} from '@angular/material'
-
-import {
   BtnContentDownloadModule,
   BtnContentFeedbackModule,
   BtnContentLikeModule,
@@ -21,19 +12,25 @@ import {
   UserImageModule,
   UserContentRatingModule,
   BtnContentFeedbackV2Module,
-  // PlayerBriefModule,
-} from '@ws-widget/collection'
+  PlayerBriefModule,
+} from '@sunbird-cb/collection'
 
 import {
   PipeDurationTransformModule,
   PipeLimitToModule,
   PipePartialContentModule,
-} from '@ws-widget/utils'
-
-import { WidgetResolverModule } from '@ws-widget/resolver'
+} from '@sunbird-cb/utils-v2'
+import { TranslateModule } from '@ngx-translate/core'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 
 import { PdfComponent } from './pdf.component'
 import { RouterModule } from '@angular/router'
+import { MatDividerModule } from '@angular/material/divider'
+import { MatIconModule } from '@angular/material/icon'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips'
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
 @NgModule({
   declarations: [PdfComponent],
   imports: [
@@ -56,10 +53,11 @@ import { RouterModule } from '@angular/router'
     PipeDurationTransformModule,
     PipeLimitToModule,
     PipePartialContentModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
     UserContentRatingModule,
     BtnContentFeedbackV2Module,
-    // PlayerBriefModule,
+    PlayerBriefModule,
+    TranslateModule,
   ],
   exports: [
     PdfComponent,

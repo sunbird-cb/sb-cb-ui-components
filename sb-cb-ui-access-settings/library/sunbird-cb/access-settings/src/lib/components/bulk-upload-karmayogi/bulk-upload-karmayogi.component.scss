@@ -1,0 +1,125 @@
+.wrapper-border {
+  border: 1px solid #00000014;
+}
+
+.numbered-list {
+  list-style: none;
+  counter-reset: list-counter;
+  padding-left: 0;
+}
+
+.numbered-list li {
+  counter-increment: list-counter;
+  margin-bottom: 16px;
+  @extend .text-style;
+}
+
+.numbered-list li::before {
+  content: counter(list-counter) ". ";
+}
+
+.text-style {
+  color: #000000de;
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.border-dotted {
+  border: 1px dashed #00000029;
+}
+
+.svg-ico {
+  width: 75px;
+  height: 75px;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.inputfile + label {
+  font-size: 1.25em;
+  color: white;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.browse_link {
+  color: #1b4ca1;
+  padding: 6px 15px;
+  text-align: center;
+  border-radius: 4px 4px;
+}
+
+.or-text {
+  margin-bottom: 0 !important;
+}
+
+.ws-mat-black87-text {
+  color: #000000de;
+}
+
+.text-title {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  color: #1b4ca1;
+}
+
+.selection-count {
+  border: 1px solid #00000014;
+  background: #d1dbec;
+
+  span {
+    font-family: Lato;
+    font-weight: 400;
+
+    &:first-child {
+      background: #d1dbec;
+      border: 1px solid #00000029;
+      border-radius: 50%;
+      padding: 4px;
+      height: 18px;
+      width: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #00000099;
+    }
+
+    &:nth-child(2) {
+      font-size: 14px;
+      color: #000000de;
+    }
+  }
+}
+
+.log-history-text {
+  @extend .text-title;
+  font-size: 14px;
+  color: #1b2133;
+  text-align: start;
+}
+
+.information-list {
+  border: 1px solid #00000014;
+}
+
+.meta-info {
+  background: #d1392429;
+  border: 1px solid #00000014;
+  border-radius: 12px;
+  padding: 18px 16px;
+}
+
+.falied-records-info p {
+  margin-bottom: 8px !important;
+}

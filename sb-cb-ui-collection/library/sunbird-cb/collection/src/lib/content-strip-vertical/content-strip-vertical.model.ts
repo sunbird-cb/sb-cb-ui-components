@@ -1,4 +1,4 @@
-import { NsWidgetResolver } from '@sunbird-cb/resolver'
+import { NsWidgetResolver } from '@sunbird-cb/resolver-v2'
 import { NSSearch } from '../_services/widget-search.model'
 import { NsContent } from '../_services/widget-content.model'
 import { NsCardContent } from '../card-content/card-content.model'
@@ -37,6 +37,7 @@ export namespace NsContentStripVertical {
     errorWidget?: NsWidgetResolver.IRenderConfigWithAnyData
     refreshEvent?: Record<'eventType' | 'from', string>
     fetchLikes?: boolean
+    viewMoreUrl?: string
   }
   export interface IStripRequestApi {
     path: string

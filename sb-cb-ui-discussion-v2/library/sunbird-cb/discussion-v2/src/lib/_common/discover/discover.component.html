@@ -1,0 +1,67 @@
+<div class="py-4">
+    <div class="flex justify-between items-center mb-4  community-groups">
+        <h2 class="text-xl font-medium title margin-remove nodtranslate">{{ 'Popular Communities' }} ({{
+            popularCommunities?.length}})</h2>
+        <a class="show-more flex items-center cursor-pointer" *ngIf="popularCommunities?.count > 3"
+            (click)="showAllCommunitiesByTopic(popularCommunities)">
+            <span class="nodtranslate">Show all</span>
+            <mat-icon>chevron_right</mat-icon>
+        </a>
+    </div>
+    <div>
+        <div class="media" *ngIf="popularCommunities && popularCommunities?.length">
+            <d-v2-image-sliders [title]="'Images'" [defaultImg]="defaultPosterThumbnail"
+                (imageClickEmit)="popularCommunity($event)" [objectArray]="popularCommunities"
+                [styleData]="sliderStyleData?.styleData"></d-v2-image-sliders>
+        </div>
+    </div>
+</div>
+<div class="" *ngIf="!topicDataLoading">
+    <ng-container *ngFor="let topic of topicDataList.slice(0, loadTopicsCount)">
+
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4 community-groups">
+                <h2 class="text-xl flex-1 font-medium title margin-remove nodtranslate">{{
+                    toppicWiseCommunities[topic.value]?.topicName }} <span class="nodtranslate"
+                        *ngIf="toppicWiseCommunities[topic.value]?.count">({{
+                        toppicWiseCommunities[topic.value]?.count}})</span></h2>
+                <a class="show-more flex items-center cursor-pointer"
+                    *ngIf="toppicWiseCommunities[topic.value]?.count > 3"
+                    (click)="showAllCommunitiesByTopic(toppicWiseCommunities[topic.value]?.topicName)">
+                    <span class="nodtranslate">Show all</span>
+                    <mat-icon>chevron_right</mat-icon>
+                </a>
+            </div>
+            <div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                    *ngIf="toppicWiseCommunities[topic.value]?.isLoading">
+                    <d-v2-community-card
+                        [isLoading]="toppicWiseCommunities[topic.value]?.isLoading"></d-v2-community-card>
+                    <d-v2-community-card
+                        [isLoading]="toppicWiseCommunities[topic.value]?.isLoading"></d-v2-community-card>
+                    <d-v2-community-card
+                        [isLoading]="toppicWiseCommunities[topic.value]?.isLoading"></d-v2-community-card>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-4"
+                    *ngIf="!toppicWiseCommunities[topic.value]?.isLoading">
+                    <div class="flex md:block overflow-x-auto scrollbar-hide ">
+                        <div class="flex md:block space-x-4 md:space-x-7">
+                            <div *ngFor="let item of toppicWiseCommunities[topic.value]?.communities.slice(0, 3)">
+                                <d-v2-community-card [userJoinedCommunityList]="userCommunityList" [community]="item"
+                                    [isLoading]="toppicWiseCommunities[topic.value]?.isLoading"
+                                    [orgDetails]="orgDetails" (click)="onCardClick(item)"></d-v2-community-card>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="topicDataList?.length > loadTopicsCount">
+        <div class="load-more-posts my-4 mt-8">
+            <button mat-flat-button color="primary" class="w-full nodtranslate" (click)="loadMoreTopics()">Load
+                More</button>
+        </div>
+    </ng-container>
+</div>

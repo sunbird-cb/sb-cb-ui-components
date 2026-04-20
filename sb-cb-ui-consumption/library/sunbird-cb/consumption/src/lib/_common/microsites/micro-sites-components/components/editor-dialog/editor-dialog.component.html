@@ -1,0 +1,834 @@
+<h2 mat-dialog-title class="flex flex-middle padding-s margin-remove">Edit {{data.displayName}}</h2>
+<mat-dialog-content class="padding-s">
+  <form [formGroup]="editorForm" class="editor-form padding-remove">
+    <div [ngSwitch]="formType">
+      <!-- Key Highlights Editor -->
+      <div *ngSwitchCase="'keyHighlights'" class="key-highlights-editor">
+        <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
+        <div formArrayName="keyHighlights" cdkDropList (cdkDropListDropped)="dropKeyHighlight($event)"
+          class="highlights-container">
+          <div *ngFor="let control of keyHighlightsArray.controls; let i = index" cdkDrag class="highlight-item">
+            <div class="drag-handle" cdkDragHandle>
+              <mat-icon>drag_indicator</mat-icon>
+            </div>
+            <mat-form-field appearance="outline" class="highlight-input">
+              <input matInput [formControlName]="i" placeholder="Heading text" maxlength="100">
+              <mat-hint align="end">{{keyHighlightsArray.controls[i].value?.length || 0}}/100</mat-hint>
+            </mat-form-field>
+            <button mat-icon-button color="warn" (click)="removeKeyHighlight(i)" class="delete-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        <button mat-button class="btn-common btn-secondary flex-center" type="button" (click)="addKeyHighlight()"
+          [disabled]="keyHighlightsArray.controls.length > 9"
+          [ngClass]="{'btn-disable': keyHighlightsArray.controls.length > 9}">
+          <mat-icon>add</mat-icon> Add Heading
+        </button>
+      </div>
+
+      <!-- Text input -->
+      <mat-form-field *ngSwitchCase="'text'" appearance="outline" class="full-width">
+        <input matInput formControlName="value" placeholder="Enter {{data.displayName}}" maxlength="75">
+        <mat-hint align="end">{{editorForm.get('value')?.value?.length || 0}}/75</mat-hint>
+        <mat-error *ngIf="editorForm.get('value')?.invalid">This field is required</mat-error>
+      </mat-form-field>
+
+      <!-- Textarea -->
+      <mat-form-field *ngSwitchCase="'textarea'" appearance="outline" class="full-width">
+        <textarea matInput formControlName="value" placeholder="Enter {{data.displayName}}" rows="5"
+          maxlength="150"></textarea>
+        <mat-hint align="end">{{editorForm.get('value')?.value?.length || 0}}/150</mat-hint>
+        <mat-error *ngIf="editorForm.get('value')?.invalid">This field is required</mat-error>
+      </mat-form-field>
+
+      <!-- Banner Image for Background -->
+      <div *ngSwitchCase="'color'" class="color-banner-container">
+        <h4>Background Banner Image</h4>
+
+        <mat-checkbox formControlName="useDefaultBanner" (change)="onDefaultBannerToggle($event)"
+          class="margin-bottom-xs">
+          Default Banner
+        </mat-checkbox>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Banner Image URL</mat-label>
+          <input matInput formControlName="value" placeholder="Enter banner image URL"
+            [readonly]="editorForm.get('useDefaultBanner')?.value">
+          <mat-error *ngIf="editorForm.get('value')?.hasError('required')">Banner image URL is required</mat-error>
+          <mat-error *ngIf="editorForm.get('value')?.hasError('pattern')">Please enter a valid URL (must start with
+            http:// or https://)</mat-error>
+        </mat-form-field>
+
+        <div class="upload-section">
+          <button type="button" mat-button class="btn-common btn-secondary" (click)="bannerFileInput.click()">
+            <mat-icon>cloud_upload</mat-icon> Upload Banner Image
+          </button>
+          <input hidden (change)="onBannerImageSelected($event)" #bannerFileInput type="file"
+            accept="image/jpeg,image/jpg,image/png">
+        </div>
+        <span *ngIf="uploadStatus" class="upload-status"
+          [class.error]="uploadStatus.startsWith('Error')">{{uploadStatus}}</span>
+        <p class="file-requirements">
+          <small>Allowed formats: JPG, PNG | Max size: 700KB</small>
+        </p>
+
+        <div class="image-preview" *ngIf="editorForm.get('value')?.value">
+          <img [src]="editorForm.get('value')?.value" alt="Banner Preview">
+        </div>
+      </div>
+
+      <!-- Image URL with upload option -->
+      <div *ngSwitchCase="'image'" class="image-container">
+        <!-- Single image mode -->
+        <div *ngIf="!isMultipleImages">
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput formControlName="value" placeholder="Enter image URL">
+            <mat-error *ngIf="editorForm.get('value')?.invalid">Valid image URL is required</mat-error>
+          </mat-form-field>
+
+          <div class="upload-section">
+            <button type="button" mat-button class="btn-common btn-secondary" (click)="fileInput.click()">
+              <mat-icon>cloud_upload</mat-icon> Upload Image
+            </button>
+            <input hidden (change)="onFileSelected($event)" #fileInput type="file"
+              accept="image/jpeg,image/jpg,image/png">
+          </div>
+          <span *ngIf="uploadStatus" class="upload-status"
+            [class.error]="uploadStatus.startsWith('Error')">{{uploadStatus}}</span>
+          <p class="file-requirements">
+            <small>Allowed formats: JPG, PNG | Max size: 100KB</small>
+          </p>
+
+          <div class="image-preview">
+            <img [src]="editorForm.get('value')?.value" alt="Image Preview" *ngIf="editorForm.get('value')?.value">
+          </div>
+        </div>
+
+        <!-- Multiple Logo items mode -->
+        <div *ngIf="isMultipleImages" formArrayName="items" class="highlight-items-container">
+          <h4>Logo Items <span class="item-count">({{imageItemsArray?.controls?.length || 0}} items)</span></h4>
+
+          <div cdkDropList (cdkDropListDropped)="dropImageLogoItem($event)" class="image-items-list">
+            <div *ngFor="let item of imageItemsArray?.controls; let i = index" [formGroupName]="i"
+              class="image-highlight-item" cdkDrag>
+              <div class="drag-handle" cdkDragHandle>
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+
+              <div class="item-content">
+                <div class="item-header flex flex-middle">
+                  <h5 class="margin-remove">Item {{i + 1}}</h5>
+                  <div class="delete-btn-container ml-auto">
+                    <button mat-icon-button color="warn" type="button" (click)="removeImageLogoItem(i)"
+                      class="remove-btn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <mat-form-field appearance="outline" class="full-width margin-remove">
+                  <mat-label>Image URL</mat-label>
+                  <input matInput formControlName="url" placeholder="Enter image URL or upload">
+                  <mat-error *ngIf="item.get('url')?.hasError('required')">Image URL is required</mat-error>
+                  <mat-error *ngIf="item.get('url')?.hasError('pattern')">Please enter a valid URL (must start with
+                    http:// or https://)</mat-error>
+                </mat-form-field>
+
+                <div class="upload-section">
+                  <input type="file" #imageFileInput accept="image/jpeg,image/jpg,image/png"
+                    (change)="onImageLogoSelected($event, i)" style="display: none">
+                  <button mat-button class="btn-common btn-secondary margin-remove" type="button"
+                    (click)="imageFileInput.click()" [disabled]="isUploading && currentUploadingIndex === i">
+                    <mat-icon>cloud_upload</mat-icon>
+                    {{ (isUploading && currentUploadingIndex === i) ? 'Uploading...' : 'Upload Image' }}
+                  </button>
+                </div>
+                <span *ngIf="uploadStatus && currentUploadingIndex === i" class="upload-status"
+                  [class.error]="uploadStatus.startsWith('Error')">{{ uploadStatus }}</span>
+                <p class="file-requirements">
+                  <small>Allowed formats: JPG, PNG | Max size: 100KB</small>
+                </p>
+
+                <div class="image-preview" *ngIf="item.get('url')?.value">
+                  <img [src]="item.get('url')?.value" alt="Image Preview">
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!imageItemsArray?.controls?.length" class="no-items">
+              No logo items available. Add some items below.
+            </div>
+          </div>
+
+          <button mat-button class="btn-common btn-secondary flex-center mt-3" type="button"
+            (click)="addImageLogoItem()" [disabled]="imageItemsArray?.controls?.length >= 4"
+            [ngClass]="{'btn-disable': imageItemsArray?.controls?.length >= 4}">
+            <mat-icon>add</mat-icon> Add Logo Item
+          </button>
+        </div>
+      </div>
+
+      <!-- Boolean toggle -->
+      <mat-slide-toggle *ngSwitchCase="'boolean'" formControlName="value" color="primary">
+        {{editorForm.get('value')?.value ? 'Enabled' : 'Disabled'}}
+      </mat-slide-toggle>
+
+      <!-- For complex types like metrics -->
+      <div *ngSwitchCase="'metrics'" class="complex-editor">
+        <div class="metrics-editor">
+          <h4>Metrics Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled Metrics' : 'Disabled Metrics'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            Metrics section will be hidden when disabled but all settings will be preserved.
+          </p>
+        </div>
+      </div>
+
+      <!-- Top Learners Configuration -->
+      <div *ngSwitchCase="'topLearnersConfig'" class="complex-editor">
+        <div class="top-learners-editor">
+          <h4>Top Learners Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled Top Learners' : 'Disabled Top Learners'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            Top Learners section will be hidden when disabled but all settings will be preserved.
+          </p>
+        </div>
+      </div>
+
+      <!-- User Progress Configuration -->
+      <div *ngSwitchCase="'userProgressConfig'" class="complex-editor">
+        <div class="user-progress-editor">
+          <h4>User Progress Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled User Progress' : 'Disabled User Progress'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            User Progress section will be hidden when disabled but all settings will be preserved.
+          </p>
+
+          <div formGroupName="data" *ngIf="editorForm.get('enabled')?.value">
+            <h5>User Progress Details</h5>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Section Title</mat-label>
+              <input matInput formControlName="title" placeholder="Enter section title" maxlength="75">
+              <mat-hint align="end">{{editorForm.get('data.title')?.value?.length || 0}}/75</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Information Text</mat-label>
+              <textarea matInput formControlName="infoText" placeholder="Enter information text" rows="3"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events Configuration -->
+      <div *ngSwitchCase="'eventsConfig'" class="complex-editor">
+        <div class="events-editor">
+          <h4>Events Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled Events Section' : 'Disabled Events Section'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            Events section will be hidden when disabled but all settings will be preserved.
+          </p>
+        </div>
+      </div>
+
+      <!-- MDO Leaderboard Configuration -->
+      <div *ngSwitchCase="'mdoLeaderboardConfig'" class="complex-editor">
+        <div class="mdo-leaderboard-editor">
+          <h4>MDO Leaderboard Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled MDO Leaderboard' : 'Disabled MDO Leaderboard'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            MDO Leaderboard section will be hidden when disabled but all settings will be preserved.
+          </p>
+        </div>
+      </div>
+
+      <!-- CBP Plan Configuration -->
+      <div *ngSwitchCase="'cbpPlanConfig'" class="complex-editor">
+        <div class="cbp-plan-editor">
+          <h4>CBP Plan Configuration</h4>
+
+          <div formArrayName="list" class="cbp-plan-list">
+            <h5>PDF Documents <span class="item-count">({{cbpPlanListArray.controls.length}} items)</span></h5>
+
+            <div cdkDropList (cdkDropListDropped)="dropCbpPlanItem($event)" class="cbp-plan-container-list">
+              <div *ngFor="let item of cbpPlanListArray.controls; let i = index" [formGroupName]="i"
+                class="cbp-plan-item" cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <mat-icon>drag_indicator</mat-icon>
+                </div>
+
+                <div class="item-content">
+                  <div class="item-header">
+                    <h6>Document {{i + 1}}</h6>
+                    <button mat-icon-button color="warn" type="button" (click)="removeCbpPlanItem(i)"
+                      class="remove-btn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Title</mat-label>
+                    <input matInput formControlName="title" placeholder="Enter document title" maxlength="100">
+                    <mat-hint align="end">{{item.get('title')?.value?.length || 0}}/100</mat-hint>
+                    <mat-error *ngIf="item.get('title')?.hasError('required')">
+                      Title is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>PDF URL</mat-label>
+                    <input matInput formControlName="downloaUrl" placeholder="Enter PDF URL or upload a file">
+                    <mat-error *ngIf="item.get('downloaUrl')?.hasError('required')">
+                      PDF URL is required
+                    </mat-error>
+                    <mat-error *ngIf="item.get('downloaUrl')?.hasError('pattern')">
+                      Please enter a valid URL (must start with http:// or https://)
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="upload-section">
+                    <input type="file" #pdfFileInput accept="application/pdf" (change)="onPdfFileSelected($event, i)"
+                      style="display: none">
+                    <button mat-button class="btn-common btn-secondary" (click)="pdfFileInput.click()"
+                      [disabled]="isUploading && currentUploadingIndex === i">
+                      <mat-icon>upload_file</mat-icon>
+                      {{ (isUploading && currentUploadingIndex === i) ? 'Uploading...' : 'Upload PDF' }}
+                    </button>
+                    <span *ngIf="isUploading && currentUploadingIndex === i" class="upload-status">{{ uploadStatus
+                      }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="cbpPlanListArray.controls.length === 0" class="no-items">
+                No PDF documents available. Add some items below.
+              </div>
+            </div>
+
+            <button mat-button class="btn-common btn-secondary flex-center mt-3" type="button"
+              (click)="addCbpPlanItem()">
+              <mat-icon>add</mat-icon> Add PDF Document
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Looker Configuration -->
+      <div *ngSwitchCase="'lookerConfig'" class="complex-editor">
+        <div class="looker-editor">
+          <h4>Looker Configuration</h4>
+
+          <!-- Enable/Disable Toggle -->
+          <div class="form-row">
+            <mat-slide-toggle formControlName="enabled">
+              Enable Looker Section
+            </mat-slide-toggle>
+          </div>
+
+          <!-- Header Title -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Header Title</mat-label>
+            <input matInput formControlName="headerText" placeholder="Enter header title" maxlength="70">
+            <mat-hint align="end">{{editorForm.get('headerText')?.value?.length || 0}}/70</mat-hint>
+          </mat-form-field>
+
+          <!-- Header Description -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Header Description</mat-label>
+            <textarea matInput formControlName="headerDescription" placeholder="Enter header description" rows="3"
+              maxlength="300"></textarea>
+            <mat-hint align="end">{{editorForm.get('headerDescription')?.value?.length || 0}}/300</mat-hint>
+          </mat-form-field>
+
+          <!-- Desktop Height -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Desktop Height (px)</mat-label>
+            <input matInput type="number" formControlName="desktopHeight" placeholder="Enter desktop height">
+            <mat-hint>Height of the iframe on desktop devices</mat-hint>
+          </mat-form-field>
+
+          <!-- Mobile Height -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mobile Height (px)</mat-label>
+            <input matInput type="number" formControlName="mobileHeight" placeholder="Enter mobile height">
+            <mat-hint>Height of the iframe on mobile devices</mat-hint>
+          </mat-form-field>
+
+          <!-- Desktop URL -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Desktop URL</mat-label>
+            <input matInput type="url" formControlName="lookerProDesktopUrl"
+              placeholder="https://lookerstudio.google.com/...">
+            <mat-hint>Must start with https://lookerstudio.google.com/</mat-hint>
+            <mat-error *ngIf="editorForm.get('lookerProDesktopUrl')?.hasError('required')">
+              Desktop URL is required
+            </mat-error>
+            <mat-error *ngIf="editorForm.get('lookerProDesktopUrl')?.hasError('pattern')">
+              URL must start with https://lookerstudio.google.com/
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Mobile URL -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mobile URL</mat-label>
+            <input matInput type="url" formControlName="lookerProMobileUrl"
+              placeholder="https://lookerstudio.google.com/...">
+            <mat-hint>Must start with https://lookerstudio.google.com/</mat-hint>
+            <mat-error *ngIf="editorForm.get('lookerProMobileUrl')?.hasError('required')">
+              Mobile URL is required
+            </mat-error>
+            <mat-error *ngIf="editorForm.get('lookerProMobileUrl')?.hasError('pattern')">
+              URL must start with https://lookerstudio.google.com/
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Announcements Configuration -->
+      <div *ngSwitchCase="'announcementsConfig'" class="complex-editor">
+        <div class="announcements-editor">
+          <h4>Announcements Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled Announcements' : 'Disabled Announcements'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            Announcements section will be hidden when disabled but all settings will be preserved.
+          </p>
+
+          <mat-form-field appearance="outline" class="full-width mt-3" *ngIf="editorForm.get('enabled')?.value">
+            <mat-label>Section Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter announcements title" maxlength="75">
+            <mat-hint align="end">{{editorForm.get('title')?.value?.length || 0}}/75</mat-hint>
+          </mat-form-field>
+
+          <!-- Announcements List -->
+          <div formArrayName="list" class="announcements-list" *ngIf="editorForm.get('enabled')?.value">
+            <h5>Announcements <span class="item-count">({{announcementsList.controls.length}} items)</span></h5>
+
+            <div cdkDropList (cdkDropListDropped)="dropAnnouncementItem($event)" class="announcements-container">
+              <div *ngFor="let item of announcementsList.controls; let i = index" [formGroupName]="i"
+                class="announcement-item flex-middle" cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <mat-icon>drag_indicator</mat-icon>
+                </div>
+
+                <div class="item-content">
+                  <div class="item-header">
+                    <h6>Announcement {{i + 1}}</h6>
+                    <button mat-icon-button color="warn" type="button" (click)="removeAnnouncementItem(i)"
+                      class="remove-btn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="name" placeholder="Enter announcement name" maxlength="75">
+                    <mat-hint align="end">{{item.get('name')?.value?.length || 0}}/75</mat-hint>
+                    <mat-error *ngIf="item.get('name')?.invalid">Name is required</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Enter description" rows="3"
+                      maxlength="150"></textarea>
+                    <mat-hint align="end">{{item.get('description')?.value?.length || 0}}/150</mat-hint>
+                    <mat-error *ngIf="item.get('description')?.invalid">Description is required</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Category</mat-label>
+                    <input matInput formControlName="category" placeholder="Enter category" maxlength="50">
+                    <mat-hint align="end">{{item.get('category')?.value?.length || 0}}/50</mat-hint>
+                    <mat-error *ngIf="item.get('category')?.invalid">Category is required</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div *ngIf="announcementsList.controls.length === 0" class="no-items">
+                No announcements available. Add some items below.
+              </div>
+            </div>
+
+            <button mat-button class="btn-common btn-secondary flex-center mt-3" type="button"
+              (click)="addAnnouncementItem()" [disabled]="announcementsList.controls.length >= 15"
+              [ngClass]="{'btn-disable': announcementsList.controls.length >= 15}">
+              <mat-icon>add</mat-icon> Add Announcement
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speakers Configuration -->
+      <div *ngSwitchCase="'speakersConfig'" class="complex-editor">
+        <div class="speakers-editor">
+          <h4>Speaker of the day Configuration</h4>
+          <mat-slide-toggle formControlName="enabled">
+            {{editorForm.get('enabled')?.value ? 'Enabled Speaker Section' : 'Disabled Speaker Section'}}
+          </mat-slide-toggle>
+          <p class="helper-text" *ngIf="!editorForm.get('enabled')?.value">
+            Speaker section will be hidden when disabled but all settings will be preserved.
+          </p>
+
+          <div formGroupName="data" *ngIf="editorForm.get('enabled')?.value">
+            <h5>Speaker Details</h5>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Section Title</mat-label>
+              <input matInput formControlName="title" placeholder="Leave empty for default title" maxlength="75">
+              <mat-hint align="end">{{editorForm.get('data.title')?.value?.length || 0}}/75</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Information Text</mat-label>
+              <textarea matInput formControlName="infoText" placeholder="Leave empty for default information text"
+                rows="3" maxlength="150"></textarea>
+              <mat-hint align="end">{{editorForm.get('data.infoText')?.value?.length || 0}}/150</mat-hint>
+            </mat-form-field>
+
+            <div class="speaker-list-preview">
+              <h5>Current Speaker(s)</h5>
+
+              <div *ngIf="getSpeakersList().length">
+                <div class="speaker-item" *ngFor="let speaker of getSpeakersList(); let i = index">
+                  <div class="speaker-item-header">
+                    <div class="speaker-image">
+                      <img [src]="speaker.profileImage" *ngIf="speaker.profileImage" alt="Speaker Image">
+                      <div class="speaker-initials" *ngIf="!speaker.profileImage">{{speaker.title | slice:0:2}}</div>
+                    </div>
+                    <div class="speaker-info">
+                      <h6>{{speaker.title}}</h6>
+                      <p>{{speaker.description}}</p>
+                      <small *ngIf="speaker.identifier">ID: {{speaker.identifier}}</small>
+                    </div>
+                    <div class="speaker-actions">
+                      <button mat-icon-button color="primary" type="button" (click)="editSpeaker(i)"
+                        matTooltip="Edit Speaker">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" type="button" (click)="removeSpeaker(i)"
+                        matTooltip="Delete Speaker">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p class="helper-text" *ngIf="!getSpeakersList().length">
+                No speakers configured. Use the button below to add speakers.
+              </p>
+
+              <!-- Add Speaker button -->
+              <button mat-button class="btn-common btn-secondary flex-center mt-3" type="button"
+                (click)="addNewSpeaker()">
+                <mat-icon>add</mat-icon> Add Speaker
+              </button>
+            </div>
+
+            <!-- Speaker Editor (when adding/editing) -->
+            <div *ngIf="isEditingSpeaker" class="speaker-editor mt-3">
+              <h3>{{editingSpeakerIndex === -1 ? 'Add' : 'Edit'}} Speaker</h3>
+              <form [formGroup]="speakerForm" class="speaker-form">
+                <div class="form-section">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Speaker Name</mat-label>
+                    <input matInput formControlName="title" placeholder="Enter speaker name" required maxlength="75">
+                    <mat-hint align="end">{{speakerForm.get('title')?.value?.length || 0}}/75</mat-hint>
+                    <mat-error *ngIf="speakerForm.get('title')?.hasError('required')">
+                      Speaker name is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput formControlName="description" placeholder="Enter speaker description" rows="2"
+                      maxlength="150" required></textarea>
+                    <mat-hint align="end">{{speakerForm.get('description')?.value?.length || 0}}/150</mat-hint>
+                    <mat-error *ngIf="speakerForm.get('description')?.hasError('required')">
+                      Description is required
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Profile Image URL</mat-label>
+                    <input matInput formControlName="profileImage" placeholder="Enter profile image URL">
+                    <mat-error *ngIf="speakerForm.get('profileImage')?.hasError('pattern')">
+                      Please enter a valid URL
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div class="upload-section">
+                    <button type="button" mat-button class="btn-common btn-secondary"
+                      (click)="speakerImageInput.click()">
+                      <mat-icon>cloud_upload</mat-icon> Upload Speaker Image
+                    </button>
+                    <input hidden (change)="onSpeakerImageSelected($event)" #speakerImageInput type="file"
+                      accept="image/jpeg,image/jpg,image/png">
+                  </div>
+                  <span *ngIf="uploadStatus" class="upload-status"
+                    [class.error]="uploadStatus.startsWith('Error')">{{uploadStatus}}</span>
+                  <p class="file-requirements">
+                    <small>Allowed formats: JPG, PNG | Max size: 100KB</small>
+                  </p>
+
+                  <div class="image-preview"
+                    *ngIf="speakerForm.get('profileImage')?.value && !speakerForm.get('profileImage')?.hasError('pattern')">
+                    <img [src]="speakerForm.get('profileImage')?.value" alt="Speaker Preview">
+                  </div>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Event Identifier</mat-label>
+                    <input matInput formControlName="identifier" placeholder="Enter event identifier">
+                  </mat-form-field>
+                </div>
+
+                <div class="form-actions">
+                  <button mat-button class="btn-common btn-secondary flex-center" type="button"
+                    (click)="cancelSpeakerEdit()">
+                    Cancel
+                  </button>
+                  <button mat-button class="btn-common btn-primary flex-center" type="button"
+                    [disabled]="speakerForm.invalid" (click)="saveSpeaker()">
+                    Save Speaker
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Week Highlights -->
+      <div *ngSwitchCase="'weekHighlights'" class="week-highlights-editor">
+        <div class="form-section">
+          <h4>Week Highlights</h4>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput formControlName="title" placeholder="Enter section title" maxlength="75">
+            <mat-hint align="end">{{editorForm.get('title')?.value?.length || 0}}/75</mat-hint>
+            <mat-error *ngIf="editorForm.get('title')?.invalid">Title is required</mat-error>
+          </mat-form-field>
+
+          <!-- Week Highlights List -->
+          <div formArrayName="list" class="week-highlights-list">
+            <h4>Highlight Items <span class="item-count">({{weekHighlightsList.controls.length}} items)</span></h4>
+
+            <div cdkDropList (cdkDropListDropped)="dropWeekHighlightItem($event)" class="week-highlights-container">
+              <div *ngFor="let item of weekHighlightsList.controls; let i = index" [formGroupName]="i"
+                class="week-highlight-item" cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <mat-icon>drag_indicator</mat-icon>
+                </div>
+
+                <div class="item-content">
+                  <div class="item-header">
+                    <h5>Item {{i + 1}}</h5>
+                    <button mat-icon-button color="warn" type="button" (click)="removeWeekHighlightItem(i)"
+                      class="remove-btn">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <input matInput formControlName="title" placeholder="Enter title" maxlength="75">
+                    <mat-hint align="end">{{item.get('title')?.value?.length || 0}}/75</mat-hint>
+                    <mat-error *ngIf="item.get('title')?.invalid">Title is required</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <textarea matInput formControlName="description" placeholder="Enter description" rows="3"
+                      maxlength="150"></textarea>
+                    <mat-hint align="end">{{item.get('description')?.value?.length || 0}}/150</mat-hint>
+                    <mat-error *ngIf="item.get('description')?.invalid">Description is required</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="full-width">
+                    <input matInput formControlName="videoUrl" placeholder="Enter video URL or upload MP4">
+                    <mat-error *ngIf="item.get('videoUrl')?.hasError('required')">Video URL is required</mat-error>
+                    <mat-error *ngIf="item.get('videoUrl')?.hasError('pattern')">Please enter a valid URL (must start
+                      with http:// or https://)</mat-error>
+                  </mat-form-field>
+
+                  <div class="upload-section">
+                    <input type="file" #videoFileInput accept="video/mp4" (change)="onVideoFileSelected($event, i)"
+                      style="display: none">
+                    <button mat-button class="btn-common btn-secondary" type="button" (click)="videoFileInput.click()"
+                      [disabled]="isUploading && currentUploadingIndex === i">
+                      <mat-icon>upload</mat-icon>
+                      {{ (isUploading && currentUploadingIndex === i) ? 'Uploading...' : 'Upload MP4' }}
+                    </button>
+                    <span *ngIf="isUploading && currentUploadingIndex === i" class="upload-status">{{ uploadStatus
+                      }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="weekHighlightsList.controls.length === 0" class="no-items">
+                No highlights available. Add some items below.
+              </div>
+            </div>
+
+            <button mat-button class="btn-common btn-secondary flex-center mt-3" type="button"
+              (click)="addWeekHighlightItem()">
+              <mat-icon>add</mat-icon> Add Highlight Item
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slider implementation -->
+      <div *ngSwitchCase="'slider'" class="slider-editor">
+        <!-- Slider Preview -->
+        <div class="slider-preview-container">
+          <h3>Preview</h3>
+          <div class="slider-preview" *ngIf="sliderData.sliders.length">
+            <sb-uic-sliders [widgetData]="sliderData.sliders" [styleData]="sliderData.styleData"
+              (clickEvent)="onSliderClick($event)">
+            </sb-uic-sliders>
+          </div>
+          <div *ngIf="!sliderData.sliders.length" class="no-items">
+            No items available for preview. Add some items.
+          </div>
+        </div>
+
+        <!-- Slider Items Management -->
+        <div class="slider-items-container">
+          <h3>Slider Items</h3>
+
+          <div class="slider-items" *ngIf="sliderData.sliders.length" cdkDropList
+            (cdkDropListDropped)="dropSliderItem($event)">
+            <div *ngFor="let item of sliderData.sliders; let i = index" class="slider-item" cdkDrag>
+              <div class="drag-handle" cdkDragHandle>
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+              <div class="item-preview">
+                <img [src]="item?.banners?.l" alt="Slider image" class="item-image">
+                <div class="item-details">
+                  <div class="item-title">{{item.title || 'No title'}}</div>
+                  <div class="item-status" [class.active]="item.active">
+                    {{item.active ? 'Active' : 'Inactive'}}
+                  </div>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button mat-icon-button color="primary" (click)="editSliderItem(i)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="removeSliderItem(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!sliderData.sliders.length" class="no-items">
+            No slider items available. Add some items to see them here.
+          </div>
+          <button mat-button class="btn-common btn-secondary flex flex-middle" type="button" (click)="addSliderItem()"
+            [disabled]="sliderData?.sliders?.length > 4" [ngClass]="{'btn-disable': sliderData?.sliders?.length > 4}">
+            <mat-icon>add</mat-icon> Add Slider Item
+          </button>
+        </div>
+
+        <!-- Item Editor (when editing) -->
+        <div *ngIf="isEditingSlider" class="slider-item-editor">
+          <h3>{{editingIndex === -1 ? 'Add' : 'Edit'}} Slider Item</h3>
+          <form [formGroup]="sliderItemForm" class="slider-item-form">
+            <div class="form-section">
+              <h4>Basic Information</h4>
+
+              <div class="toggle-container">
+                <label class="toggle-label">Item Status:</label>
+                <mat-slide-toggle formControlName="active" class="active-toggle">
+                  <span class="toggle-text">{{sliderItemForm.get('active')?.value ? 'Active' : 'Inactive'}}</span>
+                </mat-slide-toggle>
+              </div>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="title" placeholder="Enter title" maxlength="75">
+                <mat-hint align="end">{{sliderItemForm.get('title')?.value?.length || 0}}/75</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="form-section" formGroupName="banners">
+              <h4>Banner Image</h4>
+
+              <div class="image-container">
+                <mat-form-field appearance="outline" class="full-width">
+                  <input matInput formControlName="l" placeholder="Enter image URL">
+                  <mat-error *ngIf="sliderItemForm.get('banners.l')?.invalid">Valid image URL is required</mat-error>
+                </mat-form-field>
+
+                <div class="upload-section">
+                  <button type="button" mat-button class="btn-common btn-secondary" (click)="sliderFileInput.click()">
+                    <mat-icon>cloud_upload</mat-icon> Upload Image
+                  </button>
+                  <input hidden (change)="onSliderImageSelected($event)" #sliderFileInput type="file"
+                    accept="image/jpeg,image/jpg,image/png">
+                </div>
+                <span *ngIf="uploadStatus" class="upload-status"
+                  [class.error]="uploadStatus.startsWith('Error')">{{uploadStatus}}</span>
+                <p class="file-requirements">
+                  <small>Allowed formats: JPG, PNG | Max size: 500KB</small>
+                </p>
+
+                <div class="image-preview">
+                  <img [src]="sliderItemForm.get('banners.l')?.value" alt="Image Preview"
+                    *ngIf="sliderItemForm.get('banners.l')?.value">
+                </div>
+
+                <div class="note">
+                  <small>
+                    <mat-icon class="small-icon">info</mat-icon>
+                    The same image will be used for all banner sizes (L, M, S, XL, XS, XXL)
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <h4>Navigation</h4>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput formControlName="redirectUrl" placeholder="Enter redirect URL (optional)">
+              </mat-form-field>
+            </div>
+
+            <div class="item-form-actions">
+              <button mat-button class="btn-common btn-secondary flex-center" type="button"
+                (click)="cancelSliderItemEdit()">Cancel</button>
+              <button mat-button class="btn-common btn-primary flex-center" type="button"
+                [disabled]="sliderItemForm.invalid" (click)="saveSliderItem()">
+                Add Slider Item
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Default case -->
+      <mat-form-field *ngSwitchDefault appearance="outline" class="full-width">
+        <input matInput formControlName="value" placeholder="Enter {{data.displayName}}">
+        <mat-error *ngIf="editorForm.get('value')?.invalid">This field is required</mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="padding-s" align="end">
+  <button mat-button (click)="onCancel()" type="button" class="btn-common btn-secondary flex-center">Cancel</button>
+  <button mat-button [disabled]="editorForm.invalid" (click)="onSubmit()" class="btn-common btn-primary flex-center"
+    type="button">Save</button>
+</mat-dialog-actions>

@@ -1,25 +1,30 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
+import { ActivatedRoute } from '@angular/router'
+import { HttpBackend } from '@angular/common/http'
+import { ViewerUtilService } from '../../viewer-util.service'
 import { ChannelComponent } from './channel.component'
 
 describe('ChannelComponent', () => {
-  let component: ChannelComponent
-  let fixture: ComponentFixture<ChannelComponent>
+    let component: ChannelComponent
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ChannelComponent],
+    const activatedRoute: Partial<ActivatedRoute> = {}
+    const httpBackend: Partial<HttpBackend> = {}
+    const viewerSvc: Partial<ViewerUtilService> = {}
+
+    beforeAll(() => {
+        component = new ChannelComponent(
+            activatedRoute as ActivatedRoute,
+            httpBackend as HttpBackend,
+            viewerSvc as ViewerUtilService
+        )
     })
-    .compileComponents()
-  }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ChannelComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
+    beforeEach(() => {
+        jest.clearAllMocks()
+        jest.resetAllMocks()
+    })
 
-  it('should create', () => {
-    expect(component).toBeTruthy()
-  })
+    it('should create a instance of component', () => {
+        expect(component).toBeTruthy()
+    })
 })

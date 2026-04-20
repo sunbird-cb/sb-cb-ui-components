@@ -1,0 +1,167 @@
+@import '@sunbird-cb/design-system/src/styles/ws-vars';
+@import '@sunbird-cb/design-system/src/styles/ws-mixins';
+@import '../../../_variables';
+
+
+// Design system imports commented out - consuming application should provide styles
+
+.no-shadow {
+    box-shadow: none !important;
+}
+.certificate-banner-image {
+    height: 30rem;
+    display: flex;
+    width: auto;
+    margin: 0px auto;
+    @include breakpoint-lt-l {
+        width: 100%;
+        height: auto;
+        flex: 1;
+    }
+}
+
+.certificate-img-box {
+    max-height: 35rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    // border: 2px solid;
+}
+.certificate-img-content {
+    overflow: hidden;
+}
+
+a.download_btn {
+    background-color: #f0f0f0;
+    border-radius: 4px 4px;
+    float: right;
+    height: 40px;
+    padding: 0px 16px;
+    text-align: center;
+    line-height: 40px;
+    text-decoration: none;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-right: 0px;
+}
+
+.download_icon {
+    font-size: 16px;
+    vertical-align: text-top;
+}
+::ng-deep .close-button {
+    float: right;
+    top: -16px;
+    right: -12px;
+    height: 30px;
+    width: 30px;
+    line-height: 30px;
+    background: #000 !important;
+    color: #fff !important;
+}
+
+::ng-deep .close-icon {
+    transition: 1s ease-in-out;
+    color:#fff !important
+}
+
+::ng-deep .close-icon:hover {
+    transform: rotate(180deg);
+}
+
+::ng-deep .icon-outside .close-button {
+    float: right;
+    top: -52px;
+    right: -52px;
+    position: absolute;
+    top: 19px;
+    right: 18px;
+}
+::ng-deep .icon-outside .mat-dialog-container {
+    overflow: unset;
+}
+
+// ::ng-deep .mat-dialog-container {
+//     height: 90% !important;
+//     overflow-y: auto;
+//     border:2px solid red;
+// }
+
+::ng-deep .cdk-overlay-pane {
+    max-height: 96%!important;
+    overflow-y: auto!important;
+}
+
+.certificate-banner-image {
+    svg {
+        width: 500;
+        height: 500;
+        @include breakpoint-lt-l {
+            width: auto;
+            height: auto;
+            flex: 1;
+        }
+    }
+}
+.btn-custom{
+    box-sizing: border-box;
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    outline: 0;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    line-height: 36px;
+    padding: 0 16px;
+    border-radius: 4px;
+    overflow: visible;
+}
+
+
+.close-button {
+    position: absolute !important;
+    top: 19px !important;
+    right: 18px !important;
+}
+
+@media screen and (max-width: 1200px) {
+    .btn-custom{
+        box-sizing: border-box;
+        position: relative;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        outline: 0;
+        border: none;
+        -webkit-tap-highlight-color: transparent;
+        display: inline-block;
+        white-space: nowrap;
+        text-decoration: none;
+        vertical-align: baseline;
+        text-align: center;
+        margin: 0;
+        min-width: 64px;
+        line-height: 36px;
+        padding: 0 8px;
+        border-radius: 4px;
+        overflow: visible;
+    }
+
+    .gap-4 {
+        grid-gap: 0rem; 
+        gap: 0rem;
+    }
+}

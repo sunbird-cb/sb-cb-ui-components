@@ -10,7 +10,9 @@ import {
   ViewChild, ViewChildren,
   Renderer2,
 } from '@angular/core'
-import { MatDialog, MatSidenav, MatSnackBar, MatSnackBarConfig } from '@angular/material'
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog'
+import { MatSidenav } from '@angular/material/sidenav'
+import { MatLegacySnackBar as MatSnackBar, MatLegacySnackBarConfig as MatSnackBarConfig } from '@angular/material/legacy-snack-bar'
 import { Subscription, interval } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 import { NSPractice } from './practice.model'
@@ -71,6 +73,7 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
             isCorrect: false,
           },
         ],
+        choices: [],
       },
     ],
     isAssessment: false,
@@ -81,10 +84,10 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
     primaryCategory: NsContent.EPrimaryCategory.PRACTICE_RESOURCE,
   }
   @ViewChildren('questionsReference') questionsReference: QueryList<QuestionComponent> | null = null
-  @ViewChild('sidenav', { static: false }) sideNav: MatSidenav | null = null
-  @ViewChild('submitModal', { static: false }) submitModal: ElementRef | null = null
-  @ViewChild('itemTooltip', { static: false }) itemTooltip: ElementRef | null = null
-  @ViewChild('tooltipTrigger', { static: false }) tooltipTrigger: ElementRef | null = null
+  @ViewChild('sidenav') sideNav: MatSidenav | null = null
+  @ViewChild('submitModal') submitModal: ElementRef | null = null
+  @ViewChild('itemTooltip') itemTooltip: ElementRef | null = null
+  @ViewChild('tooltipTrigger') tooltipTrigger: ElementRef | null = null
   resourceName: string | null = ''
   currentQuestionIndex = 0
   currentTheme = ''
@@ -151,6 +154,7 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
   forPreview = (window.location.href.includes('public') || window.location.href.includes('author') ||
     window.location.href.includes('editMode') || window.location.href.includes('preview'))
   environment!: any
+  questionParagraph = ''
   constructor(
     @Inject('environment') environment: any,
     private events: EventService,
@@ -676,6 +680,7 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
                 questionLevel: q.questionLevel,
                 marks: q.totalMarks,
                 rhsChoices: this.getRhsValue(q),
+                choices: q.choices ? q.choices : [],
               })
             }
           })
@@ -705,6 +710,12 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
         //   this.overViewed('start')
         // })
       }
+    }
+
+    if (section && section.questionParagraph) {
+      this.questionParagraph = section.questionParagraph
+    } else {
+      this.questionParagraph = ''
     }
   }
   getMultiQuestions(ids: string[]) {
@@ -1001,7 +1012,7 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
     // status = 1 indicates started
     // status = 2 indicates completed
     const resData = this.viewerSvc.getBatchIdAndCourseId(this.activatedRoute.snapshot.queryParams.collectionId,
-      this.activatedRoute.snapshot.queryParams.batchId, this.identifier)
+                                                         this.activatedRoute.snapshot.queryParams.batchId, this.identifier)
     const collectionId = (resData && resData.courseId) ? resData.courseId : ''
     const batchId = (resData && resData.batchId) ? resData.batchId : ''
     // const collectionId = this.activatedRoute.snapshot.queryParams.collectionId ?
@@ -1012,7 +1023,7 @@ export class PracticeComponent implements OnInit, OnChanges, OnDestroy {
       if (!this.fromCreation) {
         // tslint:disable-next-line
         console.log('status', status)
-        // this.viewerSvc.realTimeProgressUpdateQuiz(this.identifier, collectionId, batchId, status)
+        this.viewerSvc.realTimeProgressUpdateQuiz(this.identifier, collectionId, batchId, status)
       }
 
     }

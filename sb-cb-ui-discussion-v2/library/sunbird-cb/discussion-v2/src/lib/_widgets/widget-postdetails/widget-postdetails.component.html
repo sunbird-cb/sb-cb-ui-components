@@ -1,0 +1,92 @@
+<div class="w-full widget-container">
+    <div class="flex gap-2">
+        <!-- <div class="side-menu-container otherCard">
+            <h1>Side menu...</h1>
+        </div> -->
+        <div class="flex-1 post-container">
+            <div class="mb-4 flex items-center">
+                <mat-icon class="cursor-pointer mr-4" (click)="navigateToCommunityPage()">arrow_back</mat-icon>
+                <h2 class="nodtranslate">Community Name - To be integrated</h2>
+            </div>
+            <div class="flex flex-1 gap-3 items-center">
+                <div *ngIf="userJoinedCommunity?.status">
+                    <span class="mat-body-1 ws-mat-black60-text nodtranslate">You have already joined this community
+                    </span>
+                </div>
+                <div class="flex flex-col " *ngIf="!userJoinedCommunity?.status">
+                    <span class="mat-body-1 ws-mat-black60-text nodtranslate">You have not joined this community
+                        yet.</span>
+                    <span class="mat-body-1 ws-mat-black60-text nodtranslate">Join community to create post and interact
+                        with other
+                        posts</span>
+                </div>
+                <div>
+                    <button mat-button class="primary-button nodtranslate" (click)="navigateToCommunityPage()">Explore
+                        Community</button>
+                </div>
+            </div>
+            <ng-container *ngIf="posts && posts.length && !loadingPosts;else noPostsSection;">
+                <div class="mt-5 flex flex-col gap-4">
+                    <ng-container *ngFor="let post of posts">
+                        <d-v2-post-card [cardType]="widgetData?.postsList?.cardType"
+                            [userJoinedCommunity]="userJoinedCommunity?.status" [cardConfig]="widgetData?.postsList"
+                            [post]="post" [replyData]="post?.answerPosts"
+                            (likeUnlikeData)="likeUnlikeEvent($event)"></d-v2-post-card>
+                    </ng-container>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="loadingPosts || loadingMore">
+                <ng-container *ngFor="let post of [1]">
+                    <ng-container [ngTemplateOutlet]="postsSkeletonLoader"></ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="other-container">
+            <div class="lg:w-80">
+                <d-v2-trending-discussions></d-v2-trending-discussions>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #postsSkeletonLoader>
+    <div class="skeleton-loader mb-4">
+        <div class="flex flex-col gap-4 p-4 rounded-md bg-white">
+
+            <div class=" flex gap-4 items-center bg-white">
+                <d-v2-widget-skeleton-loader [width]="'48px'" [height]="'48px'"
+                    [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+                <div class="flex flex-1 flex-col gap-2">
+                    <d-v2-widget-skeleton-loader [width]="'50%'" [height]="'20px'"
+                        [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+                    <d-v2-widget-skeleton-loader [width]="'40%'" [height]="'18px'"
+                        [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+                </div>
+                <d-v2-widget-skeleton-loader [width]="'64px'" [height]="'20px'"
+                    [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+            </div>
+            <div>
+                <d-v2-widget-skeleton-loader class="w-full" [width]="'100%'" [height]="'48px'"
+                    [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+            </div>
+            <div>
+                <d-v2-widget-skeleton-loader class="w-full" [width]="'100%'" [height]="'360px'"
+                    [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+            </div>
+            <div class="flex">
+                <d-v2-widget-skeleton-loader class=" mr-4" [width]="'64px'" [height]="'48px'"
+                    [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+                <d-v2-widget-skeleton-loader class=" mr-4" [width]="'64px'" [height]="'48px'"
+                    [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noPostsSection>
+    <ng-container *ngIf="!loadingPosts && !loadingMore">
+        <div class="flex flex-1 items-center justify-center nodtranslate">
+            {{widgetData?.postsList?.noPostsSection?.text}}
+        </div>
+    </ng-container>
+</ng-template>

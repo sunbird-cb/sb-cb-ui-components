@@ -1,0 +1,139 @@
+<div class="menu-container">
+  <div class="flex flex-1 flex-column min-wid sidenav-wrap">
+    <div class="flex flex-column max-width width-1-1" *ngIf="widgetData.logo">
+      <a href="javascript:void(0)" role="link" class="flex flex-column padding-right-m  padding-left-m items-center">
+        <ng-container *ngIf="widgetData?.sideNavBoolean">
+          <div class="dept-logo-block flex flex-middle flex-center">
+            <img [src]="widgetData.logoPath" [alt]="widgetData.name" class="img-logo"
+              (error)="changeToDefaultImg($event)" />
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!widgetData?.sideNavBoolean">
+          <div class="dept-logo-icon-block flex flex-middle flex-center">
+            <img [src]="widgetData.logoPath" [alt]="widgetData.name" class="img-logo"
+              (error)="changeToDefaultImg($event)" />
+          </div>
+        </ng-container>
+        <ng-container *ngIf="widgetData?.sideNavBoolean">
+          <span i18n="title" class="mat-subheading-2 margin-top-m  dept-name">
+            {{widgetData.name}}
+          </span>
+        </ng-container>
+      </a>
+    </div>
+  </div>
+
+  <div [ngClass]="{'pl-6': widgetData?.sideNavBoolean, 'mt-5': !widgetData?.sideNavBoolean}">
+    <mat-nav-list class="nav-list-menu flex-1">
+      <ng-container *ngFor="let menu of widgetData?.menus; let mi = index">
+        <ng-container *ngIf="menu?.subMenu?.length; else singleMenu">
+          <ng-container *ngIf="widgetData?.sideNavBoolean && isAllowed(menu)">
+            <div class="sub-heading-block my-4">
+              <p class="sub-menu-title"><span>{{menu?.menuCategory}}</span></p>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!widgetData?.sideNavBoolean && isAllowed(menu)">
+            <div class="bar-saparater"></div>
+          </ng-container>
+          <ng-container *ngFor="let tab of menu?.subMenu; let i = index">
+            <ng-container [ngTemplateOutlet]="menuItem" [ngTemplateOutletContext]="{'menu': tab}"></ng-container>
+          </ng-container>
+        </ng-container>
+        <ng-template #singleMenu>
+          <ng-container [ngTemplateOutlet]="menuItem" [ngTemplateOutletContext]="{'menu': menu}"></ng-container>
+        </ng-template>
+      </ng-container>
+    </mat-nav-list>
+  </div>
+
+  <ng-template #menuItem let-actionBtn="actionBtn" let-menu="menu">
+    <ng-container *ngIf="isAllowed(menu)">
+      <a mat-list-item disableRipple [ngClass]="{'flex outline-1 pl-6 my-2 cursor-pointer menu-item-a': widgetData?.sideNavBoolean,
+        'icon-menu-list': !widgetData?.sideNavBoolean}"
+        *ngIf="menu?.enabled && !menu?.customRouting && !menu?.fragment && !menu?.queryParams"
+        [routerLink]="[menu?.routerLink]" [queryParamsHandling]="'preserve'" routerLinkActive="ws-active-route-men">
+        <ng-container *ngIf="widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon">{{menu?.iconName}}</mat-icon>
+          </ng-container> <span class="padding-left-xs">{{menu?.name}}</span>
+        </ng-container>
+        <ng-container *ngIf="!widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName" [matTooltip]="menu?.name"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [matTooltip]="menu?.name">{{menu?.iconName}}</mat-icon>
+          </ng-container>
+        </ng-container>
+      </a>
+      <a mat-list-item disableRipple [ngClass]="{'flex outline-1 pl-6 my-2 cursor-pointer menu-item-a': widgetData?.sideNavBoolean,
+        'icon-menu-list': !widgetData?.sideNavBoolean}"
+        *ngIf="menu?.enabled && !menu?.customRouting && menu?.fragment && !menu?.queryParams" [routerLink]="'.'"
+        [class.ws-active-route-men]="isLinkActive(menu?.key)" [fragment]="menu?.fragment? menu?.key : ''"
+        [queryParamsHandling]="'preserve'">
+        <ng-container *ngIf="widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon">{{menu?.iconName}}</mat-icon>
+          </ng-container> <span class="padding-left-xs">{{menu?.name}}</span>
+        </ng-container>
+        <ng-container *ngIf="!widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName" [matTooltip]="menu?.name"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [matTooltip]="menu?.name">{{menu?.iconName}}</mat-icon>
+          </ng-container>
+        </ng-container>
+      </a>
+      <a mat-list-item disableRipple [ngClass]="{'flex outline-1 pl-6 my-2 cursor-pointer menu-item-a': widgetData?.sideNavBoolean,
+        'icon-menu-list': !widgetData?.sideNavBoolean}"
+        *ngIf="menu?.enabled && menu?.customRouting && !menu?.queryParams" [routerLink]="getLink(menu)"
+        [queryParamsHandling]="'preserve'" routerLinkActive="ws-active-route-men">
+        <ng-container *ngIf="widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon">{{menu?.iconName}}</mat-icon>
+          </ng-container> <span class="padding-left-xs">{{menu?.name}}</span>
+        </ng-container>
+        <ng-container *ngIf="!widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName" [matTooltip]="menu?.name"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [matTooltip]="menu?.name">{{menu?.iconName}}</mat-icon>
+          </ng-container>
+        </ng-container>
+      </a>
+      <a mat-list-item disableRipple [ngClass]="{'flex outline-1 pl-6 my-2 cursor-pointer menu-item-a': widgetData?.sideNavBoolean,
+        'icon-menu-list': !widgetData?.sideNavBoolean}"
+        *ngIf="menu?.enabled && !menu?.customRouting  && !menu?.fragment && menu?.queryParams"
+        [routerLink]="menu?.routerLink" [queryParams]="{'status':menu?.queryParams}" [queryParamsHandling]="'preserve'"
+        [class.ws-active-route-men]="isLinkActive2(menu?.routerLink)">
+        <ng-container *ngIf="widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon">{{menu?.iconName}}</mat-icon>
+          </ng-container> <span class="padding-left-xs">{{menu?.name}}</span>
+        </ng-container>
+        <ng-container *ngIf="!widgetData?.sideNavBoolean">
+          <ng-container *ngIf="menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [svgIcon]="menu?.iconName" [matTooltip]="menu?.name"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="!menu?.iconName?.includes('svg_')">
+            <mat-icon class="menu-icon" [matTooltip]="menu?.name">{{menu?.iconName}}</mat-icon>
+          </ng-container>
+        </ng-container>
+      </a>
+    </ng-container>
+  </ng-template>
+</div>

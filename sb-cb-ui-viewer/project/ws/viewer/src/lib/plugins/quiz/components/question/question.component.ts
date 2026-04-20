@@ -17,6 +17,9 @@ export class QuestionComponent implements OnInit, AfterViewInit {
   @Input() question: NSQuiz.IQuestion = {
     multiSelection: false,
     question: '',
+    instructions: '',
+    section: '',
+    questionType: undefined,
     questionId: '',
     options: [
       {
@@ -74,7 +77,7 @@ export class QuestionComponent implements OnInit, AfterViewInit {
       this.safeQuestion = this.domSanitizer.bypassSecurityTrustHtml(this.question.question)
     }
     if (this.question.questionType === 'mtf') {
-      this.question.options.map(option => (option.matchForView = option.match))
+      this.question.options.forEach(option => (option.matchForView = option.match))
       const array = this.question.options.map(elem => elem.match)
       const arr = this.shuffle(array)
       for (let i = 0; i < this.question.options.length; i += 1) {

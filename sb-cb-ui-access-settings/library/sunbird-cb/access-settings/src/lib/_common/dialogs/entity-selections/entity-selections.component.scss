@@ -1,0 +1,247 @@
+:host {
+  display: block;
+}
+.dialog-heading {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  padding: 0 16px;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__title {
+  margin-bottom: 8px !important;
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 0 0px 9px 0px;
+}
+
+.close-button {
+  margin-right: -8px;
+}
+
+.dialog-body-wrapper {
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+.search-button {
+  padding: 4px 24px;
+}
+
+.filter-options {
+  margin-bottom: 15px;
+
+  .mat-radio-button {
+    margin-right: 24px;
+  }
+}
+
+.org-container {
+  // height: 410px;
+  display: flex;
+  flex-direction: column;
+}
+
+.alphabet-filter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 8px 0;
+
+  .divider-apl {
+    width: 1px;
+    height: 14px;
+    background-color: #00000029;
+  }
+
+  .letter-button {
+    min-width: 30px;
+    padding: 0;
+    margin: 2px;
+    line-height: 30px;
+    font-family: Lato;
+    font-weight: 400;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.6);
+    &.active-range-btn {
+      font-weight: 700;
+      font-size: 14px;
+      color: #000000;
+    }
+  }
+
+  .range-button {
+    @extend .letter-button;
+    padding: 0 16px !important;
+  }
+}
+
+.organization-scroll {
+  flex: 1;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.org-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.org-column {
+  .org-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .org-card {
+    .mat-checkbox {
+      ::ng-deep .mat-checkbox-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        width: 180px;
+        font-family: Lato;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 16px;
+        color: #000000de;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .mat-mdc-dialog-content {
+  max-height: 79vh !important;
+}
+
+.apply-button-container {
+  div:first-child {
+    color: #00000099;
+  }
+  button {
+    padding: 0 54px;
+  }
+}
+
+.spinner-loader {
+  height: 200px;
+}
+
+.no-data span {
+  font-family: Lato;
+  font-size: 8.98px;
+  color: #000000de;
+}
+
+.batch-range-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.batch-range-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+.batch-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+}
+
+.options-checkbox {
+  .mat-checkbox {
+    ::ng-deep .mat-checkbox-label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      font-family: Lato;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 14px;
+      color: #000000de;
+    }
+  }
+}
+
+.lato-normal-text-line {
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+}
+
+// Toggle Switch Styles
+.checkbox-toggle {
+  input[type="checkbox"] {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+  }
+
+  label {
+    cursor: pointer;
+    width: 60px;
+    height: 28px;
+    background: #666666;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+  }
+
+  label::before {
+    content: "OFF";
+    color: white;
+    position: absolute;
+    left: 28px;
+    top: 2px;
+    z-index: 1;
+    transition: 0.3s;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 11.57px;
+  }
+
+  label:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+    z-index: 2;
+  }
+
+  input:checked + label {
+    background: #1d8923;
+  }
+
+  input:checked + label::before {
+    content: "ON";
+    left: 10px;
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 11.57px;
+    transition: 0.3s;
+  }
+
+  input:checked + label:after {
+    left: calc(100% - 5px);
+    transform: translateX(-100%);
+  }
+
+  label:active:after {
+    width: 30px;
+  }
+
+  label[data-disabled="true"] {
+    cursor: not-allowed;
+  }
+}

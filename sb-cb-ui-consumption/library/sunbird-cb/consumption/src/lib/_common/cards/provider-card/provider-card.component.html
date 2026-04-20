@@ -15,7 +15,6 @@
   </div> -->
   <!-- {{widgetData|json}} -->
 
-
 <ng-container *ngIf="!isCardLoading">
   <ng-container *ngIf="widgetData && widgetData?.content">
     <div class="providers-container">
@@ -35,7 +34,7 @@
           </div>
         </div>
         <div class="provider-content">
-          <p>{{ widgetData?.content?.name }}</p>
+          <p class="provider-name" [title]="widgetData?.content?.name">{{ widgetData?.content?.name }}</p>
           <div class="view-provider-button flex items-center" (click)="redirectTo(widgetData.content)">View Provider 
             <mat-icon class="" color="accent">navigate_next</mat-icon></div>
         </div>
@@ -54,8 +53,8 @@
           </div>
         </div>
         <div class="w-full p-4 provider-content">
-          <p class="w-full pl-4"> <sb-uic-skeleton-loader [width]="'200px'" [height]="'12px'" class="w-full h-full"  [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></p>
-          <div class="w-full pl-4 view-provider-button" (click)="redirectTo(widgetData.content)"><sb-uic-skeleton-loader [width]="'200px'" [height]="'12px'"  class="w-full h-full"  [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></div>
+          <p class="provider-name w-full"> <sb-uic-skeleton-loader [width]="'200px'" [height]="'12px'" class="w-full h-full"  [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></p>
+          <div class="w-full view-provider-button" (click)="redirectTo(widgetData.content)"><sb-uic-skeleton-loader [width]="'200px'" [height]="'12px'"  class="w-full h-full"  [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></div>
         </div>
       </div>
     </div>

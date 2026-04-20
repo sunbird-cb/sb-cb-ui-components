@@ -1,0 +1,48 @@
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { labels } from '../../labels/strings'
+declare var LeaderLine: any;
+
+@Component({
+  selector: 'lib-categories-preview',
+  templateUrl: './categories-preview.component.html',
+  styleUrls: ['./categories-preview.component.scss']
+})
+export class CategoriesPreviewComponent implements OnChanges, OnInit { 
+
+  @Input() data: any;
+  lineRef: any = [];
+  app_strings: any = labels;
+  constructor() { }
+
+  ngOnChanges(){
+    setTimeout(() => {
+          this.drawLine()
+    },200)
+  }
+
+  ngOnInit() {}
+ 
+  // ngAfterViewInit() {
+  //   this.drawLine()
+  // }
+
+  drawLine(){
+    this.lineRef = []
+    for(let cat of this.data){
+      for(let term of cat.terms){
+        if(term.connected){
+         const startEle = document.querySelector(`#${term.domId}`)
+          if(term.parent) {
+              const endEle = document.querySelector(`#${term.parent}`)
+              const line: any = new LeaderLine(startEle, endEle);
+              line.color='#666'
+              line.endPlug = 'disc'
+              line.startPlug = 'disc'
+              this.lineRef.push(line)
+          }
+        }
+      }
+    }
+  }
+
+}

@@ -1,0 +1,27 @@
+.comminity-guidelines {
+    .headding {
+        //styleName: Sub heading 2;
+        font-family: Montserrat;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 17.07px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
+    .guidelines-info {
+        //styleName: Body 2;
+        font-family: Lato;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16.8px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        // white-space: nowrap;         /* Prevent text from wrapping */
+        // overflow: hidden;            /* Hide the overflow content */
+        // text-overflow: ellipsis;     /* Show ellipsis for overflow text */
+        // width: 100%; 
+    }
+}

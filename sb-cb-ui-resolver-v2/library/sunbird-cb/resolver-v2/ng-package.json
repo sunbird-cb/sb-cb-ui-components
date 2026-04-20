@@ -2,9 +2,6 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/sunbird-cb/resolver-v2",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "@sunbird-cb/utils-v2": "@sunbird-cb/utils-v2"
-    }
+    "entryFile": "src/public-api.ts"
   }
 }

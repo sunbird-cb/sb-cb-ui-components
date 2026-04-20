@@ -1,0 +1,55 @@
+.close-icon {
+    //font-size: 36px;
+    cursor: pointer;
+    //position: absolute;
+    //right: 0;
+    //top: -7px;
+    //visibility: hidden;
+}
+
+.lang-msg-wrapper {
+    text-align: left;
+    border:1px solid #E0E0E0;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 8px;
+    box-sizing: border-box;
+}
+.confirmation-dialog-container .dialog-header {
+    justify-content: space-between !important;
+    .close-icon {
+        color: #817c7c;
+        background-color: #ffffff;
+    }
+}
+
+.submit-btn {
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .accept-btn {
+    color: #fff;
+    background: no-repeat padding-box #1b4ca1!important;
+    margin-left: 8px;
+    border: 1px solid #1b4ca1;
+  
+  }
+  
+  .close-btn {
+    color: #1b4ca1;
+    background-color: #fff;
+    border: 1px solid #1b4ca1;
+  }
+
+.header-icon{
+    color: rgba(27, 76, 161, 1);
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 16px;
+}

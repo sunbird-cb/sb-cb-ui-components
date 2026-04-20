@@ -1,0 +1,165 @@
+.bread-crumb-container {
+  .breadcrumb-item,
+  .breadcrumb-separator {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+  }
+
+  .breadcrumb-item {
+    &.breadcrumb-active {
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+}
+
+.header-container {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-container {
+  gap: 12px;
+}
+
+.btn-common {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary {
+  background-color: #1976d2;
+  color: white;
+
+  &:hover {
+    background-color: #1565c0;
+  }
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.87);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.stepper-container {
+  margin-top: 32px;
+}
+
+.stepper-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step-label {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 400;
+  }
+
+  &.active {
+    .step-number {
+      background-color: #ff9800;
+      color: white;
+    }
+
+    .step-label {
+      color: #ff9800;
+      font-weight: 500;
+    }
+  }
+
+  &.completed {
+    .step-number {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .step-label {
+      color: rgba(0, 0, 0, 0.87);
+    }
+  }
+}
+
+.step-divider {
+  width: 80px;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0 16px;
+}
+
+// Utility classes
+.flex {
+  display: flex;
+}
+
+.flex-middle {
+  align-items: center;
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+.mt-5 {
+  margin-top: 20px;
+}
+
+.mt-8 {
+  margin-top: 32px;
+}
+
+.gap-3 {
+  gap: 12px;
+}
+
+.gap-5 {
+  gap: 20px;
+}
+
+.px-8 {
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.py-5 {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

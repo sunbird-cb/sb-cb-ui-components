@@ -1,0 +1,222 @@
+<div class="container-fluid white-background nlm-micro-sites micro-white" id="nlm-micro-sites">
+    <div class="flex flex-col flex-1">
+        <ng-container *ngIf="sectionList?.length">
+            <ng-container *ngFor="let section of sectionList">
+                <ng-container *ngIf="section?.enabled">
+                    <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4 white-bg" [ngClass]="{'container': section.wrapperClass}">
+                        <ng-container *ngFor="let column of section.column">
+                            <div id="{{column?.key}}" class="col-span-{{column.colspan || 12}} ">
+                                <ng-container *ngIf="column?.enabled" [ngSwitch]="column?.key">
+                                    <ng-container *ngSwitchCase="'topSection'" [ngTemplateOutlet]="topSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                    <ng-container *ngSwitchCase="'contentSection'" [ngTemplateOutlet]="contentSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                        <ng-container *ngSwitchCase="'lookerSection'" [ngTemplateOutlet]="lookerTemplate"
+                                            [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </section>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #topSection let-data="data">
+    <!-- top section desktop layout -->
+    <div class="w-full topSection">
+        <div *ngIf="data.sliderData && data.sliderData.sliders">
+            <sb-uic-sliders [widgetData]="data.sliderData.sliders" [styleData]="data.sliderData.styleData" ></sb-uic-sliders>
+        </div>
+        <div *ngIf="data && data.metrics">
+            <div class="block md:hidden">
+                <sb-uic-data-points
+                    [providerId]="providerId"
+                    [fetchDataFromApi]="true"
+                    [objectData]="data?.metrics?.data"
+                    [layoutType]="'nlwCol'"
+                    [title]="data?.metrics?.title"
+                    [pageLayout]="'nlw'">
+                </sb-uic-data-points>
+            </div>
+            <div class="hidden md:block">
+                <sb-uic-data-points
+                    [providerId]="providerId"
+                    [fetchDataFromApi]="true"
+                    [objectData]="data?.metrics?.data"
+                    [layoutType]="'nlwRow'"
+                    [title]="data?.metrics?.title"
+                    [pageLayout]="'nlw'">
+                </sb-uic-data-points>
+            </div>
+        </div>
+
+        <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class="container">
+                    <div class="block md:hidden">
+                        <sb-uic-key-highlights (emptyResponse)="hideKeyHightlight($event, data.keyHighlights)"  [formData]="data.keyHighlights" [providerId]="providerId" [mode]="'mobile'"></sb-uic-key-highlights>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class="container">
+                    <div class="hidden md:block">
+                        <div class="flex flex items-center justify-center gap-10">
+                            <div class="mr-4 logo-box-container">
+                                <div class="flex logo-box-rounded top mr-4">
+                                    <img alt="Application Logo" class="logo-img" [src]="data?.imageUrl">
+                                </div>
+                            </div>
+                            <div class="w-full md:w-9/12 flex-1 flex flex-col pr-3">
+                                <div class=" txt-ellipsis-2 break-words description-title">{{data?.title}}</div>
+                                <div class="description">{{data?.description | slice:0:descriptionMaxLength}}
+                                    <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block md:hidden">
+                        <div class="flex flex-col items-center justify-center margin-bottom-xl px-5">
+                            <div class="mlogo-box-rounded">
+                                <img alt="Application Logo" class="logo-img" [src]="data?.imageUrl">
+                            </div>
+                        </div>
+                        <div class="flex flex-col px-5">
+                            <div class=" txt-ellipsis-2 break-words description-title">{{data?.title}}</div>
+                            <div class="mdescription">{{data?.description | slice:0:descriptionMaxLength}}
+                                <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class="container margin-top-xl">
+                    <div class="hidden md:block">
+                        <sb-uic-key-highlights (emptyResponse)="hideKeyHightlight($event, data.keyHighlights)"  [formData]="data.keyHighlights" [providerId]="providerId" [mode]="'desktop'"></sb-uic-key-highlights>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<ng-template #contentSection let-data="data">
+    <div class="flex items-center justify-center">
+        <div class="container">
+            <div class="grid grid-cols-12 gap-4 mb-6">
+                <div class="col-span-12 md:col-span-{{data.leftContent.colspan}}">
+                    <div *ngIf="data.leftContent.data.weekHighlights.data">
+                        <sb-uic-highlights-of-week
+                            [objectData]="data.leftContent.data.weekHighlights.data">
+                        </sb-uic-highlights-of-week>
+                    </div>
+                    <div class="hidden md:block">
+                        <div *ngIf="data.leftContent.data.mandatoryCourse.enabled && data?.leftContent?.data?.mandatoryCourse?.column[0]?.data">
+                            <div class="margin-top-l nlw-mandatoryCourse">
+                                <sb-uic-content-strip-with-tabs
+                                    [emitViewAll]="false"
+                                    (viewAllResponse)="''"
+                                    (telemtryResponse)="raiseTelemetryInteratEvent($event)"
+                                    (emptyResponse)="''"
+                                    [providerId]="'123456789'"
+                                    [widgetData]="data?.leftContent?.data?.mandatoryCourse?.column[0]?.data"
+                                    [channnelName]="'channnelName'">
+                                </sb-uic-content-strip-with-tabs>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:block">
+                        <div *ngIf="data?.leftContent?.data?.exploreLearningContent?.strips[0]">
+                            <!-- <sb-uic-content-strip-facet-filter [widgetData]="data?.leftContent?.data?.exploreLearningContent"></sb-uic-content-strip-facet-filter> -->
+                            <sb-uic-content-strip-with-tabs
+                            [emitViewAll]="false"
+                            (viewAllResponse)="''"
+                            (telemtryResponse)="raiseTelemetryInteratEvent($event)"
+                            (emptyResponse)="''"
+                            [providerId]="environment?.spvorgID"
+                            [widgetData]="data?.leftContent?.data?.exploreLearningContent"
+                            [channnelName]="'channnelName'">
+                        </sb-uic-content-strip-with-tabs>
+                        </div>
+                    </div>
+                    <div class="hidden md:block">
+                        <div *ngIf="data.leftContent.data.events.enabled && data.leftContent.data.events.column[0]">
+                            <sb-uic-events [object]="data.leftContent.data.events.column[0]" [nwlEventsConfig]="nwlConfiguration"></sb-uic-events>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-span-12 md:col-span-{{data.rightContent.colspan}}">
+                    <div *ngIf="data.rightContent.data.myprogress">
+                        <sb-uic-user-progress
+                            [objectData]="data.rightContent.data.myprogress.data" [rootOrgId]="configDetails?.unMappedUser?.rootOrgId">
+                        </sb-uic-user-progress>
+                    </div>
+                    <div *ngIf="data.rightContent.data.speakerOftheDay">
+                        <sb-uic-speakers
+                            [objectData]="data.rightContent.data.speakerOftheDay.data">
+                        </sb-uic-speakers>
+                    </div>
+                    <div *ngIf="data.rightContent.data.mdoLeaderboard">
+                        <sb-uic-mdo-leaderboard
+                            [object]="data.rightContent.data.mdoLeaderboard.data"
+                            (tabClicked)="raiseTabClick($event)"></sb-uic-mdo-leaderboard>
+                    </div>
+
+                    <div class="block md:hidden">
+                        <div *ngIf="data.leftContent.data.mandatoryCourse.enabled && data?.leftContent?.data?.mandatoryCourse?.column[0]?.data">
+                            <div class="margin-top-l nlw-mandatoryCourse">
+                                <sb-uic-content-strip-with-tabs
+                                    [emitViewAll]="false"
+                                    (viewAllResponse)="''"
+                                    (telemtryResponse)="raiseTelemetryInteratEvent($event)"
+                                    (emptyResponse)="''"
+                                    [providerId]="'123456789'"
+                                    [widgetData]="data?.leftContent?.data?.mandatoryCourse?.column[0]?.data"
+                                    [channnelName]="'channnelName'">
+                                </sb-uic-content-strip-with-tabs>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block md:hidden px-4 md-px-0">
+                        <div *ngIf="data?.leftContent?.data?.exploreLearningContent?.strips[0]">
+                            <sb-uic-content-strip-facet-filter [widgetData]="data?.leftContent?.data?.exploreLearningContent"></sb-uic-content-strip-facet-filter>
+                        </div>
+                    </div>
+                    <div class="block md:hidden px-4 md-px-0">
+                        <div *ngIf="data.leftContent.data.events.enabled && data.leftContent.data.events.column[0]">
+                            <sb-uic-events [object]="data.leftContent.data.events.column[0]" [nwlEventsConfig]="nwlConfiguration"></sb-uic-events>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+
+
+
+<ng-template #lookerTemplate let-data="data">
+    <div class="flex items-center justify-center" >
+        <div class="container  mt-8">
+            <div class="key-speakers flex-wrap flex items-center justify-center">
+                <h1 class="featured  text-center">{{data?.header?.headerText}}</h1>
+                <p class="featured-description  p-4 md:p-0 text-center">{{data?.header?.description}}</p>
+            </div>
+            <div class="lookpro" *ngIf="lookerProUrl">
+                <iframe title="{{data?.header?.headerText}}" width="100%" height="520" [src]="lookerProUrl" frameborder="0" style="border:0" sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+            </div>
+        </div>
+    </div>
+</ng-template>

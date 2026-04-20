@@ -1,0 +1,55 @@
+<mat-tab-group (selectedTabChange)="handleTabChange($event)" #stickyMenu [class.sticky-mat-tabs]="sticky"
+    [selectedIndex]="selectedTabIndex" [ngClass]="{'content-tabs':!fromViewer,'contentSticky': forPreview}">
+    <mat-tab label="About">
+        <ng-container *ngIf="content">
+            <ws-widget-app-toc-about [fromViewer]="fromViewer" [pathSet]="pathSet" [content]="content"
+                [contentReadData]="contentReadData" [tocStructure]="tocStructure" [config]="config"
+                [forPreview]="forPreview" [sticky]="sticky" [selectedBatchData]="selectedBatchData"
+                [selectedTabValue]="selectedTabIndex" [resumeData]="resumeData" [batchData]="batchData"
+                [skeletonLoader]="skeletonLoader" [condition]="condition" [kparray]="kparray"
+                [showReviews]="'true'"></ws-widget-app-toc-about>
+        </ng-container>
+    </mat-tab>
+    <ng-container *ngIf="content?.children?.length">
+        <mat-tab label="Content" *ngIf="contentTabFlag">
+            <ws-widget-app-toc-content [batchId]="batchId" [componentName]="componentName" [pathSet]="pathSet"
+                [content]="content" [tocStructure]="tocStructure" [config]="config" [forPreview]="false"
+                [resumeData]="resumeData" [batchData]="batchData" [skeletonLoader]="skeletonLoader"
+                [hierarchyMapData]="hierarchyMapData"></ws-widget-app-toc-content>
+        </mat-tab>
+    </ng-container>
+    <ng-container *ngIf="config?.commentsTab">
+        <mat-tab label="Comments">
+            <ng-container *ngIf="commentId">
+                <div class="flex flex-col ratings-div mt-5" id="commentsDiv" *ngIf="discussWidgetData">
+                    <div class="flex flex-row gap-3 cursor-pointer" (click)="clearCommentIdFromUrl()">
+                        <mat-icon class="cursor-pointer">arrow_back</mat-icon>
+                        Back to all comments
+                    </div>
+                    <d-v2-widget-comment [widgetData]="discussWidgetData" [commentId]="commentId"
+                        (commentDataChange)="onCommentDataChange($event)"></d-v2-widget-comment>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!commentId">
+                <div class="flex flex-col ratings-div mt-5" id="commentsDiv" *ngIf="discussWidgetData">
+                    <d-v2-widget-comment [widgetData]="discussWidgetData" [commentId]="commentId"
+                        (commentDataChange)="onCommentDataChange($event)"></d-v2-widget-comment>
+                </div>
+            </ng-container>
+        </mat-tab>
+    </ng-container>
+    <ng-container *ngIf="contentReadData?.referenceNodes && teacherNotesFlag">
+        <mat-tab label="Teachers Note">
+            <div class="flex flex-col ratings-div mt-5" id="teachersNoteDiv">
+                <ws-widget-app-toc-teachers-notes [content]="contentReadData"></ws-widget-app-toc-teachers-notes>
+            </div>
+        </mat-tab>
+    </ng-container>
+    <ng-container *ngIf="contentReadData?.referenceNodes && referenceNotesFlag">
+        <mat-tab label="References">
+            <div class="flex flex-col ratings-div mt-5" id="teachersNoteDiv">
+                <ws-widget-app-toc-reference-notes [content]="contentReadData"></ws-widget-app-toc-reference-notes>
+            </div>
+        </mat-tab>
+    </ng-container>
+</mat-tab-group>

@@ -1,0 +1,49 @@
+<mat-card class="members-wrapper mt-4">
+    <div class="mb-6">
+        <div class="relative flex community-search">
+            <input type="text" (keydown.enter)="onSearch($event)" placeholder="Search Members"
+                class="w-full px-4 py-2 pl-10  rounded-full " />
+            <mat-icon class="absolute left-3 top-1.5 h-5 w-5 text-gray-400">
+                search
+            </mat-icon>
+            <!-- <Search class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" /> -->
+        </div>
+    </div>
+    <div class="member-title" *ngIf="totalNumberOfMembers">
+        <h2 class="nodtranslate">Members <span class="ml-2 nodtranslate"
+                >({{totalNumberOfMembers}})</span></h2>
+    </div>
+    <div>
+        <div class="flex justify-start">
+            <ng-container *ngIf="!membersLoading">
+                <div class="flex gap-4 flex-wrap justify-start" *ngIf="communityMembersList?.length;else noData ">
+                    <ng-container *ngFor="let member of communityMembersList">
+                        <d-v2-member-card [memeberData]="member"
+                            *ngIf="member && (member.first_name || member.firstName)"></d-v2-member-card>
+                    </ng-container>
+                </div>
+            </ng-container>
+            <div class="flex gap-4 flex-wrap justify-start">
+                <ng-container *ngIf="membersLoading">
+                    <ng-container *ngFor="let member of [1,2,3]">
+                        <d-v2-member-card [isLoading]="true" [memeberData]="member"
+                            *ngIf="member && (member.first_name || member.firstName)"></d-v2-member-card>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+        <ng-container *ngIf="!(this.communityMembersList.length >= this.totalNumberOfMembers)">
+            <div class="load-more-posts my-4 mt-8">
+                <button mat-flat-button color="primary" class="w-full underline nodtranslate"
+                    (click)="loadMoreMembers()">Load
+                    More</button>
+            </div>
+        </ng-container>
+    </div>
+</mat-card>
+
+<ng-template #noData>
+    <div class="flex justify-center w-full mt-8">
+        <d-v2-no-data [iconName]="'forum'" [noText]="'No data'"></d-v2-no-data>
+    </div>
+</ng-template>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy, HostBinding } from '@angular/core'
-import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver'
+import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
 import { NsContentStripMultiple } from './content-strip-multiple.model'
 import { ContentStripMultipleService } from './content-strip-multiple.service'
 import { WidgetContentService } from '../_services/widget-content.service'
@@ -10,10 +10,10 @@ import {
   EventService,
   ConfigurationsService,
   UtilityService,
-} from '@sunbird-cb/utils'
+} from '@sunbird-cb/utils-v2'
 import { Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
-import { NSSearch } from '@sunbird-cb/utils/lib/services/widget-search.model'
+import { NSSearch } from '@sunbird-cb/utils-v2/lib/services/widget-search.model'
 
 interface IStripUnitContentData {
   key: string

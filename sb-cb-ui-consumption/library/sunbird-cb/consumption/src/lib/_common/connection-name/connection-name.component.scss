@@ -1,0 +1,48 @@
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
+
+.name {
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.designation {
+    line-height: 21px;
+}
+
+.action-container {
+    padding: $size-m 0;
+}
+
+.mentor {
+  color: #FFF;
+  text-align: center;
+  /*stylelint-disable */
+  font: 400 10px Lato;
+  /*stylelint-enable */
+  line-height: normal;
+  border-radius: 4px;
+  background-color: #1B4CA1;
+  padding: 1px 4px;
+  width: fit-content;
+}
+
+[wsTooltipDirective] {
+    position: relative;
+  }
+
+  .tooltip {
+    position: absolute;
+    opacity: 1;
+    z-index: 99;
+    padding: 5px;
+
+    @media (max-width:380px) {
+        left: 0;
+        padding:0;
+    }
+  }

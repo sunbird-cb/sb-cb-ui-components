@@ -1,5 +1,5 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
 
 .quiz-question {
     overflow-x: auto;

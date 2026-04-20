@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { HorizontalScrollerV2Component } from './horizontal-scroller-v2.component';
 
 describe('HorizontalScrollerV2Component', () => {
   let component: HorizontalScrollerV2Component;
   let fixture: ComponentFixture<HorizontalScrollerV2Component>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [HorizontalScrollerV2Component],
     })

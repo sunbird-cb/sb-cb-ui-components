@@ -1,0 +1,43 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
+  "version": 1,
+  "newProjectRoot": "project",
+  "projects": {
+    "@sunbird-cb/tree-hierarchy": {
+      "projectType": "library",
+      "root": "library/sunbird-cb/tree-hierarchy",
+      "sourceRoot": "library/sunbird-cb/tree-hierarchy/src",
+      "prefix": "sb-cb-tree",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "library/sunbird-cb/tree-hierarchy/tsconfig.lib.json",
+            "project": "library/sunbird-cb/tree-hierarchy/ng-package.json"
+          }
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "library/sunbird-cb/tree-hierarchy/tsconfig.lib.prod.json"
+            }
+          }
+},
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "library/sunbird-cb/tree-hierarchy/src/test.ts",
+            "tsConfig": "library/sunbird-cb/tree-hierarchy/tsconfig.spec.json",
+            "karmaConfig": "library/sunbird-cb/tree-hierarchy/karma.conf.js"
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  }
+}

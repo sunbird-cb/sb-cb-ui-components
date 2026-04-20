@@ -1,0 +1,153 @@
+<div class="hidden md:block" *ngIf="!isMobile">
+  <div class="web-banner-background" [ngStyle]="getBackgroundStyle(data?.background)">
+    <div class="p-4 flex flex-center" *ngIf="isEdit">
+      <button mat-button class="btn-common btn-secondary"
+        (click)="openEditor('background', 'Background', data?.background)" aria-label="Edit Background" type="button">
+        <i class="material-icons">edit</i>
+        <span> Edit Background</span>
+      </button>
+    </div>
+    <div class="flex items-center justify-center">
+      <div class="container">
+        <div *ngIf="!isEdit" class="flex sticky-logo-square" [style.width]="stripWidth"></div>
+        <div class="grid grid-cols-12 gap-4 padding-top-xxxl mb-10">
+          <div class="col-span-12 md:col-span-6">
+            <div class="flex-1 flex flex-col mr-4 ws-mat-black-text">
+              <div class="">
+                <div class="flex items-center logo-square">
+                  <!-- Multiple logos (array) -->
+                  <ng-container *ngIf="data?.logo && isArray(data?.logo); else singleLogo">
+                    <div class="flex items-center gap-3 logo-container-multiple">
+                      <ng-container *ngFor="let logoUrl of data?.logo; let i = index">
+                        <img alt="Application Logo" class="logo-img" [src]="logoUrl.url">
+                        <div *ngIf="i < data?.logo.length - 1" class="logo-separator"></div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <!-- Single logo (string) -->
+                  <ng-template #singleLogo>
+                    <ng-container *ngIf="data?.logo">
+                      <img alt="Application Logo" class="logo-img" [src]="data?.logo">
+                    </ng-container>
+                    <ng-container *ngIf="!data?.logo">
+                      <label>Upload logo</label>
+                    </ng-container>
+                  </ng-template>
+                  <button *ngIf="isEdit" class="edit-icon" (click)="openEditor('logo', 'Logo', data?.logo)"
+                    aria-label="Edit Logo">
+                    <i class="material-icons">edit</i>
+                  </button>
+                </div>
+                <h1 class="txt-ellipsis-2 break-words pt-10 mt-2 {{data?.titleClass}}" [style.color]="data?.titleColor">
+                  {{data.title || channelName}}
+                  <button *ngIf="isEdit" class="edit-icon"
+                    (click)="openEditor('title', 'Title', data?.title || channelName)" aria-label="Edit Title">
+                    <i class="material-icons">edit</i>
+                  </button>
+                </h1>
+                <h4 *ngIf="data?.subTitle" class="txt-ellipsis-2 break-words {{data?.subTitleClass}}"
+                  [style.color]="data?.subTitleColor">
+                  {{data?.subTitle}}
+                  <button *ngIf="isEdit" class="edit-icon" (click)="openEditor('subTitle', 'Subtitle', data?.subTitle)"
+                    aria-label="Edit Subtitle">
+                    <i class="material-icons">edit</i>
+                  </button>
+                </h4>
+                <h4 *ngIf="data?.subTitleTwo" class="sub-title-two txt-ellipsis-2 break-words pt-4 mb-8"
+                  [style.color]="data?.subTitleColorTwo">
+                  {{data?.subTitleTwo}}
+                  <button *ngIf="isEdit" class="edit-icon"
+                    (click)="openEditor('subTitleTwo', 'Secondary Subtitle', data?.subTitleTwo)"
+                    aria-label="Edit Secondary Subtitle">
+                    <i class="material-icons">edit</i>
+                  </button>
+                </h4>
+                <p class="mat-body-1" [style.color]="data?.descriptionColor">
+                  {{data?.description | slice:0:descriptionMaxLength}}
+                  <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
+                  <button *ngIf="isEdit" class="edit-icon"
+                    (click)="openEditor('description', 'Description', data?.description)" aria-label="Edit Description">
+                    <i class="material-icons">edit</i>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-span-12 md:col-span-6">
+            <div class="slider slider-box"
+              *ngIf="data?.sliderData?.sliders && data?.sliderData?.sliders.length > 0; else noSlider">
+              <sb-uic-sliders [widgetData]="data?.sliderData?.sliders" [styleData]="data?.sliderData?.styleData"
+                (clickEvent)="emitEvent('slider-click', $event)"></sb-uic-sliders>
+              <button *ngIf="isEdit" class="edit-icon slider-edit"
+                (click)="openEditor('sliderData', 'Slider Images', data?.sliderData)" aria-label="Edit Slider Images">
+                <i class="material-icons">edit</i>
+              </button>
+            </div>
+            <ng-template #noSlider>
+              <div class="slider-placeholder" *ngIf="isEdit">
+                <button mat-button class="btn-common btn-primary"
+                  (click)="openEditor('sliderData', 'Slider Images', data?.sliderData || {})"
+                  aria-label="Upload Slider Images" type="button">
+                  <i class="material-icons">cloud_upload</i>
+                  <span> Upload Images</span>
+                </button>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="block md:hidden" *ngIf="isMobile">
+  <!-- Mobile view simplified -->
+  <div class="col-span-12">
+    <div class="slider slider-box" *ngIf="data?.sliderData?.sliders">
+      <sb-uic-sliders [widgetData]="data?.sliderData?.sliders" [styleData]="data?.sliderData?.styleData"
+        (clickEvent)="emitEvent('slider-click', $event)"></sb-uic-sliders>
+    </div>
+  </div>
+  <div class="container px-4 flex flex-col mob-container">
+    <div class="mr-4 logo-box-container">
+      <div class="flex logo-box-square top mr-4">
+        <!-- Check if logo is array -->
+        <ng-container *ngIf="isArray(data?.logoMobile || data?.logo); else singleMobileLogo">
+          <div class="flex items-center gap-2 logo-container-multiple">
+            <ng-container *ngFor="let logoUrl of (data?.logoMobile || data?.logo); let i = index">
+              <img alt="Application Logo" class="logo-img logo-img-mb {{data?.customMobileClass}}" [src]="logoUrl.url">
+              <div *ngIf="i < (data?.logoMobile || data?.logo).length - 1" class="logo-separator"></div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-template #singleMobileLogo>
+          <img alt="Application Logo" class="logo-img logo-img-mb {{data?.customMobileClass}}"
+            [src]="data?.logoMobile || data?.logo">
+        </ng-template>
+      </div>
+    </div>
+    <div class="w-full flex-1 flex flex-col">
+      <h1 class="txt-ellipsis-2 break-words">{{data?.title || channelName}}</h1>
+      <h4 *ngIf="data?.subTitle" class="sub-title txt-ellipsis-2 break-words" [style.color]="data?.subTitleColorMobile">
+        {{data?.subTitle}}</h4>
+      <p class="mat-body-2">{{data?.description | slice:0:descriptionMaxLength}}</p>
+    </div>
+  </div>
+</div>
+
+<div class="flex items-center justify-center">
+  <div class="container metrics-section">
+    <div [class]="isMobile ? 'block md:hidden pt-14 px-4' : 'hidden md:block'">
+      <div [class]="isMobile ? 'mob-metrics mob-metrics-sec' : 'metrics'"
+        [ngStyle]="{'background': data?.metrics?.background}">
+        <sb-uic-data-points [providerId]="orgId" [fetchDataFromApi]="true" [objectData]="data?.metrics?.data"
+          [layoutType]="isMobile ? 'singleRow' : 'singleFlexeRow'" [pageLayout]="'mdo'" [slwConfig]="slwConfig"
+          (metricClick)="emitEvent('metric-click', $event)">
+        </sb-uic-data-points>
+        <button *ngIf="isEdit" class="edit-icon metrics-edit" (click)="openEditor('metrics', 'Metrics', data?.metrics)"
+          aria-label="Edit Metrics">
+          <i class="material-icons">edit</i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

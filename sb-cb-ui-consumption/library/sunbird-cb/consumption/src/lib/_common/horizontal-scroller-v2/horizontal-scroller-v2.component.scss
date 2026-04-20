@@ -1,4 +1,4 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 $size-m: 16px;
 $size-xs: 8px;
@@ -44,12 +44,14 @@ $spaceFromEnd: 0;
   @extend %btn;
   @extend %navBtnRounded;
   left: $spaceFromEnd;
+  z-index: 999;
 }
 
 .nextBtn {
   @extend %btn;
   @extend %navBtnRounded;
   right: $spaceFromEnd;
+  z-index: 999;
 }
 
 .nextLoading {
@@ -121,6 +123,7 @@ $spaceFromEnd: 0;
   flex-wrap: nowrap;
   display: flex;
   align-items: stretch;
+  // justify-content: center;
   -ms-overflow-style: none;
   scrollbar-width: none;
 

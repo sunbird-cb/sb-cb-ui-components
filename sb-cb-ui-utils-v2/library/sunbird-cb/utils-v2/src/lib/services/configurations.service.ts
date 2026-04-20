@@ -33,6 +33,7 @@ export class ConfigurationsService {
   hostPath = (window.location.host).replace(':', '_')
 
   userRoles: Set<string> | null = null
+  userAllRoles: Set<string> | null = null
   userGroups: Set<string> | null = null
   restrictedFeatures: Set<string> | null = null
   restrictedWidgets: Set<string> | null = null
@@ -106,12 +107,25 @@ export class ConfigurationsService {
   // )}`
   // setHostPath = (sitePath: string) => (sitePath).replace(':', '_')
   welcomeTabs: NSProfileDataV3.IProfileTab | null = null
-
+  compentency: any = null
+  competency: any
+  iGOTAIConfig: any
   // variable setting for csJwtToken
   cstoken = ''
+  netcoreConfig: any = {}
+  completionSurvey: any = {}
+  globalConfig: any = {}
 
   changeNavBarFullView = new Subject()
   openExploreMenuForMWeb = new Subject()
+
+  orgReadData: any
+  spvOrgReadData: any
+  menus: any
+  public readonly noSpecialChar = new RegExp(/^[\p{L}\p{M}\p{N}\p{Cf}._\-$/:।()\[\]'! ]+$/u)
+  public readonly assessmentNoSpecialChar = new RegExp(/^[\p{L}\p{M}\p{N}\p{Cf}._\-\s$":/?,।()\[\]'! ]+$/u)
+  public readonly htmlTasRemovalRegex = /<\/?[^>]+>|&nbsp;|<br\s*\/?>|<\/br>|&#39;|&quot;/gi
+  public readonly noSpecialCharHowToSection = new RegExp(/^[\p{L}\p{M}\p{N}\p{Cf}._\-$/:,।()\[\]'! ]+$/u)
   updateGlobalProfile(state: boolean) {
     this.updateProfile.next(state)
   }
@@ -123,4 +137,11 @@ export class ConfigurationsService {
   updatePlatformRatingMethod(state: any) {
     this.updatePlatformRating.next(state)
   }
+
+  private updateOrgReadData: BehaviorSubject<string> = new BehaviorSubject('')
+  updateOrgReadDataObservable = this.updateOrgReadData.asObservable()
+  updateOrgData(id: string) {
+    this.updateOrgReadData.next(id)
+  }
+
 }

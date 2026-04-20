@@ -9,7 +9,8 @@
       <mat-icon class="margin-xs correct alignment">done</mat-icon>
     </ng-container>
     <ng-container *ngIf="result?.classErrorsSpecification?.length">
-      <table mat-table [dataSource]="result?.classErrorsSpecification" class="mat-elevation-z8" style="width:100%;">
+      <table aria-describedby="classes" mat-table [dataSource]="result?.classErrorsSpecification"
+        class="mat-elevation-z8" style="width:100%;">
         <!-- Class Column -->
         <ng-container matColumnDef="classname">
           <th mat-header-cell *matHeaderCellDef>Class Name</th>
@@ -48,7 +49,8 @@
   <div class="margin-s">
     <h3 i18n>Relationships</h3>
     <ng-container *ngIf="result?.relationErrorsSpecification?.length">
-      <table mat-table [dataSource]="result?.relationErrorsSpecification" class="mat-elevation-z8" style="width:100%;">
+      <table aria-describedby="relationships" mat-table [dataSource]="result?.relationErrorsSpecification"
+        class="mat-elevation-z8" style="width:100%;">
         <!-- Relationship Column -->
         <ng-container matColumnDef="relationship">
           <th mat-header-cell *matHeaderCellDef>Relationship</th>
@@ -75,7 +77,8 @@
     </ng-container>
 
     <ng-container *ngIf="!result?.relationErrorsSpecification?.length">
-      <table mat-table [dataSource]="userData?.relations" class="mat-elevation-z8" style="width:100%;">
+      <table aria-describedby="errors" mat-table [dataSource]="userData?.relations" class="mat-elevation-z8"
+        style="width:100%;">
         <!-- Relationship Column -->
         <ng-container matColumnDef="relationship">
           <th mat-header-cell *matHeaderCellDef>Relationship</th>

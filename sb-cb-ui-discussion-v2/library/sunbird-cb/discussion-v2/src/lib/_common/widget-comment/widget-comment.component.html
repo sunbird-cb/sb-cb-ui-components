@@ -1,0 +1,51 @@
+<div class="w-full mb-4">
+    <div class="flex flex-col ratings-div" id="ratingsDiv">
+        <div class="mb-1" *ngIf="widgetData?.newCommentSection?.show">
+            <d-v2-new-comment [config]="widgetData?.newCommentSection" [hierarchyPath]="getHierarchyPath"
+                (newComment)="refreshComments($event)"></d-v2-new-comment>
+        </div>
+        <ng-container
+            *ngIf="commentData?.commentTree?.commentTreeData?.comments?.length && !loading; else noCommentsSection;">
+            <ng-container *ngFor="let item of commentData?.commentTree?.commentTreeData?.comments">
+                <ng-container *ngIf="isCommentPresent(item.commentId)">
+                    <div class="w-full mt-4">
+                        <d-v2-comment-card [cardType]="widgetData?.commentsList?.cardType"
+                            [commentUsersData]="commentUsersData" [cardConfig]="widgetData?.commentsList"
+                            [comment]="getComment(item)" [replyData]="getReplies(item)"
+                            [hierarchyPath]="getHierarchyPath" (newReply)="updateRepliesData($event)"
+                            [userLikedComments]="userLikedComments"
+                            (likeUnlikeData)="likeUnlikeEvent($event)"></d-v2-comment-card>
+                    </div>
+
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="commentData.commentCount > commentData.comments.length">
+                <div class="load-more-comments my-4">
+                    <button mat-flat-button color="primary" class="w-full underline" (click)="loadMoreComments()">Load
+                        More</button>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="loading || loadingMore">
+            <div class="skeleton-loader mb-4">
+                <div class="flex gap-4 items-center p-4 rounded bg-white">
+                    <d-v2-widget-skeleton-loader [width]="'55px'" [height]="'55px'"
+                        [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+                    <d-v2-widget-skeleton-loader class="w-full" [width]="'100%'" [height]="'43px'"
+                        [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+                    <d-v2-widget-skeleton-loader [width]="'64px'" [height]="'40px'"
+                        [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #noCommentsSection>
+    <ng-container *ngIf="!loading && !loadingMore">
+        <div class="flex flex-1 items-center justify-center nodtranslate">
+            {{widgetData?.commentsList?.noCommentsSection?.text}}
+        </div>
+    </ng-container>
+</ng-template>

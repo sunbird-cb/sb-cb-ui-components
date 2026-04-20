@@ -4,10 +4,10 @@ import {
   NsContent,
   IWidgetsPlayerMediaData,
   NsDiscussionForum,
-  WidgetContentService,
-} from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
-import { ValueService } from '@ws-widget/utils'
+  // WidgetContentService,
+} from '@sunbird-cb/collection'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
+import { ValueService } from '@sunbird-cb/utils'
 import { ActivatedRoute } from '@angular/router'
 import { Platform } from '@angular/cdk/platform'
 
@@ -20,7 +20,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   private routeDataSubscription: Subscription | null = null
   private screenSizeSubscription: Subscription | null = null
   private viewerDataSubscription: Subscription | null = null
-  forPreview = window.location.href.includes('/author/')
+  forPreview = false
   isScreenSizeSmall = false
   isFetchingDataComplete = false
   youtubeData: NsContent.IContent | null = null
@@ -34,9 +34,13 @@ export class YoutubeComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private valueSvc: ValueService,
-    private contentSvc: WidgetContentService,
+    // private contentSvc: WidgetContentService,
     private platform: Platform,
-  ) { }
+  ) {
+    this.activatedRoute.paramMap.subscribe(params => {
+      this.forPreview = params.get('preview') === 'true'
+    })
+  }
 
   ngOnInit() {
     this.screenSizeSubscription = this.valueSvc.isXSmall$.subscribe(data => {
@@ -44,6 +48,7 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     })
     this.routeDataSubscription = this.activatedRoute.data.subscribe(
       async data => {
+        console.log('youtube data', data)
         this.widgetResolverYoutubeData = null
         this.youtubeData = data.content.data
         if (this.youtubeData) {
@@ -65,9 +70,9 @@ export class YoutubeComponent implements OnInit, OnDestroy {
         } else {
           this.widgetResolverYoutubeData.widgetData.isVideojs = true
         }
-        if (this.youtubeData && this.youtubeData.artifactUrl.indexOf('content-store') >= 0) {
-          await this.setS3Cookie(this.youtubeData.identifier)
-        }
+        // if (this.youtubeData && this.youtubeData.artifactUrl.indexOf('content-store') >= 0) {
+        //   await this.setS3Cookie(this.youtubeData.identifier)
+        // }
         this.isFetchingDataComplete = true
       },
       () => { },
@@ -114,11 +119,11 @@ export class YoutubeComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async setS3Cookie(contentId: string) {
-    await this.contentSvc
-      .setS3Cookie(contentId)
-      .toPromise()
-      .catch(() => { })
-    return
-  }
+  // private async setS3Cookie(contentId: string) {
+  //   await this.contentSvc
+  //     .setS3Cookie(contentId)
+  //     .toPromise()
+  //     .catch(() => { })
+  //   return
+  // }
 }

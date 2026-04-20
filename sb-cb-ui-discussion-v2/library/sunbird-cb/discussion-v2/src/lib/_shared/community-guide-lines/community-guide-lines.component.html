@@ -1,0 +1,27 @@
+<div class="community-guide-lines">
+    <ng-container *ngIf="isProfanity">
+        <div class="w-full flex justify-end items-start">
+            <mat-icon class="close-icon" (click)="dialogRef.close(false)">close</mat-icon>
+        </div>
+    </ng-container>
+    <div class="community-guide-lines-header w-full flex items-center justify-center">
+        <img src="assets/icons/discuss/community-guide-lines.svg" alt="Community Guidelines">
+    </div>
+    <div class="community-guide-lines-header w-full flex items-center justify-center">
+        <h1 class="mat-title nodtranslate">Community Guidelines</h1>
+    </div>
+    <div class="flex items-center justify-center guide-lines-info">
+        <p class="mat-body-1 nodtranslate">Agree to the following:</p>
+    </div>
+    <div class="community-guide-lines-content">
+        <p class="mat-body-1 nodtranslate" [innerHTML]="data?.community?.communityGuideLines">
+        </p>
+    </div>
+    <ng-container *ngIf="!isProfanity">
+        <div class="community-guide-lines-footer w-full flex items-center justify-center mt-8">
+            <button
+                class="btn mat-subheading-2 btn rounded-full text-white cursor-pointer margin-remove h-10 nodtranslate"
+                (click)="submit(); $event.stopPropagation()">Agree & Continue</button>
+        </div>
+    </ng-container>
+</div>

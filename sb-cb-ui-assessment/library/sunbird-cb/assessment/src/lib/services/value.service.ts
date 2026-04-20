@@ -14,9 +14,9 @@ export class ValueService {
 
   public isXSmall$: Observable<boolean> = this.breakpointObserver
     .observe([Breakpoints.XSmall])
-    .pipe(map((res: BreakpointState) => res.matches))
+    .pipe(map((res: BreakpointState) => res && res.matches))
   public isLtMedium$: Observable<boolean> = this.breakpointObserver
     .observe([Breakpoints.XSmall, Breakpoints.Small])
-    .pipe(map((res: BreakpointState) => res.matches))
+    .pipe(map((res: BreakpointState) => res && res.matches))
 
 }

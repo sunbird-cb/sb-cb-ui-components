@@ -1,0 +1,154 @@
+@use "../../../styles/variable" as *;
+
+.dialog {
+
+    .mat-dialog-title {
+        padding: 10px 20px;
+        margin-bottom: 0;
+        background: $light-gray;
+    }
+
+    .mat-form-field {
+        width: 90%;
+        padding: 0;
+        background: $white;
+        margin: 20px;
+        border-radius: 2px;
+    }
+
+    .actions {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 20px 20px 20px;
+    }
+
+    .mat-error {
+        padding: 0 25px;
+        margin-top: -10px;
+    }
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-row-reverse {
+    flex-direction: row-reverse;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.flex {
+    display: flex;
+}
+
+.padding-s {
+    padding: 8px
+}
+
+.container {
+    padding: 1em;
+}
+
+.side,
+.or {
+    float: left;
+    // height: 6em;
+    text-align: center;
+}
+
+.side {
+    width: 40%;
+}
+
+.or {
+    position: relative;
+    width: 20%;
+}
+
+.or-line {
+    float: left;
+    width: 50%;
+    border-right: 1px solid rgb(68, 50, 50);
+    height: 100%;
+}
+
+.or-label {
+    background: $white;
+    color: $black;
+    height: 1em;
+    left: 50%;
+    margin-left: -1.25em;
+    margin-top: 2em;
+    padding: .5em;
+    position: absolute;
+    text-transform: uppercase;
+    width: 1em;
+}
+
+.play {
+    padding: 20px;
+    margin: 20% auto auto auto;
+    display: flex;
+}
+.dialog-title {
+    align-items: center;
+    display: flex;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    padding: 0;
+}
+
+::ng-deep .cdk-overlay-pane {
+    @media only screen and (max-width: 1024px) {
+        width: 70% !important;
+        height: 60% !important;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    mat-icon {
+        font-size: $font-size-20;
+        width: 1.25em;
+        height: 1.25em; 
+    }
+    .pointer .mat-raised-button {
+        min-width:auto;
+        padding: 0em 0.5em;
+        line-height: 2em;
+    }
+    .dialog.flex {
+        height: calc(100% - 16vh);
+        font-size: $font-size-12;
+        mat-form-field {
+            margin: 1em;
+        }
+    }
+    .dialog .actions {
+        padding: 0;
+        button {
+            font-size: $font-size-12;
+            line-height: 2.5em;
+            margin: 0 5px;
+        }
+    }
+    .dialog-title {
+        font-size: $font-size-14;
+        height: 1em;
+    }
+    .play {
+        padding: 0.6em; 
+        font-size: $font-size-12;      
+    }
+}

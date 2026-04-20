@@ -1,12 +1,12 @@
 import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core'
 import { Event, NavigationEnd, Router } from '@angular/router'
-import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver'
-import { ConfigurationsService, NsPage } from '@sunbird-cb/utils'
 import { Subscription } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { MobileAppsService } from './mobile-apps.service'
+import { MobileAppsService } from '../_services/mobile-apps.service'
 import { CustomTourService } from '../_common/tour-guide/tour-guide.service'
 import { BtnFeatureService } from './btn-feature.service'
+import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
+import { ConfigurationsService, EventService, NsPage } from '@sunbird-cb/utils-v2'
 
 export const typeMap = {
   cardFull: 'card-full',
@@ -45,7 +45,7 @@ export class BtnFeatureComponent extends WidgetBaseComponent
   private pinnedAppsChangeSubs?: Subscription
   private navigationSubs?: Subscription
   constructor(
-    // private events: EventService,
+    private events: EventService,
     private configurationsSvc: ConfigurationsService,
     private btnFeatureSvc: BtnFeatureService,
     private router: Router,
@@ -141,9 +141,11 @@ export class BtnFeatureComponent extends WidgetBaseComponent
   togglePin(featureId: string, event: any) {
     event.preventDefault()
     event.stopPropagation()
-    // this.events.raiseInteractTelemetry('pin', 'feature', {
-    //   featureId,
-    // })
+    this.events.raiseInteractTelemetry({
+      type: 'pin',
+      subType: 'feature',
+      id: `${featureId}`,
+    }, {})
     this.configurationsSvc.pinnedApps.pipe(take(1)).subscribe(pinnedApps => {
       const newPinnedApps = new Set(pinnedApps)
       if (newPinnedApps.has(featureId)) {

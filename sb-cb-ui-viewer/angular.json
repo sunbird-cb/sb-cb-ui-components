@@ -10,10 +10,15 @@
       "prefix": "viewer",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "project/ws/viewer/tsconfig.lib.json",
             "project": "project/ws/viewer/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "project/ws/viewer/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
@@ -39,10 +44,15 @@
       }
     }
   },
-  "defaultProject": "@ws-widget/utils",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "style": "scss"
+    }
+  },
+  "cli": {
+    "analytics": "231b8221-da58-47d5-b943-326cd9b1bf7d",
+    "cache": {
+      "enabled": false
     }
   }
 }

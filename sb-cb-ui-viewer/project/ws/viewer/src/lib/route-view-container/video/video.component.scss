@@ -1,5 +1,5 @@
-@import '~@ws-widget/design-system/src/styles/_ws-vars.scss';
-@import '~@ws-widget/design-system/src/styles/_ws-mixins.scss';
+@import 'ws-vars';
+@import 'ws-mixins';
 
 .video-player-summary-container {
   height: auto;
@@ -10,12 +10,11 @@
 }
 
 .padding-dynamic {
-  padding: $size-xs;
-  padding-top: $size-m;
-
+  // padding: $size-xs;
+  // padding-top: $size-m;
   @include breakpoint-xs {
-    padding: $size-xs;
-    padding-top: 40vh;
+    // padding: 0;
+    // padding-top: $size-m!important;
   }
 }
 
@@ -27,11 +26,9 @@
 
 .video-player-title {
   width: 65%;
-
   @include breakpoint-gt-s {
     width: 70%;
   }
-
   @include breakpoint-xs {
     width: 100%;
   }
@@ -39,11 +36,9 @@
 
 .video-summary {
   width: 30%;
-
   @include breakpoint-gt-s {
     width: 25%;
   }
-
   @include breakpoint-xs {
     width: 100%;
   }
@@ -51,36 +46,36 @@
 
 .video-player {
   width: 100%;
-  height: 75vh;
-
-  @include breakpoint-lt-xl {
-    height: 70vh;
-  }
-
-  @include breakpoint-lt-l {
-    height: 65vh;
-  }
-
-  @include breakpoint-lt-m {
-    height: 60vh;
-  }
-
-  @include breakpoint-lt-s {
-    height: 55vh;
-  }
-
-  @include breakpoint-xs {
-    position: fixed;
-    top: 55px;
-    left: 0px;
-    height: 40vh;
-    width: 100vw;
-    z-index: 1000;
-    background: black;
-  }
+  height:557px;
+  // @include breakpoint-lt-xl {
+  //   height: 56vh;
+  // }
+  // @include breakpoint-lt-l {
+  //   height: 65vh;
+  // }
+  // @include breakpoint-lt-m {
+  //   height: 60vh;
+  // }
+  // @include breakpoint-lt-s {
+  //   height: 55vh;
+  // }
+  // @include breakpoint-xs {
+  //   // position: fixed;
+  //   // top: 55px;
+  //   padding-top: 1rem;
+  //   left: 0px;
+  //   height: 40vh;
+  //   width: 100vw;
+  //   z-index: 1000;
+  //   background: black;
+  // }
 }
 
 .video-player-mobile {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  padding: 0;
   @include breakpoint-xs {
     padding: 0;
   }
@@ -100,23 +95,19 @@
   .info-container {
     padding: $size-s $size-m;
     margin-bottom: $size-m;
-
     .info-item {
       display: flex;
       align-items: center;
       padding: $size-xs 0;
       box-sizing: border-box;
-
       h3 {
         margin: 0;
       }
-
       .item-heading {
         width: 40%;
         min-width: 80px;
         max-width: 140px;
       }
-
       .item-icon {
         $icon-size: 20px;
         width: $icon-size;
@@ -126,7 +117,6 @@
       }
     }
   }
-
   @include breakpoint-xs {
     width: 100%;
   }
@@ -135,7 +125,6 @@
 .author {
   padding: $size-s 0;
   display: flex;
-
   .author-image {
     margin-right: $size-s;
     $size: 4 * $size-s;
@@ -154,4 +143,12 @@
 .video-player-embed {
   height: 100vh;
   width: 100vw;
+}
+
+@media only screen and (min-width: 280px) and (max-width: 767px) {
+  .video-player {
+    width: 100%;
+    height:250px;
+  }
+ 
 }

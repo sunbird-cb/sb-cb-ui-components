@@ -60,6 +60,28 @@ $card-standard-width: 268px;
   background: #ce3939;
 }
 
+.sinput {
+  width: 400px;
+  border-radius: 20px;
+  border: 1px solid #d5d0d0;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  // margin-bottom: 10px;
+  height: 42px;
+
+  .material-icons {
+    vertical-align: middle;
+    font-size: 20px;
+    margin-right: 4px;
+  }
+
+  input {
+    border: 0 !important;
+    // width: 75%;
+    outline: none !important;
+  }
+}
+
 .card-space-saving-container {
   $card-padding: $size-m;
   $action-btn-size: 2.5 * $size-m;
@@ -638,18 +660,19 @@ $title-line-count: 2;
   display: flex;
   position: relative;
   flex: 1 1 auto;
+  margin-bottom: 12px;
 }
 
-.sinput {
-  width: 315px;
-  border-radius: 4px;
-  border: 1px solid #d5d0d0;
-  padding: 9px 9px 9px 35px;
-  margin-bottom: 20px;
-  margin-top: 0;
-  font: normal 14px Lato;
-  font-weight: 400;
-}
+// .sinput {
+//   width: 315px;
+//   border-radius: 4px;
+//   border: 1px solid #d5d0d0;
+//   padding: 9px 9px 9px 35px;
+//   margin-bottom: 20px;
+//   margin-top: 0;
+//   font: normal 14px Lato;
+//   font-weight: 400;
+// }
 
 .searchText {
   display: flex;

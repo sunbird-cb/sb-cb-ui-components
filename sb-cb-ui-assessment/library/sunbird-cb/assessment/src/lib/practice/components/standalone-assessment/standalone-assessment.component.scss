@@ -1,6 +1,6 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-// @import 'ws-mixins';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 $nav-height: 40px;
 

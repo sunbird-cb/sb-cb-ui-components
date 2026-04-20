@@ -1,4 +1,4 @@
-import { ThemePalette } from '@angular/material'
+import { ThemePalette } from '@angular/material/core'
 import { NsAppsConfig } from '../services/configurations.model'
 import { NsWidgetResolver } from '../services/widget-resolver.model'
 
@@ -32,6 +32,7 @@ export namespace NsPage {
     actionBtnId?: string
     actionBtn?: NsAppsConfig.IFeature
     actionBtnName?: string
+    className?: string
   }
 
   export interface INavLinkConfig<T> {

@@ -150,6 +150,8 @@ export class TelemetryService {
             object: {
               ...(data) && data,
             },
+            ...(this.configSvc.userProfile && this.configSvc.userProfile.userId ?
+               null : { actor: { id: '', type: 'AnonymousUser' } }),
           }
         )
       } else {
@@ -695,7 +697,7 @@ export class TelemetryService {
                   event.data.edata.id
                   : '',
                 pageid: event.data.pageContext && event.data.pageContext.pageId || page.pageid,
-                // target: { page },
+                ...(event.data.edata.target && { target: event.data.edata.target })
               },
               {
                 context: {

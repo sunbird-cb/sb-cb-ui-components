@@ -1,0 +1,1 @@
+{"version":3,"file":"pipe-limit-to.pipe.d.ts","sourceRoot":"ng://@sunbird-cb/utils-v2/","sources":["lib/pipes/pipe-limit-to/pipe-limit-to.pipe.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,aAAa,EAAE,MAAM,eAAe,CAAA;;AAEnD,qBAGa,eAAgB,YAAW,aAAa;IAEnD,SAAS,CAAC,IAAI,EAAE,GAAG,EAAE,KAAK,GAAE,MAAU,GAAG,GAAG;yCAFjC,eAAe;uCAAf,eAAe;CAmB3B"}

@@ -10,12 +10,17 @@
       "prefix": "sunbird-cb",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "library/sunbird-cb/collection/tsconfig.lib.json",
             "project": "library/sunbird-cb/collection/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "library/sunbird-cb/collection/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -23,26 +28,13 @@
             "tsConfig": "library/sunbird-cb/collection/tsconfig.spec.json",
             "karmaConfig": "library/sunbird-cb/collection/karma.conf.js"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "library/sunbird-cb/collection/tsconfig.lib.json",
-              "library/sunbird-cb/collection/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     }
   },
-  "defaultProject": "@sunbird-cb/collection",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "style": "scss"
     }
   },
   "cli": {

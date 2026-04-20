@@ -1,0 +1,11 @@
+<div wsWidgetTooltipDirective>
+    <span class="mat-body-1 name">{{getUseravatarName}}</span>
+    <span class="profile-badge"> <img class="profile-badge" src="fusion-assets/images/profile-badge.png"
+            alt="profile-badge" height="18">
+    </span>
+    <ng-template #tooltipTemplate>
+        <div class="tooltip">
+            <ws-widget-connection-hover-card [hoverUser]="hoverUser"></ws-widget-connection-hover-card>
+        </div>
+    </ng-template>
+</div>

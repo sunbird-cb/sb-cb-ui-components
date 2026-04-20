@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Subscription } from 'rxjs'
-import { NsContent, WidgetContentService } from '@ws-widget/collection'
-import { ValueService, EventService, WsEvents } from '@ws-widget/utils'
+import { NsContent, WidgetContentService } from '@sunbird-cb/collection'
+import { ValueService, EventService, WsEvents } from '@sunbird-cb/utils'
 import { ActivatedRoute } from '@angular/router'
 import { ViewerUtilService } from '../../viewer-util.service'
 
@@ -31,7 +31,7 @@ export class DndQuizComponent implements OnInit, OnDestroy {
     private valueSvc: ValueService,
     private eventSvc: EventService,
     private viewSvc: ViewerUtilService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.isSmallSubscription = this.isLtMedium$.subscribe(isSmall => {
@@ -59,7 +59,7 @@ export class DndQuizComponent implements OnInit, OnDestroy {
           this.isErrorOccured = true
         }
       },
-      () => {},
+      () => { },
     )
   }
 
@@ -68,8 +68,8 @@ export class DndQuizComponent implements OnInit, OnDestroy {
       this.activatedRoute.snapshot.queryParams.collectionType
       && this.dndQuizData) {
       await this.contentSvc.continueLearning(this.dndQuizData.identifier,
-                                             this.activatedRoute.snapshot.queryParams.collectionId,
-                                             this.activatedRoute.snapshot.queryParams.collectionType,
+        this.activatedRoute.snapshot.queryParams.collectionId,
+        this.activatedRoute.snapshot.queryParams.collectionType,
       )
     } else if (this.dndQuizData) {
       await this.contentSvc.continueLearning(this.dndQuizData.identifier)
@@ -94,7 +94,7 @@ export class DndQuizComponent implements OnInit, OnDestroy {
       manifestFile = await this.http
         .get<any>(artifactUrl)
         .toPromise()
-        .catch((_err: any) => {})
+        .catch((_err: any) => { })
     }
     return manifestFile
   }

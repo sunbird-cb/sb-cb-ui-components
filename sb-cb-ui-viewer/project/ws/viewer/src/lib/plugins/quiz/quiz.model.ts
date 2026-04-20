@@ -1,22 +1,37 @@
+import { NsContent } from "../../models/constant"
+
+
 export namespace NSQuiz {
   export interface IQuiz {
     timeLimit: number
     questions: IQuestion[]
     isAssessment: boolean
+    maxQuestions: number
+    requiresSubmit: 'Yes' | 'No'
+    showTimer: 'Yes' | 'No'
+    allowSkip: 'Yes' | 'No'
+    primaryCategory: NsContent.EPrimaryCategory
   }
 
   export interface IQuestion {
     multiSelection: boolean
+    section: string
+    instructions: string | null
     question: string
     questionId: string
     options: IOption[]
-    questionType?: TQuizQuestionType
+    editorState?: any[],
+    questionType?: TQuizQuestionType,
+    questionLevel?: string,
+    marks?: number,
+    rhsChoices?: any[],
+    choices?: any[]
   }
 
   export interface IOption {
     optionId: string
     text: string
-    isCorrect: boolean
+    isCorrect?: boolean | undefined
     hint?: string
     match?: string
     matchForView?: string

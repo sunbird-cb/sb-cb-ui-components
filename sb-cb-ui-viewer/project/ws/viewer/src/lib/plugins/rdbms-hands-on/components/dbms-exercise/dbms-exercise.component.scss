@@ -1,5 +1,5 @@
-@import '~@ws-widget/design-system/src/styles/_ws-vars.scss';
-@import '~@ws-widget/design-system/src/styles/_ws-mixins.scss';
+@use '@sunbird-cb/design-system/src/styles/ws-vars' as *;
+@use '@sunbird-cb/design-system/src/styles/ws-mixins';
 
 .result {
   font-weight: bold;
@@ -46,11 +46,11 @@
   border: 1px solid #cecece;
   min-height: 175px;
 
-  // @include breakpoint-xs {
+  // @include ws-mixins.breakpoint-xs {
   //   width: 100% !important;
   // }
 
-  // @include breakpoint-sm {
+  // @include ws-mixins.breakpoint-sm {
   //   width: 45%;
   // }
 }

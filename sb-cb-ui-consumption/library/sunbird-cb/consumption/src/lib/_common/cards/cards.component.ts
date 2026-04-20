@@ -1,41 +1,37 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { WidgetBaseComponent, NsWidgetResolver } from '@sunbird-cb/resolver-v2';
-import { NsCardContent } from '../../_models/card-content.model';
-import { UtilityService } from '@sunbird-cb/utils-v2';
-import { WidgetContentService } from '../../_services/widget-content.service';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { WidgetBaseComponent, NsWidgetResolver } from '@sunbird-cb/resolver-v2'
+import { NsCardContent } from '../../_models/card-content.model'
+import { NsContent, UtilityService } from '@sunbird-cb/utils-v2'
+import { WidgetContentLibService } from '../../_services/widget-content-lib.service'
+import { Router } from '@angular/router'
+import { VIEWER_ROUTE_FROM_MIME } from '../../_services/viewer-route-util'
 
 @Component({
   selector: 'sb-uic-cards',
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.scss']
 })
-export class CardsComponent  extends WidgetBaseComponent
-implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard>  {
+export class CardsComponent extends WidgetBaseComponent
+  implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard> {
 
-  @Input() widgetData!: NsCardContent.ICard;
+  @Input() widgetData!: NsCardContent.ICard
   @Output() triggerTelemetry = new EventEmitter<any>()
   isIntranetAllowedSettings = false
   cbPlanMapData: any
   cbPlanInterval: any
-  enrollInterval: any
-  enrollmentMapData: any
   constructor(private utilitySvc: UtilityService,
-    private contSvc: WidgetContentService,
+    private contSvc: WidgetContentLibService,
     public router: Router
   ) {
-    super();
+    super()
   }
 
   ngOnInit() {
     this.cbPlanInterval = setInterval(() => {
       this.getCbPlanData()
-    },                                1000)
-    
-    this.enrollInterval = setInterval(() => {
-      this.getEnrollmentData()
-    // tslint:disable-next-line
     }, 1000)
+
+
   }
 
   get isLiveOrMarkForDeletion() {
@@ -55,22 +51,32 @@ implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard>  {
     }
     return false
   }
-  async getRedirectUrlData(content: any){
-    if(content.externalId) {
+  async getRedirectUrlData(content: any) {
+    if (content?.primaryCategory === NsContent.EPrimaryCategory.RESOURCE) {
+      let url = `app/amrit-gyaan-kosh/player/${VIEWER_ROUTE_FROM_MIME(content?.mimeType)}/${content?.identifier}`
+      let queryParams = {
+        primaryCategory: content?.primaryCategory
+      }
+      this.router.navigate([url], { queryParams })
+    } else if (content.externalId) {
       this.router.navigate(
         [`app/toc/ext/${content.contentId}`])
     } else {
       let urlData = await this.contSvc.getResourseLink(content)
+      const queryParams = {
+        ...urlData.queryParams,
+        ...(this.widgetData?.sakshamAIGenerated ? { recommendationId: this.widgetData?.sakshamAIGenerated } : {})
+      }
       this.router.navigate(
         [urlData.url],
-        {
-          queryParams: urlData.queryParams
-        })
+        // { queryParams: urlData.queryParams }
+        { queryParams }
+      )
     }
-    
+
   }
   getCbPlanData() {
-    let cbpList: any={}
+    let cbpList: any = {}
     if (localStorage.getItem('cbpData')) {
       let cbpListArr = JSON.parse(localStorage.getItem('cbpData') || '')
       if (cbpListArr && cbpListArr.length) {
@@ -84,14 +90,13 @@ implements OnInit, NsWidgetResolver.IWidgetData<NsCardContent.ICard>  {
     }
   }
 
-  getEnrollmentData() {
-    if (localStorage.getItem('enrollmentMapData')) {
-       this.enrollmentMapData = JSON.parse(localStorage.getItem('enrollmentMapData') || '{}')
-      clearInterval(this.enrollInterval)
-    }
-  }
+
 
   raiseCardClick(data: any) {
     this.triggerTelemetry.emit(data)
+  }
+
+  redirectToNewVersion(identifier: any) {
+    this.router.navigate(['app/toc', identifier, 'overview'])
   }
 }

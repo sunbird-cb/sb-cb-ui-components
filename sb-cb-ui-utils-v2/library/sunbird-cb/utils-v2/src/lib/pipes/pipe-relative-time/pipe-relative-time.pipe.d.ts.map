@@ -1,0 +1,1 @@
+{"version":3,"file":"pipe-relative-time.pipe.d.ts","sourceRoot":"ng://@sunbird-cb/utils-v2/","sources":["lib/pipes/pipe-relative-time/pipe-relative-time.pipe.ts"],"names":[],"mappings":"AAAA,OAAO,EAAQ,aAAa,EAAE,MAAM,eAAe,CAAA;;AAGnD,qBAGa,oBAAqB,YAAW,aAAa;IACxD,SAAS,CAAC,KAAK,EAAE,MAAM,GAAG,MAAM;yCADrB,oBAAoB;uCAApB,oBAAoB;CAOhC"}

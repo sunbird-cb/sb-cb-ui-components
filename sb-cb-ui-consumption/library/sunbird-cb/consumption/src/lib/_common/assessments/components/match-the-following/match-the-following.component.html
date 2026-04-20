@@ -1,0 +1,34 @@
+<div class="mtf-container">
+  <div class="mtf-pairs-list">
+    <div class="mtf-pair-item" *ngFor="let pair of pairsList; let i = index">
+      <!-- Question (Left Side) -->
+      <div class="mtf-question">
+        <label class="mtf-label">Question {{ i + 1 }}</label>
+        <div class="editor-wrapper">
+          <sb-uic-assessment-rich-text [textToBeShown]="pair.question" (getContent)="onQuestionTextChange(pair, $event)"
+            [showAudioVideoToolBar]="false" [readOnly]="isReadOnly">
+          </sb-uic-assessment-rich-text>
+        </div>
+      </div>
+
+      <!-- Answer (Right Side) -->
+      <div class="mtf-answer">
+        <label class="mtf-label">Answer {{ i + 1 }}</label>
+        <div class="editor-wrapper">
+          <sb-uic-assessment-rich-text [textToBeShown]="pair.answer" (getContent)="onAnswerTextChange(pair, $event)"
+            [showAudioVideoToolBar]="false" [readOnly]="isReadOnly">
+          </sb-uic-assessment-rich-text>
+        </div>
+      </div>
+
+      <!-- Remove Button -->
+      <ng-container *ngIf="pairsList.length > minOptions && !isReadOnly">
+        <div class="mtf-actions">
+          <button mat-icon-button (click)="removePair(i)" class="remove-btn" matTooltip="Remove Pair">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

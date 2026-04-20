@@ -1,0 +1,33 @@
+<div class="flex flex-col item-center mt-10">
+  <div class="flex flex-col card-container cursor-pointer " [ngClass]="{ 'all-result-peoples': category && category === 'peoples', 'cbpUser': applicationName === 'CBP Portal'}">
+    <div class="photo-container flex items-center justify-center cursor-pointer" (click)="goToUserProfile(user)">
+      <ws-widget-avatar-photo i18n-aria-label role="link" tabindex="0" [name]="getUseravatarName()" [photoUrl]="user?.photo" size="m"> </ws-widget-avatar-photo>
+    </div>
+    <div class="name-container text-center flex flex-col width-expand">
+      <div class="" i18n-aria-label role="link" tabindex="0">
+        <div (click)="goToUserProfile(user)">
+          <div class="connection-name" matTooltip="{{ user?.firstName | titlecase }}" matTooltipPosition="below">
+            <span class="mat-body-1 name text-center"
+              ><mat-icon class="verified-icon margin-left-xs" *ngIf="isUserVerified"> check_circle</mat-icon>{{ user?.firstName | titlecase }}</span
+            >
+          </div>
+          <div class="users-info ws-mat-black60-text mat-body-2 m-auto font-bold mb-2">{{ userDesignation }}</div>
+          <div class="users-info ws-mat-black60-text mat-body-2 m-auto mb-2">{{ userEmail }}</div>
+          <div class="users-info ws-mat-black60-text mat-body-2 m-auto mb-2">{{ userPhone }}</div>
+          <div class="users-info ws-mat-black60-text mat-body-2 m-auto mb-2" *ngIf="onboardingDate">Onboarded On {{ onboardingDate | date : "mediumDate" }}</div>
+        </div>
+        <ng-container *ngIf="applicationName === 'CBP Portal'">
+          <div class="users-info flex justify-center mt-2">
+            <mat-slide-toggle 
+              [(ngModel)]="!user.isDeleted" 
+              (change)="onUserActivationToggle($event, user)"
+              [color]="'primary'"
+              class="activation-toggle">
+              {{ user.isDeleted ? 'Activate User' : 'Deactivate User' }}
+            </mat-slide-toggle>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

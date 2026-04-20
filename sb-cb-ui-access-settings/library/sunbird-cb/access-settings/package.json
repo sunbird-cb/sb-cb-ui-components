@@ -1,0 +1,14 @@
+{
+  "name": "@sunbird-cb/access-settings",
+  "version": "0.0.1-cbrelease-4.8.34",
+  "dependencies": {
+    "tslib": "^2.0.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^16.2.12",
+    "@angular/core": "^16.2.12",
+    "@sunbird-cb/design-system": "0.0.3",
+    "@sunbird-cb/utils-v2": "0.0.27-ang-13-16",
+    "@sunbird-cb/resolver-v2": "0.0.7-ang-13-16"
+  }
+}

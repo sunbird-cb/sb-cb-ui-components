@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import {
-  MatToolbarModule,
-  MatIconModule,
-  MatButtonModule,
-  MatTooltipModule,
-} from '@angular/material'
+
 import { ViewerTopBarComponent } from './viewer-top-bar.component'
-import { BtnFullscreenModule, BtnPageBackNavModule } from '@ws-widget/collection'
+import { BtnFullscreenModule, BtnPageBackNavModule } from '@sunbird-cb/collection'
 import { RouterModule } from '@angular/router'
-import { ValueService } from '@ws-widget/utils'
+import { ValueService } from '@sunbird-cb/utils'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatIconModule } from '@angular/material/icon'
+import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip'
 @NgModule({
   declarations: [ViewerTopBarComponent],
   imports: [

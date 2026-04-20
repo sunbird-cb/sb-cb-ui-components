@@ -3,18 +3,8 @@
   "dest": "../../../dist/sunbird-cb/utils-v2",
   "lib": {
     "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "lodash": "_",
-      "date-fns": "DateFns",
-      "moment": "moment",
-      "ngx-image-cropper": "ngxImageCropper",
-      "keycloak-angular": "keycloak-angular"
-    },
     "styleIncludePaths": [
       "~/src/styles/_theme.scss"
     ]
-  },
-  "whitelistedNonPeerDependencies": [
-    "."
-  ]
+  }
 }

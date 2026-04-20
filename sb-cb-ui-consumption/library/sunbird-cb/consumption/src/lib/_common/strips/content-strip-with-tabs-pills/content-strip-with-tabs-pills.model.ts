@@ -1,30 +1,30 @@
-import { NsWidgetResolver } from '@sunbird-cb/resolver-v2';
-import { NSSearch } from '../../../_models/widget-search.model';
-import { NsContent } from '../../../_models/widget-content.model';
-import { NsCardContent } from '../../../_models/card-content.model';
+import { NsWidgetResolver } from '@sunbird-cb/resolver-v2'
+import { NSSearch } from '../../../_models/widget-search.model'
+import { NsContent } from '../../../_models/widget-content.model'
+import { NsCardContent } from '../../../_models/card-content.model'
 
 export namespace NsContentStripWithTabsAndPills {
   export interface IContentStripMultiple {
-    errorWidget?: NsWidgetResolver.IRenderConfigWithAnyData;
-    loader?: boolean;
-    noDataWidget?: NsWidgetResolver.IRenderConfigWithAnyData;
-    strips: IContentStripUnit[];
-    isChannelStrip?: boolean;
+    errorWidget?: NsWidgetResolver.IRenderConfigWithAnyData
+    loader?: boolean
+    noDataWidget?: NsWidgetResolver.IRenderConfigWithAnyData
+    strips: IContentStripUnit[]
+    isChannelStrip?: boolean
   }
   export interface IContentStripUnit {
-    type: string;
-    disableTranslate?: any;
-    key: string;
-    title: string;
-    customeClass?: string;
-    nodataMsg?: string;
+    type: string
+    disableTranslate?: any
+    key: string
+    title: string
+    customeClass?: string
+    nodataMsg?: string
     stripTitleLink?: {
-        link:  {
-          queryParams: string
-        },
-        icon: string,
+      link: {
         queryParams: string
-    };
+      },
+      icon: string,
+      queryParams: string
+    }
     sliderConfig?: {
       showNavs: boolean,
       showDots: boolean,
@@ -37,25 +37,25 @@ export namespace NsContentStripWithTabsAndPills {
         showDots: boolean,
         dotsAlign?: "right" | "left",
         arrowsPlacement?: "bottom-right" | "bottom-center" | "bottom-left" | "middle-inline",
-      };
-    };
-    tabs?: NsContentStripWithTabsAndPills.IContentStripTab[] | undefined;
-    titleDescription?: string;
-    name?: string;
-    mode?: string |'accordion';
-    info?: IStripInfo;
-    logo?: string;
-    preWidgets?: NsWidgetResolver.IRenderConfigWithAnyData[];
-    postWidgets?: NsWidgetResolver.IRenderConfigWithAnyData[];
-    stripConfig?: IStripConfig;
-    canHideStrip?: boolean;
-    showStrip: boolean;
-    filters?: any[];
-    selectAll?: boolean | null;
+      }
+    }
+    tabs?: NsContentStripWithTabsAndPills.IContentStripTab[] | undefined
+    titleDescription?: string
+    name?: string
+    mode?: string | 'accordion'
+    info?: IStripInfo
+    logo?: string
+    preWidgets?: NsWidgetResolver.IRenderConfigWithAnyData[]
+    postWidgets?: NsWidgetResolver.IRenderConfigWithAnyData[]
+    stripConfig?: IStripConfig
+    canHideStrip?: boolean
+    showStrip: boolean
+    filters?: any[]
+    selectAll?: boolean | null
     request?: {
-      playlistRead: any;
-      playlistSearch?: any;
-      ciosContent?:any;
+      playlistRead: any
+      playlistSearch?: any
+      ciosContent?: any
       search?: NSSearch.ISearchRequest
       searchV6?: NSSearch.ISearchV6Request
       topContent?: any
@@ -63,6 +63,7 @@ export namespace NsContentStripWithTabsAndPills {
       bookmarkRead?: any
       enrollmentList?: any
       cbpList?: any,
+      designationsList?: any,
       apiUrl: string
       searchRegionRecommendation?: NSSearch.ISearchOrgRegionRecommendationRequest
       api?: IStripRequestApi
@@ -71,85 +72,88 @@ export namespace NsContentStripWithTabsAndPills {
       recommendedCourses?: any,
       masterCompetency?: any
       trendingSearch?: any
-    };
-    searchV6Type?: 'KB' | 'Collections' | 'searchQuery' | null;
-    stripBackground?: string;
-    noDataWidget?: NsWidgetResolver.IRenderConfigWithAnyData;
-    loader?: boolean;
-    loaderWidgets?: any;
-    errorWidget?: NsWidgetResolver.IRenderConfigWithAnyData;
-    refreshEvent?: Record<'eventType' | 'from', string>;
-    fetchLikes?: boolean;
-    secondaryHeading?: any;
+      microSearch?: any
+    }
+    searchV6Type?: 'KB' | 'Collections' | 'searchQuery' | null
+    stripBackground?: string
+    noDataWidget?: NsWidgetResolver.IRenderConfigWithAnyData
+    loader?: boolean
+    loaderWidgets?: any
+    errorWidget?: NsWidgetResolver.IRenderConfigWithAnyData
+    refreshEvent?: Record<'eventType' | 'from', string>
+    fetchLikes?: boolean
+    secondaryHeading?: any
     viewMoreUrl?: {
       queryParams?: any
       viewMoreText: string
       path: string
-    };
-    data?: [];
+    }
+    data?: []
+    showOnLoader?: boolean
   }
 
   export interface IStripRequestApi {
-    path: string;
+    path: string
     queryParams?: {
       pageNo?: number
       pageSize?: number
       pageState?: string
       sourceFields?: string
-    };
+    }
   }
   export interface INetworkRequestApi {
-    path: string;
-    data?: any;
+    path: string
+    data?: any
   }
   export interface IStripInfo {
-    mode: 'below' | 'popup' | 'modal';
-    visibilityMode?: 'hidden' | 'visible';
+    mode: 'below' | 'popup' | 'modal'
+    visibilityMode?: 'hidden' | 'visible'
     icon: {
       icon: string
       scale: number
       style?: any // added for UI
-    };
-    widget: NsWidgetResolver.IRenderConfigWithAnyData;
+    }
+    widget: NsWidgetResolver.IRenderConfigWithAnyData
   }
   interface IStripConfig {
     // card subType key is used to determine the content Card display type
-    cardSubType: NsCardContent.TCardSubType;
+    cardSubType: NsCardContent.TCardSubType
     // to show view more card for a search strip
-    postCardForSearch?: boolean;
-    intranetMode?: 'greyOut' | 'hide';
-    deletedMode?: 'greyOut' | 'hide';
-    contentTags?: IContentTags;
-    hideShowAll?: boolean;
+    postCardForSearch?: boolean
+    intranetMode?: 'greyOut' | 'hide'
+    deletedMode?: 'greyOut' | 'hide'
+    contentTags?: IContentTags
+    hideShowAll?: boolean
   }
 
   export interface IContentTags {
-    daysSpan?: number;
-    excludeContentType?: NsContent.EContentTypes[];
-    excludeMimeType?: string[];
-    tag: string;
-    criteriaField: string;
+    daysSpan?: number
+    excludeContentType?: NsContent.EContentTypes[]
+    excludeMimeType?: string[]
+    tag: string
+    criteriaField: string
   }
   export interface IContentStripResponseApi {
-    contents: NsContent.IContent[];
-    hasMore?: boolean;
-    pageState?: string;
-    totalHits?: number;
+    contents: NsContent.IContent[]
+    hasMore?: boolean
+    pageState?: string
+    totalHits?: number
   }
 
   export interface IContentStripTab {
-    pillsData?: any;
-    label: string;
-    value: string;
-    showTabDataCount: boolean;
-    requestRequired?: boolean;
-    computeDataOnClick?: boolean;
-    computeDataOnClickKey?: string;
-    request?: any;
-    widgets?: NsWidgetResolver.IRenderConfigWithAnyData[];
-    maxWidgets?: number;
-    fetchTabStatus?: string;
-    nodataMsg?: string;
-    tabLoading?: boolean;
+    pillsData?: any
+    label: string
+    value: string
+    showTabDataCount: boolean
+    requestRequired?: boolean
+    computeDataOnClick?: boolean
+    computeDataOnClickKey?: string
+    request?: any
+    widgets?: NsWidgetResolver.IRenderConfigWithAnyData[]
+    maxWidgets?: number
+    fetchTabStatus?: string
+    nodataMsg?: string
+    tabLoading?: boolean
+    hideTab?: boolean
   }
 }

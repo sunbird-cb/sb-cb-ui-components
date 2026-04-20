@@ -29,8 +29,10 @@ const API_END_POINTS = {
     `${PROTECTED_SLAG_V8}/content/collection/${type}/${id}`,
   REGISTRATION_STATUS: `${PROTECTED_SLAG_V8}/admin/userRegistration/checkUserRegistrationContent`,
   MARK_AS_COMPLETE_META: (contentId: string) => `${PROTECTED_SLAG_V8}/user/progress/${contentId}`,
-  EXT_USER_COURSE_ENROLL : (contentId: any) => `/apis/proxies/v8/cios-enroll/v1/readby/useridcourseid/${contentId}`,
+  EXT_USER_COURSE_ENROLL: (contentId: any) => `/apis/proxies/v8/cios-enroll/v1/readby/useridcourseid/${contentId}`,
   EXT_CONTENT_EROLL: `/apis/proxies/v8/cios-enroll/v1/create`,
+  CERT_DOWNLOAD: (certId: any) => `${PROTECTED_SLAG_V8}/cohorts/course/batch/cert/download/${certId}`,
+  CERT_DOWNLOADV2: `/apis/proxies/v8/certificate/dynamic/v1/generate`,
 }
 
 @Injectable({
@@ -241,7 +243,15 @@ export class WidgetContentService {
     return this.http.get<any>(API_END_POINTS.EXT_USER_COURSE_ENROLL(contentId))
   }
 
-  extContentEnroll (requestBody: any) {
+  extContentEnroll(requestBody: any) {
     return this.http.post<any>(`${API_END_POINTS.EXT_CONTENT_EROLL}`, requestBody)
+  }
+
+  downloadCert(certId: any) {
+    return this.http.get<any>(`${API_END_POINTS.CERT_DOWNLOAD(certId)}`)
+  }
+
+  downloadCertV2(payload: any) {
+    return this.http.post<any>(`${API_END_POINTS.CERT_DOWNLOADV2}`, payload)
   }
 }

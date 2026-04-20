@@ -1,16 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core'
 import { Subscription } from 'rxjs'
-import { ValueService } from '@ws-widget/utils'
+import { ValueService } from '@sunbird-cb/utils'
 import { ActivatedRoute } from '@angular/router'
 import {
-  NsContent,
   IWidgetsPlayerMediaData,
   NsDiscussionForum,
   WidgetContentService,
-} from '@ws-widget/collection'
+} from '@sunbird-cb/collection'
+
 import { ViewerUtilService } from '../../viewer-util.service'
-import { NsWidgetResolver } from '@ws-widget/resolver'
-import { AccessControlService } from '../../access-control.service'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
+import { AccessControlService } from '@sunbird-cb/toc'
+import { NsContent } from '../../models/constant'
 
 @Component({
   selector: 'viewer-audio',
@@ -25,7 +26,7 @@ export class AudioComponent implements OnInit, OnDestroy {
   isNotEmbed = true
   isFetchingDataComplete = false
   forPreview = window.location.href.includes('/author/')
-  audioData: NsContent.IContent | null = null
+  audioData: NsContent.IContent | null | any = null
   widgetResolverAudioData: NsWidgetResolver.IRenderConfigWithTypedData<
     IWidgetsPlayerMediaData
   > | null = null
@@ -38,6 +39,7 @@ export class AudioComponent implements OnInit, OnDestroy {
     private valueSvc: ValueService,
     private viewerSvc: ViewerUtilService,
     private accessControlSvc: AccessControlService,
+    @Inject('environment') private environment: any,
   ) { }
 
   ngOnInit() {
@@ -61,9 +63,10 @@ export class AudioComponent implements OnInit, OnDestroy {
             this.formDiscussionForumWidget(this.audioData)
           }
           this.widgetResolverAudioData = this.initWidgetResolverAudioData()
-          this.widgetResolverAudioData.widgetData.url = this.audioData
-            ? `/apis/authContent/${encodeURIComponent(this.audioData.artifactUrl)}`
-            : ''
+          // this.widgetResolverAudioData.widgetData.url = this.audioData
+          //   ? `/apis/authContent/${encodeURIComponent(this.audioData.artifactUrl)}`
+          //   : ''
+          this.widgetResolverAudioData.widgetData.url = this.generateUrl(this.audioData.artifactUrl)
           this.widgetResolverAudioData.widgetData.disableTelemetry = true
           this.isFetchingDataComplete = true
 
@@ -94,10 +97,18 @@ export class AudioComponent implements OnInit, OnDestroy {
           if (this.audioData) {
             this.formDiscussionForumWidget(this.audioData)
           }
-          if (this.audioData && this.audioData.artifactUrl.indexOf('content-store') >= 0) {
-            await this.setS3Cookie(this.audioData.identifier)
-          }
+          // if (this.audioData && this.audioData.artifactUrl.indexOf('content-store') >= 0) {
+          //   await this.setS3Cookie(this.audioData.identifier)
+          // }
           this.widgetResolverAudioData = this.initWidgetResolverAudioData()
+          // ? this.viewerSvc.getAuthoringUrl(this.audioData.artifactUrl)
+          // tslint:disable-next-line: max-line-length
+          this.widgetResolverAudioData.widgetData.url = this.audioData ? this.forPreview ? this.audioData.artifactUrl : this.audioData.artifactUrl : '' // NOSONAR
+          this.widgetResolverAudioData.widgetData.identifier = this.audioData
+            ? this.audioData.identifier
+            : ''
+          this.widgetResolverAudioData = JSON.parse(JSON.stringify(this.widgetResolverAudioData))
+          this.isFetchingDataComplete = true
           if (this.audioData && this.audioData.identifier) {
             if (this.activatedRoute.snapshot.queryParams.collectionId) {
               await this.fetchContinueLearning(
@@ -108,11 +119,11 @@ export class AudioComponent implements OnInit, OnDestroy {
               await this.fetchContinueLearning(this.audioData.identifier, this.audioData.identifier)
             }
           }
-          if (this.forPreview) {
+          if (this.forPreview && this.widgetResolverAudioData) {
             this.widgetResolverAudioData.widgetData.disableTelemetry = true
           }
 
-          if (data.content.data.subTitles[0]) {
+          if (data.content.data.subTitles && data.content.data.subTitles[0]) { // NOSONAR
 
             let subTitlesUrl = ''
             if (data.content.data.subTitles[0].url.indexOf('/content-store/') > -1) {
@@ -120,31 +131,36 @@ export class AudioComponent implements OnInit, OnDestroy {
             } else {
               subTitlesUrl = `/apis/authContent/${encodeURIComponent(data.content.data.subTitles[0].url)}`
             }
-            this.widgetResolverAudioData.widgetData.subtitles = [{
-              srclang: '',
-              label: '',
-              url: subTitlesUrl,
-            }]
-
+            if (this.widgetResolverAudioData) {
+              this.widgetResolverAudioData.widgetData.subtitles = [{
+                srclang: '',
+                label: '',
+                url: subTitlesUrl,
+              }]
+            }
           }
-
-          this.widgetResolverAudioData.widgetData.url = this.audioData
-            ? this.forPreview
-              ? this.viewerSvc.getAuthoringUrl(this.audioData.artifactUrl)
-              : this.audioData.artifactUrl
-            : ''
-          this.widgetResolverAudioData.widgetData.identifier = this.audioData
-            ? this.audioData.identifier
-            : ''
-          this.widgetResolverAudioData = JSON.parse(JSON.stringify(this.widgetResolverAudioData))
-          this.isFetchingDataComplete = true
 
         },
         () => { },
       )
     }
   }
-
+  generateUrl(oldUrl: string) {
+    const chunk = oldUrl ? oldUrl.split('/') : []
+    const newChunk = this.environment.azureHost.split('/')
+    const newLink = []
+    for (let i = 0; i < chunk.length; i += 1) {
+      if (i === 2) {
+        newLink.push(newChunk[i])
+      } else if (i === 3) {
+        newLink.push(this.environment.azureBucket)
+      } else {
+        newLink.push(chunk[i])
+      }
+    }
+    const newUrl = newLink.join('/')
+    return newUrl
+  }
   ngOnDestroy() {
     if (this.routeDataSubscription) {
       this.routeDataSubscription.unsubscribe()
@@ -210,13 +226,13 @@ export class AudioComponent implements OnInit, OnDestroy {
     })
   }
 
-  private async setS3Cookie(contentId: string) {
-    await this.contentSvc
-      .setS3Cookie(contentId)
-      .toPromise()
-      .catch(() => {
-        // throw new DataResponseError('COOKIE_SET_FAILURE')
-      })
-    return
-  }
+  // private async setS3Cookie(contentId: string) {
+  //   await this.contentSvc
+  //     .setS3Cookie(contentId)
+  //     .toPromise()
+  //     .catch(() => {
+  //       // throw new DataResponseError('COOKIE_SET_FAILURE')
+  //     })
+  //   return
+  // }
 }

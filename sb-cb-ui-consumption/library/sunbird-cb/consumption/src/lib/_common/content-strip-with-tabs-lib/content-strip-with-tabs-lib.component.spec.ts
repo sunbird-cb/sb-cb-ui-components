@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ContentStripWithTabsLibComponent } from './content-strip-with-tabs-lib.component';
 
 describe('ContentStripWithTabsComponent', () => {
   let component: ContentStripWithTabsLibComponent;
   let fixture: ComponentFixture<ContentStripWithTabsLibComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ContentStripWithTabsLibComponent],
     })

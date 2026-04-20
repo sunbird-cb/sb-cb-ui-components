@@ -1,16 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
-// import { PipeLimitToPipe } from '@ws-widget/utils'
-
-import {
-  MatCardModule,
-  MatDividerModule,
-  MatButtonModule,
-  MatSnackBarModule,
-  MatIconModule,
-  MatChipsModule,
-} from '@angular/material'
 
 import {
   BtnContentDownloadModule,
@@ -24,22 +14,30 @@ import {
   UserContentRatingModule,
   UserImageModule,
   BtnContentFeedbackV2Module,
-  // PlayerBriefModule,
-} from '@ws-widget/collection'
+  PlayerBriefModule,
+} from '@sunbird-cb/collection'
 
 import {
   PipeDurationTransformModule,
   PipeLimitToModule,
   PipePartialContentModule,
-} from '@ws-widget/utils'
+  PipeLimitToPipe,
+} from '@sunbird-cb/utils-v2'
 
-import { WidgetResolverModule } from '@ws-widget/resolver'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 
 // import { HtmlRoutingModule } from './html-routing.module'
 
 import { HtmlModule as HtmlPluginModule } from '../../plugins/html/html.module'
 
 import { HtmlComponent } from './html.component'
+import { MatDividerModule } from '@angular/material/divider'
+import { MatIconModule } from '@angular/material/icon'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips'
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
+
 // import { ViewerCourseInfoModule } from '../../plugins/viewer-course-info/viewer-course-info.module'
 
 @NgModule({
@@ -49,7 +47,7 @@ import { HtmlComponent } from './html.component'
     HtmlPluginModule,
     RouterModule,
     // HtmlRoutingModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
     PipeDurationTransformModule,
     PipeLimitToModule,
     PipePartialContentModule,
@@ -70,10 +68,10 @@ import { HtmlComponent } from './html.component'
     MatSnackBarModule,
     UserContentRatingModule,
     BtnContentFeedbackV2Module,
-    // PlayerBriefModule,
+    PlayerBriefModule,
     // ViewerCourseInfoModule,
   ],
-  // providers: [PipeLimitToPipe],
+  providers: [PipeLimitToPipe],
   exports: [HtmlComponent],
 })
 export class HtmlModule { }

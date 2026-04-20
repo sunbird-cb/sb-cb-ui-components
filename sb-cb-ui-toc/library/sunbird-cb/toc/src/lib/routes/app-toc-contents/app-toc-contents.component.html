@@ -1,0 +1,18 @@
+<div class="contents-container">
+  <div class="main-container">
+    <ng-container *ngIf="content?.children?.length; else noChildren">
+      <div class="content-card padding-right-m padding-left-m padding-top-s padding-bottom-s margin-bottom-m" *ngFor="let card of content?.children; trackBy: contentTrackBy">
+        <ws-app-toc-content-card [forPreview]="forPreview" [expandAll]="expandAll" [rootId]="contextId" [batchId]="batchId"
+          [rootContentType]="contextPath" [content]="card"></ws-app-toc-content-card>
+      </div>
+    </ng-container>
+    <ng-template #noChildren>
+      <div *ngIf="!isPlayable"
+        class="ws-mat-primary-default-text ws-mat-primary-lite-background px-6 py-8 font-normal text-base noChildren"
+       >
+        {{ 'apptocontents.previewContentUnavailable' | translate }}
+      </div>
+      <ng-container *ngIf="isPlayable" [sbUiResolverWidget]="contentPlayWidgetConfig"></ng-container>
+    </ng-template>
+  </div>
+</div>

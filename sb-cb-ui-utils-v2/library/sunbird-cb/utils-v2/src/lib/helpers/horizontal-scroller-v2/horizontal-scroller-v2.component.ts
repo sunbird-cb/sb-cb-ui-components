@@ -195,8 +195,10 @@ export class HorizontalScrollerV2Component implements OnInit, OnChanges, OnDestr
             this.defaultMaxWidgets = this.defaultMaxWidgets ?  this.widgetsLength < this.defaultMaxWidgets ?
               this.widgetsLength : this.defaultMaxWidgets : this.defaultMaxWidgets
             arrLength = this.defaultMaxWidgets / arrLength
-            for (let i = 0; i < arrLength; i += 1) {
-              this.bottomDotsArray.push(i)
+            if (arrLength !== Infinity) {
+              for (let i = 0; i < arrLength; i += 1) {
+                this.bottomDotsArray.push(i)
+              }
             }
             // console.log('this.cardSubType', this.cardSubType, arrLength, this.widgetsLength ,
             // this.defaultMaxWidgets, scrollerWidth, this.bottomDotsArray)

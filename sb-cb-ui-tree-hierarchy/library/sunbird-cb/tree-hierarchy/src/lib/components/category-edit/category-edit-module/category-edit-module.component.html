@@ -1,0 +1,41 @@
+<div class="modal-wrapper">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h2 class="modal-title">Edit Category</h2>
+    <button mat-icon-button class="close-button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Modal Container -->
+  <div class="modal-container">
+    <form [formGroup]="categoryForm">
+        <div class="form-group">
+            <div class="static-label required">Name</div>
+            <mat-form-field appearance="outline" class="w-full custom-field">
+                <input matInput formControlName="categoryName" >
+                <mat-error *ngIf="categoryForm.get('categoryName')?.hasError('required')">
+                Name is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <div class="static-label">Description</div>
+            <mat-form-field appearance="outline" class="w-full custom-field">
+                <textarea matInput formControlName="categoryDescription"></textarea>
+                <mat-error *ngIf="categoryForm.get('categoryDescription')?.hasError('required')">
+                Description is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer">
+    <button mat-button class="btn-common btn-secondary" (click)="closeDialog()" type="button">Cancel</button>
+    <button mat-button class="btn-common btn-primary" [disabled]="!categoryForm.valid" (click)="saveCategoryName()" type="button">
+      Save
+    </button>
+  </div>
+</div>

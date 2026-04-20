@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils-v2';
-import { WidgetContentService } from '../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../_services/widget-content-lib.service';
 import { CompetencyPassbookMdoService } from './competency-passbook-mdo.service';
 import { Router } from '@angular/router';
+import { NsCompentency } from '../../_models/compentencies.model';
 @Component({
   selector: 'sb-uic-competency-passbook-mdo',
   templateUrl: './competency-passbook-mdo.component.html',
@@ -22,7 +23,7 @@ export class CompetencyPassbookMdoComponent implements OnInit {
   loadCompetencyArea: boolean = false
   originalCompetencyArray: any
   competencyArea: any []
-  selectedValue: any;
+  selectedValue: any = 'functional';
   competencyVersion:string = ''
   competencyThemeData: any
   competencyTheme: any = []
@@ -31,21 +32,33 @@ export class CompetencyPassbookMdoComponent implements OnInit {
   competencyThemeLength: any = 6
   showAllTheme : any = [{name:'Show all', showAll: false}]
 
+  environment!: any;
+  comeptencyKeys: NsCompentency.CompentencyKeys;
+  
   // subTheme = ['Behavioural']
   // currentFilter = 'Behavioural'
   // currentCompetencies: any = []
   // competencyData: any
   constructor(public configSvc: ConfigurationsService,
-    public contentSvc:WidgetContentService,
+    public contentSvc:WidgetContentLibService,
     public competencySvc: CompetencyPassbookMdoService,
-    public router : Router
-  ) { 
-    
+    public router : Router,
+    @Inject('environment') environment: any,
+
+  ) {
+    this.environment = environment
   }
 
  
   ngOnInit() {
-    this.getAllCompetencies()
+    this.comeptencyKeys = this.configSvc.compentency[this.environment.compentencyVersionKey]
+    
+    if(this.comeptencyKeys.vKey === 'competencies_v5') {
+      this.getAllCompetencies()
+    }
+    else {
+      this.getAllCompetenciesV2()
+    }
   }
 
 
@@ -70,6 +83,25 @@ export class CompetencyPassbookMdoComponent implements OnInit {
     })
   }
   
+  getAllCompetenciesV2(){
+    this.loadCometency = true
+    this.competencySvc.getCompetencyListv_V2().subscribe((response: any) => {
+      this.allcompetencyTheme = {}
+      if(response && response.result && response.result.content) {
+        this.originalCompetencyArray = response.result.content
+        this.getMdoCompetencies()
+        // this.getCompetencyArea()
+        response.result.content.forEach(element => {
+          element.children.forEach((childEle) => {
+            let name = childEle.name.toLowerCase()
+            this.allcompetencyTheme[name] = childEle
+            this.allcompetencyTheme[name]['viewMore'] = false
+          });
+        });
+      }
+      this.loadCometency = false
+    })
+  }
 
 
   async getMdoCompetencies(){
@@ -80,14 +112,19 @@ export class CompetencyPassbookMdoComponent implements OnInit {
         if(response.results.result.facets && response.results.result.facets.length){
           let facetData = response.results.result.facets
           facetData.forEach((facet: any) => {
-            if(facet.name === 'competencies_v5.competencyArea') {
+            if(facet.name ===   `${this.environment.compentencyVersionKey}.${this.comeptencyKeys.vCompetencyArea}`) {
               this.competencyArea = facet.values
               this.selectedValue = facet.values[0].name
-            } else if(facet.name === 'competencies_v5.competencyTheme') {
+            } else if(facet.name ===   `${this.environment.compentencyVersionKey}.${this.comeptencyKeys.vCompetencyTheme}`) {
               this.competencyThemeData = facet.values
               this.getCompetencyTheme()
             }
-          });
+          })
+
+          this.competencyArea.forEach((area: any) => {
+            let _count = this.getCompetencyThemeCount(area.name)
+            area.count = _count
+          })
 
         } else {
           this.emptyResponse.emit(true)
@@ -99,6 +136,18 @@ export class CompetencyPassbookMdoComponent implements OnInit {
       // console.error('Error:', error);
           this.emptyResponse.emit(true)
     }
+  }
+
+  getCompetencyThemeCount(area: any) {
+    let returnedData = []
+    this.originalCompetencyArray.forEach((element: any) => {
+      if(element.name.toLowerCase() === area) {
+        returnedData = this.competencyThemeData.filter((ele1: any) => {
+           return  element.children.find((ele2: any) => ele2.name.toLowerCase() === ele1.name.toLowerCase())
+         })
+       }
+    })
+    return returnedData.length
   }
 
   getCompetencyTheme(){
@@ -146,7 +195,6 @@ export class CompetencyPassbookMdoComponent implements OnInit {
     }
 
     this.temeletryResponse.emit(e.name)
-    
     this.selectedValue = e.name
     this.getCompetencyTheme()
   }

@@ -1,0 +1,412 @@
+@import '../../../../src/styles/variable.scss';
+
+:host {
+  display: block;
+  height: 100%;
+
+  ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+	display: none; // Hide the subscript wrapper
+  }
+
+}
+
+::ng-deep .no-checkbox .mat-pseudo-checkbox {
+  	display: none !important;
+}
+
+.custom-height-select {
+  width: 100%;
+  margin-top: 5px;
+
+  ::ng-deep {
+	// Target mat-select height directly
+	.mat-mdc-select {
+	  height: 35px;
+	  line-height: 35px;
+	}
+
+	// Update form field related heights
+	.mat-form-field-flex {
+	  height: 35px !important;
+	  min-height: 35px !important;
+	}
+
+	.mat-form-field-infix {
+	  min-height: 35px !important;
+	  height: 35px !important;
+	  display: flex;
+	  align-items: center;
+	  border: 0;
+	  position: relative;
+	  padding: 4px 8px 0px 8px;
+	}
+
+	// Ensure wrapper has proper height
+	.mat-form-field-wrapper {
+	  height: 35px;
+	  padding: 0;
+	  margin: 0;
+	}
+
+	// Maintain border radius and color
+	.mdc-notched-outline {
+	  border-radius: 20px !important;
+	}
+
+	.mdc-notched-outline__leading {
+	  display: none;
+	}
+
+	.mdc-notched-outline__notch {
+	  border-color: #00000029 !important;
+	}
+
+	.mdc-notched-outline__trailing {
+	  border-color: #00000029 !important;
+	  border-radius: 20px !important;
+	  border-left: 1px solid #00000029 !important;
+	  border-right: 1px solid #00000029 !important;
+	}
+
+	// Center select content vertically
+	.mat-select-arrow-wrapper {
+	  padding-top: 15px;
+	  transform: translateY(-4px); /* Fine tune arrow position */
+	}
+
+	// Adjust select value text position
+	.mat-select-value {
+	  line-height: 35px;
+	}
+  }
+}
+
+// Move ::ng-deep to the top level
+::ng-deep {
+  .right-side-modal {
+	// Fix for position
+	&.cdk-global-overlay-wrapper {
+	  justify-content: flex-end;
+	}
+	
+	// Style for right-aligned modal container
+	.mat-dialog-container {
+	  border-radius: 0 !important;
+	  padding: 0 !important;
+	  overflow-x: hidden;
+	  display: flex !important;
+	  flex-direction: column !important;
+	  height: 100vh !important;
+	}
+	
+	// Fix accessibility issues
+	.cdk-overlay-pane {
+	  margin-right: 0 !important;
+	  max-width: 90vw !important; // Optional: adjust width if needed
+	}
+  }
+
+  .mat-pseudo-checkbox-checked {
+	background-color: $primary-color !important;
+	border-color: $primary-color !important;
+  }
+}
+
+.org-hierarchy-modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  
+  .modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 12px 24px;
+	border-bottom: 1px solid $light-gray;
+	flex-shrink: 0; // Prevent header from shrinking
+	
+	.header-title {
+	  h2 {
+		font-size: $font-size-16;
+		font-weight: 600;
+		color: $dark-grey;
+	  }
+	}
+	
+	.close-button {
+	  color: $grey;
+	}
+  }
+  
+  .modal-content {
+	flex: 1;
+	overflow-y: auto;
+	padding: 12px 24px;
+	min-height: 0; // Important for flex child to properly scroll
+	
+	.content-container {
+	  max-width: 800px;
+	  margin: 0 auto;
+	}
+	
+	.form-field {
+	  margin-bottom: 16px;
+	  
+	  .w-full {
+		width: 100%;
+	  }
+	}
+  }
+  
+  .modal-footer {
+	display: flex;
+	justify-content: flex-end;
+	padding: 12px 24px;
+	border-top: 1px solid $light-gray;
+	gap: 16px;
+	flex-shrink: 0; // Prevent footer from shrinking
+	
+	.cancel-btn {
+	  min-width: 100px;
+	}
+	
+	.save-btn {
+	  min-width: 100px;
+	}
+  }
+}
+
+// Searchable select styles
+.searchable-select-container {
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.selected-items-container {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  
+  .selected-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+  }
+}
+
+::ng-deep {
+  .searchable-select-panel {
+	// Panel styling
+	.mat-select-panel {
+	  max-height: 350px;
+	}
+	
+	// Search box styling
+	.search-box {
+	  position: relative;
+	  padding: 8px;
+	  
+	  input {
+		width: 100%;
+		height: 36px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		padding: 8px 36px 8px 12px;
+		outline: none;
+		font-size: 14px;
+		
+		&:focus {
+		  border-color: $primary-color;
+		}
+	  }
+	  
+	  .clear-search {
+		position: absolute;
+		right: 8px;
+		top: 8px;
+		width: 24px;
+		height: 24px;
+		line-height: 24px;
+		
+		.mat-icon {
+		  font-size: 16px;
+		  width: 16px;
+		  height: 16px;
+		  line-height: 16px;
+		}
+	  }
+	}
+  }
+  
+  // Chip styling
+  .mat-chip {
+	font-size: 12px;
+	min-height: 26px;
+	
+	.mat-icon {
+	  font-size: 16px;
+	  width: 16px;
+	  height: 16px;
+	}
+  }
+  
+  // Updated Chip styling
+  .mat-mdc-chip {
+	font-size: 12px;
+	min-height: 26px;
+	
+	.mat-icon {
+	  font-size: 16px;
+	  width: 16px !important;
+	  height: 16px !important;
+	}
+  }
+  
+  // Make disabled chip-options look like regular chips
+  .mat-mdc-chip-option[disabled] {
+	opacity: 1;
+	
+	.mdc-evolution-chip__text-label {
+	  opacity: 1;
+	}
+  }
+}
+
+.m-0 {
+  margin: 0;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.orgTypeName {
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.sub-label {
+  font-weight: 400;
+  font-size: 12px;
+  color: #00000099;
+}
+
+.orgTypeSelected {
+  padding: 5px 15px;
+  border: 1px solid #00000029;
+  background: #E8E9EB;
+  border-radius: 20px;
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+/* Add this to your existing stylesheet */
+.search-container {
+  position: relative;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box; /* Add this to prevent padding from adding to width */
+  top: 0;
+
+  &::before {
+	content: "";
+	position: absolute;
+	left: 16px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 16px;
+	height: 16px;
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="%23757575"/></svg>');
+	background-repeat: no-repeat;
+	background-size: contain;
+	z-index: 1;
+  }
+
+  .search-input {
+	width: calc(100% - 8px); /* Adjust width to account for borders */
+	height: 28px; /* Increase height from 14px to 28px */
+	border: 1px solid #00000029;
+	border-radius: 20px;
+	padding: 4px 12px 4px 36px; /* Adjusted padding */
+	outline: none;
+	font-size: 14px;
+	box-sizing: border-box; /* Crucial - makes padding part of width/height */
+	
+	&:focus {
+	  border-color: $primary-color;
+	}
+  }
+}
+
+.dashed-line {
+  height: 25px;
+  border-left: 2px dashed $primary-color;
+  margin-left: 10px; /* Add some margin to position it */
+}
+
+.org-container {
+  position: relative;
+  
+  &:not(:first-child) {
+	margin-top: 0px; /* Add spacing between containers */
+	
+	&::before {
+		content: "";
+		position: absolute;
+		left: -20px;
+		top: 4px;
+		height: 8px;
+		border-left: 2px dashed #1B4CA1;
+		z-index: 0;
+		border-bottom: 2px dashed #1B4CA1;
+		width: 10px;
+	}
+	
+	/* Arrow at the bottom pointing to the current element */
+	&::after {
+		content: "";
+		position: absolute;
+		left: -15px;
+		top: 8px;
+		width: 8px;
+		height: 8px;
+		border-right: 2px solid #1B4CA1;
+		border-bottom: 2px solid #1B4CA1;
+		transform: rotate(-45deg);
+		z-index: 1;
+		background-color: transparent;
+	}
+  }
+}
+
+.add-btn {
+    height: 24px;
+    background: rgba(27, 76, 161, 1);
+    color: white !important;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    border-radius: 12px;
+}
+
+.clip-option {
+	margin: 2px !important;
+    border: 1px solid #D6D6D6;
+    border-radius: 4px;
+    font-size: 14px;
+	background: white !important;
+    color: black !important;
+    padding: 0 !important; 
+}
+
+.select-search-container {
+	position: relative;
+}
+
+.org-clip {
+	position: absolute;
+	top: 50px;
+	left: 0;
+}

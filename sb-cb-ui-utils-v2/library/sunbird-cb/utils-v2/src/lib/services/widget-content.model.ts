@@ -385,4 +385,27 @@ export namespace NsContent {
   export enum ETagType {
     NEWLY_ADDED = 'NEWLY ADDED',
   }
+
+  export enum ECourseCategory {
+    MODULE = 'Course Unit',
+    INVITE_ONLY_PROGRAM = 'Invite-Only Program',
+    MODERATED_PROGRAM = 'Moderated Program',
+    BLENDED_PROGRAM = 'Blended Program',
+    CURATED_PROGRAM = 'Curated Program',
+    COURSE = 'Course',
+    MODERATED_COURSE = 'Moderated Course',
+    STANDALONE_ASSESSMENT = 'Standalone Assessment',
+    MODERATED_ASSESSEMENT = 'Moderated Assessment',
+    INVITE_ONLY_ASSESSMENT = 'Invite-Only Assessment',
+    CQF_ASSESSMENT = 'CQF Assessment',
+    CASE_STUDY = 'Case Study',
+    PRE_ENROLMENT_ASSESSMENT = 'Pre Enrolment Assessment',
+    COMPREHENSIVE_ASSESSMENT_PROGRAM = 'Comprehensive Assessment Program',
+    MULTILINGUAL_COURSE = 'Multilingual Course',
+    RESOURCE = 'Learning Resource',
+  }
+
+  export enum EContextTypes {
+    FINAL_MILESTONE_ASSESSMENT = 'Final Milestone Assessment',
+  }
 }

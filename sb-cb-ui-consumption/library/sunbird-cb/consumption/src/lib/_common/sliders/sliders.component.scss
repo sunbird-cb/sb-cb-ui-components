@@ -1,5 +1,5 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 $banner-min-height: 243px;
 
@@ -30,13 +30,13 @@ $banner-min-height: 243px;
   .banner-container {
     min-height: 280px !important;
   }
-  .navigation {
-    &.middle-inline {
-      .prev {
-        left: 15% !important;
-      }
-    }
-  }
+  // .navigation {
+  //   &.middle-inline {
+  //     .prev {
+  //       left: 15% !important;
+  //     }
+  //   }
+  // }
 }
 
 @media screen and (min-width: 768px) and (max-width: 1279px) {
@@ -113,10 +113,12 @@ $banner-min-height: 243px;
   &.left {
     left: 0;
     transform: translateX(0);
+    z-index: 998;
   }
   &.right{
     left: 100%;
     transform: translateX(-100%);
+    z-index: 998;
   }
 
   .banner-title {
@@ -215,11 +217,13 @@ $banner-min-height: 243px;
 .prev {
   left: 0;
   margin-left: -16px;
+  z-index: 998;
 }
 
 .next {
   right: 0;
   margin-right: -16px;
+  z-index: 998;
 }
 
 .navigation {
@@ -341,18 +345,18 @@ $banner-min-height: 243px;
 }
 
 
-@media screen and (min-width: 769px) {
-  .navigation {
-    &.middle-inline {
-      .prev {
-        left: 23% !important;
-      }
-      .next {
-        right: 6% !important;
-      }
-    }
-  }
-}
+// @media screen and (min-width: 769px) {
+//   .navigation {
+//     &.middle-inline {
+//       .prev {
+//         left: 23% !important;
+//       }
+//       .next {
+//         right: 6% !important;
+//       }
+//     }
+//   }
+// }
 
 @media screen and (min-width: 820px) and (max-width: 1023px) {
   .navigation {

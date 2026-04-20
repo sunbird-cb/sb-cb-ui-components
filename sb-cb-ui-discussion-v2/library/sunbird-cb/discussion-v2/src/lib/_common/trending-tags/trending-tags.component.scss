@@ -1,0 +1,40 @@
+.trending-tags-wrapper {
+
+    background-color: white;
+    border: 1px solid #00000029;
+    border-radius: 12px;
+}
+
+.custom-mdc-chip-listbox {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Space between chips */
+    padding: 16px;
+    background-color: #fafafa; /* Light background */
+    border: 1px solid #e0e0e0; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+  }
+  
+  .custom-mdc-chip-listbox mat-chip {
+    background-color: #6200ea; /* Purple background */
+    color: #ffffff; /* White text */
+    border-radius: 16px; /* Rounded corners for chips */
+    padding: 8px 12px; /* Internal padding for chips */
+    font-size: 14px; /* Default text size */
+    font-weight: 500; /* Medium weight */
+  }
+  
+  .custom-mdc-chip-listbox mat-chip.mat-mdc-chip-selected {
+    background-color: #03dac6; /* Teal background for selected chips */
+    color: #000000; /* Black text for selected chips */
+  }
+  
+  .custom-mdc-chip-listbox mat-chip:hover {
+    background-color: #3700b3; /* Darker purple on hover */
+    cursor: pointer; /* Pointer cursor */
+  }
+  
+  .custom-mdc-chip-listbox mat-chip.mat-mdc-chip-selected:hover {
+    background-color: #018786; /* Darker teal for selected chips */
+  }
+  

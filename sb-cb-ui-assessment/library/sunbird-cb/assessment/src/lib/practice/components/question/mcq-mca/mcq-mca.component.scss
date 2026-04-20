@@ -1,5 +1,6 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 .quiz-question {
   overflow-x: auto;
@@ -126,4 +127,8 @@
     height: auto !important;
     word-wrap: break-word;
   }
+}
+
+video {
+  width: 360px !important;
 }

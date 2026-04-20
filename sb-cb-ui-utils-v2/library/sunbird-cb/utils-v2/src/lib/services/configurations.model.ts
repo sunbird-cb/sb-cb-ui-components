@@ -35,6 +35,7 @@ export namespace NsInstanceConfig {
     telemetryConfig: ITelemetryConfig
     themes: ITheme[]
     logos: ILogos
+    domainList?: IDomainList
     sources?: ISourceLogo[]
     mailIds: IMailIds
     details: IDetails
@@ -68,7 +69,31 @@ export namespace NsInstanceConfig {
     websitelanguages: any[]
     profileTimelyNudges: any,
     npsCategory?: string
+    compentency?: any  // This is a temporary fix, need to remove this after the competency is implemented in the app
+    competency?: ICompetencyKeys,
+    devnagiriMultiLangEnabled?: any,
+    completionSurvey: any
+    globalConfig: any
   }
+
+  export interface ICompetencyKeys {
+    vKey: string
+    vCompetencyArea: string
+    vCompetencyAreaDescription: string
+    vCompetencyTheme: string
+    vCompetencySubTheme: string
+  }
+
+  export interface IDomainList {
+    [key: string]: {
+      logo: string
+      redirectPath: string
+      cdnContentHost: string
+      sitePath: string
+    }
+  }
+
+
   export interface IPortalUrls {
     igot: string,
     spv: string,
@@ -179,7 +204,6 @@ export namespace NsInstanceConfig {
     navbarLogo?: string
     playListLogo?: string
     thumpsUp?: string
-
   }
   export interface IMailIds {
     contactUs: string
@@ -298,7 +322,11 @@ export namespace NsUser {
     profileImageUrl?: string
     professionalDetails?: any
     webPortalLang?: any,
-    departmentImg?: any
+    departmentImg?: any,
+    profileBannerUrl?: string
+    mobile?: string
+    userRootOrg?: any
+    channel?: string
   }
 
   export interface INodebbUserProfile {

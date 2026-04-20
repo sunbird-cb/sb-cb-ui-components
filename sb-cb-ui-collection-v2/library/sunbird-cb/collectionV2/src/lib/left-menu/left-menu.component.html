@@ -1,0 +1,151 @@
+<div class="flex flex-1 flex-column padding-left-l padding-right-l">
+  <div class="margin-top-xs flex flex-column max-width m-auto" *ngIf="widgetData.logo">
+    <a href="javascript:void(0)" role="link" class="flex flex-column margin-top-l items-center" (click)="menuClick(widgetData.name)">
+      <div class="logo-cover rounded-full bg-white flex items-center justify-center">
+        <img [src]="widgetData.logoPath || defaultImage" [alt]="widgetData.name" class="img rounded-full" (error)="changeToDefaultImg($event)" />
+      </div>
+      <span i18n class="mat-subheading-2 margin-top-m">
+        {{ widgetData.name }}
+      </span>
+    </a>
+  </div>
+  <!-- Add isCustomIcon:true to use svgIcon  -->
+  <mat-nav-list class="mat-nav-list mat-list-base flex-1">
+    <ng-container *ngFor="let menuItem of widgetData.menus; let i = index">
+      <ng-container *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0; else singleLink">
+        <mat-expansion-panel *ngIf="menuItem.enabled && isAllowed(menuItem)" hideToggle [expanded]="false" #expansion>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon *ngIf="menuItem?.icon" class="mr-2" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+              {{ menuItem.name }}
+              <mat-panel-description>
+                <mat-icon *ngIf="!expansion.expanded">arrow_drop_down</mat-icon>
+                <mat-icon *ngIf="expansion.expanded">arrow_drop_up</mat-icon>
+              </mat-panel-description>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <!-- Submenus -->
+          <mat-nav-list>
+            <ng-container *ngFor="let subItem of menuItem.subMenu; let i = index">
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem?.enabled && !subItem.customRouting && !subItem.fragment && !subItem.queryParams"
+                [routerLink]="[subItem.routerLink]"
+                routerLinkActive="ws-active-route-menu"
+                queryParamsHandling="preserve"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem.name }}</span>
+              </a>
+
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem?.enabled && !subItem.customRouting && subItem.fragment && !subItem.queryParams"
+                [routerLink]="'.'"
+                [class.ws-active-route-menu]="isLinkActive(subItem.key, i)"
+                [fragment]="subItem.fragment ? subItem.key : ''"
+                queryParamsHandling="preserve"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem?.name }}</span>
+              </a>
+
+              <a
+                mat-list-item
+                class="new-pill-ui"
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem.enabled && subItem.customRouting && !subItem.queryParams"
+                [routerLink]="getLink(subItem)"
+                queryParamsHandling="preserve"
+                routerLinkActive="new-pill-ui-active"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem?.name }}</span>
+              </a>
+
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem?.enabled && !subItem.customRouting && !subItem.fragment && subItem.queryParams"
+                [routerLink]="subItem.routerLink"
+                [queryParams]="{ status: subItem.queryParams }"
+                queryParamsHandling="preserve"
+                [class.ws-active-route-menu]="isLinkActive2(subItem.routerLink)"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem?.name }}</span>
+              </a>
+            </ng-container>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </ng-container>
+
+      <!-- Template for menu items without subMenu -->
+      <ng-template #singleLink>
+        <ng-container *ngIf="isAllowed(menuItem)">
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && !menuItem.customRouting && !menuItem.fragment && !menuItem.queryParams"
+            [routerLink]="[menuItem.routerLink]"
+            routerLinkActive="ws-active-route-menu"
+            queryParamsHandling="preserve"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem.name }}</span>
+          </a>
+
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && !menuItem.customRouting && menuItem.fragment && !menuItem.queryParams"
+            [routerLink]="'.'"
+            [class.ws-active-route-menu]="isLinkActive(menuItem.key, i)"
+            [fragment]="menuItem.fragment ? menuItem.key : ''"
+            queryParamsHandling="preserve"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem?.name }}</span>
+          </a>
+
+          <a
+            mat-list-item
+            class="new-pill-ui"
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && menuItem.customRouting && !menuItem.queryParams"
+            [routerLink]="getLink(menuItem)"
+            queryParamsHandling="preserve"
+            routerLinkActive="new-pill-ui-active"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem?.name }}</span>
+          </a>
+
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && !menuItem.customRouting && !menuItem.fragment && menuItem.queryParams"
+            [routerLink]="menuItem.routerLink"
+            [queryParams]="{ status: menuItem.queryParams }"
+            queryParamsHandling="preserve"
+            [class.ws-active-route-menu]="isLinkActive2(menuItem.routerLink)"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem?.name }}</span>
+          </a>
+        </ng-container>
+      </ng-template>
+    </ng-container>
+  </mat-nav-list>
+</div>

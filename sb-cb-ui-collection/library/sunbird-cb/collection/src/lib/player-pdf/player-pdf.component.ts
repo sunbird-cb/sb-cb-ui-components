@@ -8,11 +8,13 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core'
-import { FormControl } from '@angular/forms'
+import { UntypedFormControl } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
-import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver'
-import { EventService, LoggerService, WsEvents, ValueService } from '@sunbird-cb/utils'
+import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
+import { EventService, LoggerService, WsEvents, ValueService } from '@sunbird-cb/utils-v2'
 import * as PDFJS from 'pdfjs-dist/webpack'
+(PDFJS as any).GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 import { fromEvent, interval, merge, Subject, Subscription } from 'rxjs'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
 // import { ViewerUtilService } from '../../../../../../project/ws/viewer/src/lib/viewer-util.service'
@@ -21,7 +23,8 @@ import { NsContent } from '../_services/widget-content.model'
 import { WidgetContentService } from '../_services/widget-content.service'
 import { IWidgetsPlayerPdfData } from './player-pdf.model'
 
-const pdfjsViewer = require('pdfjs-dist/web/pdf_viewer')
+// const pdfjsViewer = require('pdfjs-dist/web/pdf_viewer')
+import * as pdfjsViewer from 'pdfjs-dist/web/pdf_viewer'
 @Component({
   selector: 'ws-widget-player-pdf',
   templateUrl: './player-pdf.component.html',
@@ -34,14 +37,14 @@ export class PlayerPdfComponent extends WidgetBaseComponent
   containerSection!: ElementRef<HTMLElement>
 
   @ViewChild('pdfContainer', { static: true })
-  pdfContainer!: ElementRef<HTMLCanvasElement>
+  pdfContainer!: ElementRef<HTMLCanvasElement> | any
   DEFAULT_SCALE = 1.0
   MAX_SCALE = 3
   MIN_SCALE = 0.2
   CSS_UNITS = 96 / 72
   totalPages = 0
-  currentPage = new FormControl(0)
-  zoom = new FormControl(this.DEFAULT_SCALE)
+  currentPage = new UntypedFormControl(0)
+  zoom = new UntypedFormControl(this.DEFAULT_SCALE)
   isSmallViewPort = false
   realTimeProgressRequest = {
     content_type: 'Resource',
@@ -168,9 +171,10 @@ export class PlayerPdfComponent extends WidgetBaseComponent
     // }
   }
   ngAfterViewInit() {
-    this.contextMenuSubs = fromEvent(this.pdfContainer.nativeElement, 'contextmenu').subscribe(e =>
+    this.contextMenuSubs = fromEvent(this.pdfContainer.nativeElement, 'contextmenu').subscribe((e: any) =>
       e.preventDefault(),
     )
+    console.log('this.widgetData---', this.widgetData)
     if (this.widgetData && this.widgetData.pdfUrl) {
       this.loadDocument(this.widgetData.pdfUrl)
       if (this.widgetData.identifier) {
@@ -297,9 +301,10 @@ export class PlayerPdfComponent extends WidgetBaseComponent
     if (!this.current.includes(pageNumStr)) {
       this.current.push(pageNumStr)
     }
-    const viewport = page.getViewport({ scale: this.zoom.value })
+    const viewport: any = page.getViewport({ scale: this.zoom.value })
     this.pdfContainer.nativeElement.width = viewport.width
     this.pdfContainer.nativeElement.height = viewport.height
+    let eventBus = new pdfjsViewer.EventBus()
     this.lastRenderTask = new pdfjsViewer.PDFPageView({
       scale: viewport.scale,
       container: this.pdfContainer.nativeElement,
@@ -307,6 +312,7 @@ export class PlayerPdfComponent extends WidgetBaseComponent
       defaultViewport: viewport,
       textLayerFactory: new pdfjsViewer.DefaultTextLayerFactory(),
       annotationLayerFactory: new pdfjsViewer.DefaultAnnotationLayerFactory(),
+      eventBus: eventBus
     })
     if (this.lastRenderTask) {
       this.lastRenderTask.setPdfPage(page)
@@ -356,7 +362,7 @@ export class PlayerPdfComponent extends WidgetBaseComponent
       },
       to: '',
       data: {
-        // object: {},
+        object: {},
         eventSubType: eventType,
         activityType: activity,
         currentPage: this.currentPage.value,

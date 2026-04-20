@@ -1,0 +1,18 @@
+{
+    "sourceFile": "library/sunbird-cb/notification/src/lib/notification.service.spec.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1747132034193,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1747132034193,
+            "name": "Commit-0",
+            "content": "import { TestBed } from '@angular/core/testing';\n\nimport { ConsumptionService } from './notification.service';\n\ndescribe('ConsumptionService', () => {\n  beforeEach(() => TestBed.configureTestingModule({}));\n\n  it('should be created', () => {\n    const service: ConsumptionService = TestBed.get(ConsumptionService);\n    expect(service).toBeTruthy();\n  });\n});\n"
+        }
+    ]
+}

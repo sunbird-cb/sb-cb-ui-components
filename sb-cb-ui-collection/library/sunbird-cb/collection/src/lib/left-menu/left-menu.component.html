@@ -1,44 +1,149 @@
-<div class="flex flex-1 flex-column pad-l-4r min-wid">
-  <div class="margin-top-xs flex flex-column max-width" *ngIf="widgetData.logo">
-    <a href="javascript:void(0)" role="link" class="flex flex-column margin-top-l" (click)="menuClick(widgetData.name)">
-      <img [src]="widgetData.logoPath || defaultImage" [alt]="widgetData.name" class="img"
-        (error)="changeToDefaultImg($event)" />
+<div class="flex flex-1 flex-column min-wid bg-white">
+  <div class="margin-top-xs flex flex-column max-width m-auto" *ngIf="widgetData.logo">
+    <a href="javascript:void(0)" role="link" class="flex flex-column margin-top-l items-center" (click)="menuClick(widgetData.name)">
+      <div class="logo-cover rounded-full bg-white flex items-center justify-center">
+        <img [src]="widgetData.logoPath || defaultImage" [alt]="widgetData.name" class="img rounded-full" (error)="changeToDefaultImg($event)" />
+      </div>
       <span i18n class="mat-subheading-2 margin-top-m">
-        <!-- this will be dynamic -->
-        {{widgetData.name}}
+        {{ widgetData.name }}
       </span>
     </a>
   </div>
-  <mat-nav-list class="margin-top-m flex-1 custom-class">
-    <ng-container *ngFor="let tab of widgetData.menus; let i = index">
-      <ng-container *ngIf="isAllowed(tab)">
-        <a mat-list-item disableRipple class="flex outline-1" [attr.data-index]="i" (click)="menuClick(tab)"
-          *ngIf="tab?.enabled && !tab.customRouting && !tab.fragment && !tab.queryParams"
-          [routerLink]="[tab.routerLink]" queryParamsHandling="preserve" routerLinkActive="ws-active-route-menu">
-          <!--  [class.ws-active-route-menu]="isLinkActive(tab.key)" [fragment]="tab.fragment? tab.key : ''" [queryParamsHandling]="preserve" -->
-          <span class="padding-left-xs">{{tab?.name}}</span>
-        </a>
-        <a mat-list-item disableRipple class="flex outline-1" [attr.data-index]="i" (click)="menuClick(tab)"
-          *ngIf="tab?.enabled && !tab.customRouting && tab.fragment && !tab.queryParams" [routerLink]="'.'"
-          [class.ws-active-route-menu]="isLinkActive(tab.key, i)" [fragment]="tab.fragment? tab.key : ''"
-          queryParamsHandling="preserve">
-          <span class="padding-left-xs">{{tab?.name}}</span>
-        </a>
-        <a mat-list-item disableRipple class="flex outline-1" [attr.data-index]="i" (click)="menuClick(tab)"
-          *ngIf="tab?.enabled && tab.customRouting && !tab.queryParams" [routerLink]="getLink(tab)"
-          queryParamsHandling="preserve" routerLinkActive="ws-active-route-menu">
-          <!--  [class.ws-active-route-menu]="isLinkActive(tab.key)" [fragment]="tab.fragment? tab.key : ''" [queryParamsHandling]="preserve" -->
-          <span class="padding-left-xs">{{tab?.name}}</span>
-        </a>
-        <a mat-list-item disableRipple class="flex outline-1" [attr.data-index]="i" (click)="menuClick(tab)"
-          *ngIf="tab?.enabled && !tab.customRouting  && !tab.fragment && tab.queryParams" [routerLink]="tab.routerLink"
-          [queryParams]="{'status':tab.queryParams}" queryParamsHandling="preserve"
-          [class.ws-active-route-menu]="isLinkActive2(tab.routerLink)">
-          <!-- routerLinkActive="ws-active-route-menu"> -->
-          <!--  [class.ws-active-route-menu]="isLinkActive(tab.key)" [fragment]="tab.fragment? tab.key : ''" [queryParamsHandling]="preserve" -->
-          <span class="padding-left-xs">{{tab?.name}}</span>
-        </a>
+  <!-- Add isCustomIcon:true to use svgIcon  -->
+  <mat-nav-list class="menu-left">
+    <ng-container *ngFor="let menuItem of widgetData.menus; let i = index">
+      <ng-container *ngIf="menuItem.subMenu && menuItem.subMenu.length > 0; else singleLink">
+        <mat-expansion-panel *ngIf="menuItem.enabled && isAllowed(menuItem)" hideToggle [expanded]="false" #expansion>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon *ngIf="menuItem?.icon" class="mr-2" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+              {{ menuItem.name }}
+              <mat-panel-description>
+                <mat-icon *ngIf="!expansion.expanded">arrow_drop_down</mat-icon>
+                <mat-icon *ngIf="expansion.expanded">arrow_drop_up</mat-icon>
+              </mat-panel-description>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <!-- Submenus -->
+          <mat-nav-list>
+            <ng-container *ngFor="let subItem of menuItem.subMenu; let i = index">
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem?.enabled && !subItem.customRouting && !subItem.fragment && !subItem.queryParams"
+                [routerLink]="[subItem.routerLink]"
+                routerLinkActive="ws-active-route-menu"
+                queryParamsHandling="preserve"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem.name }}</span>
+              </a>
+
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem?.enabled && !subItem.customRouting && subItem.fragment && !subItem.queryParams"
+                [routerLink]="'.'"
+                [class.ws-active-route-menu]="isLinkActive(subItem.key, i)"
+                [fragment]="subItem.fragment ? subItem.key : ''"
+                queryParamsHandling="preserve"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem?.name }}</span>
+              </a>
+
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem.enabled && subItem.customRouting && !subItem.queryParams"
+                [routerLink]="getLink(subItem)"
+                queryParamsHandling="preserve"
+                routerLinkActive="ws-active-route-menu"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem?.name }}</span>
+              </a>
+
+              <a
+                mat-list-item
+                [attr.data-index]="i"
+                (click)="menuClick(subItem)"
+                *ngIf="subItem?.enabled && !subItem.customRouting && !subItem.fragment && subItem.queryParams"
+                [routerLink]="subItem.routerLink"
+                [queryParams]="{ status: subItem.queryParams }"
+                queryParamsHandling="preserve"
+                [class.ws-active-route-menu]="isLinkActive2(subItem.routerLink)"
+              >
+                <mat-icon *ngIf="subItem?.icon" [svgIcon]="subItem?.isCustomIcon ? subItem?.icon : ''">{{ subItem?.isCustomIcon ? "" : subItem?.icon }}</mat-icon>
+                <span class="padding-left-xs menu-text">{{ subItem?.name }}</span>
+              </a>
+            </ng-container>
+          </mat-nav-list>
+        </mat-expansion-panel>
       </ng-container>
+
+      <!-- Template for menu items without subMenu -->
+      <ng-template #singleLink>
+        <ng-container *ngIf="isAllowed(menuItem)">
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && !menuItem.customRouting && !menuItem.fragment && !menuItem.queryParams"
+            [routerLink]="[menuItem.routerLink]"
+            routerLinkActive="ws-active-route-menu"
+            queryParamsHandling="preserve"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem.name }}</span>
+          </a>
+
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && !menuItem.customRouting && menuItem.fragment && !menuItem.queryParams"
+            [routerLink]="'.'"
+            [class.ws-active-route-menu]="isLinkActive(menuItem.key, i)"
+            [fragment]="menuItem.fragment ? menuItem.key : ''"
+            queryParamsHandling="preserve"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem?.name }}</span>
+          </a>
+
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && menuItem.customRouting && !menuItem.queryParams"
+            [routerLink]="getLink(menuItem)"
+            queryParamsHandling="preserve"
+            routerLinkActive="ws-active-route-menu"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem?.name }}</span>
+          </a>
+
+          <a
+            mat-list-item
+            [attr.data-index]="i"
+            (click)="menuClick(menuItem)"
+            *ngIf="menuItem?.enabled && !menuItem.customRouting && !menuItem.fragment && menuItem.queryParams"
+            [routerLink]="menuItem.routerLink"
+            [queryParams]="{ status: menuItem.queryParams }"
+            queryParamsHandling="preserve"
+            [class.ws-active-route-menu]="isLinkActive2(menuItem.routerLink)"
+          >
+            <mat-icon *ngIf="menuItem?.icon" [svgIcon]="menuItem?.isCustomIcon ? menuItem?.icon : ''">{{ menuItem?.isCustomIcon ? "" : menuItem?.icon }}</mat-icon>
+            <span class="padding-left-xs menu-text">{{ menuItem?.name }}</span>
+          </a>
+        </ng-container>
+      </ng-template>
     </ng-container>
   </mat-nav-list>
 </div>

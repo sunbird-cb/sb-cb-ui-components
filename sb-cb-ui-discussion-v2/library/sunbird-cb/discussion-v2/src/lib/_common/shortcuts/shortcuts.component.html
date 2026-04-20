@@ -1,0 +1,27 @@
+<mat-card class="shortcuts-wrapper">
+   <mat-card-header>
+      <mat-card-title class="nodtranslate">Shortcuts</mat-card-title>
+   </mat-card-header>
+   <mat-card-content class="shortcuts-list">
+      <div class="flex flex-col space-y-2">
+         <ng-container *ngFor="let shortcut of data">
+            <a class="flex items-center list-data" [routerLink]="[shortcut?.link]" mat-button>
+               <mat-icon class="mr-2">{{shortcut?.icon}}</mat-icon>
+               <span class="nodtranslate">{{shortcut?.name}}</span>
+            </a>
+         </ng-container>
+         <!-- <a class="flex items-center list-data" mat-button>
+             <mat-icon class="mr-2">bookmark_border</mat-icon>
+             <span>Saved Posts</span>
+          </a>
+          <a  class="flex items-center  list-data" mat-button>
+             <mat-icon class="mr-2">list_alt</mat-icon>
+             <span>Posts By You</span>
+          </a>
+          <a  class="flex items-center list-data" mat-button>
+             <mat-icon class="mr-2">update</mat-icon>
+             <span>Pending Request</span>
+          </a> -->
+      </div>
+   </mat-card-content>
+</mat-card>

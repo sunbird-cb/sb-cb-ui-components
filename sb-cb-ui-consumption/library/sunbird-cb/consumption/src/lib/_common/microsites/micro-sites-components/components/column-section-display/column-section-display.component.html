@@ -1,0 +1,31 @@
+<ng-container *ngIf="filteredData?.length">
+  <ng-container *ngFor="let section of filteredData">
+    <ng-container *ngIf="section?.enabled">
+      <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4"
+              [ngClass]="{'container': section.wrapperClass}">
+        <ng-container *ngFor="let column of section.column">
+          <div id="{{column?.key}}" class="col-span-{{column.colspan || 12}}">
+            <ng-container *ngIf="column?.enabled">
+              <!-- Competency component -->
+              <app-competency 
+                *ngIf="column?.key === 'competency'"
+                [competency]="column"
+                (emptyResponse)="onCompetencyEvent($event)"
+                (telemetryResponse)="onCompetencyTelemetry($event)">
+              </app-competency>
+              
+              <!-- Content strip components -->
+              <app-content-strip
+                *ngIf="column?.key.includes('content')"
+                [data]="{contentStrip: column?.data, sectionKey: section.key}"
+                (viewAllResponse)="onViewAllEvent($event.event, $event.data)"
+                [isEdit]="isEdit"
+                (telemetryResponse)="onContentTelemetry($event)">
+              </app-content-strip>
+            </ng-container>
+          </div>
+        </ng-container>
+      </section>
+    </ng-container>
+  </ng-container>
+</ng-container>

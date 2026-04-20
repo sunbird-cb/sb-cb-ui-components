@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CompetencyPassbookMdoComponent } from './competency-passbook-mdo.component';
 
@@ -6,7 +6,7 @@ describe('CompetencyPassbookMdoComponent', () => {
   let component: CompetencyPassbookMdoComponent;
   let fixture: ComponentFixture<CompetencyPassbookMdoComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CompetencyPassbookMdoComponent ]
     })

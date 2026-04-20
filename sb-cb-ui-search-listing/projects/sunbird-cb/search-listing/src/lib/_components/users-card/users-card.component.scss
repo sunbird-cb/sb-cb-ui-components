@@ -1,0 +1,106 @@
+@import "../../_scss/ws-common";
+@import "../../_scss/ws-vars";
+@import "../../_scss/ws-mixins";
+
+.card-container {
+  height: 175px;
+  width: 280px;
+  border: 1px solid $matCardBorderColor;
+  border-radius: 12px;
+  background: $white;
+}
+
+.all-result-peoples {
+  width: 280px !important;
+  height: 176px !important;
+}
+
+.name-container {
+  padding: 0 $size-m;
+  height: 75px;
+}
+.name-container-inner {
+  height: 65px;
+  box-sizing: border-box;
+}
+
+.connection-name .name {
+  margin-top: 8px !important;
+  margin-bottom: 4px !important;
+  overflow: hidden;
+  word-break: break-word;
+  white-space: initial;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  /* stylelint-disable */
+  font-family: Montserrat;
+  /* stylelint-enable */
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.users-info {
+  /* stylelint-disable */
+  font-family: Lato;
+  /* stylelint-enable */
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.4px;
+  text-align: center;
+  max-width: 18em;
+  overflow: hidden;
+  word-break: break-word;
+  white-space: initial;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+@media screen and (max-width: 576px) {
+  .all-result-peoples {
+    margin: 0 auto;
+    width: 335px !important;
+  }
+
+  .designation {
+    max-width: 18em;
+  }
+}
+
+.verified-icon {
+  color: $snackBarSuccess;
+  vertical-align: sub;
+  height: 14px;
+  width: 14px;
+  font-size: 14px;
+  margin-right: 4px;
+  margin-bottom: 2px;
+  color: #1D8923 !important;
+}
+
+.designation {
+  font-weight: 600 !important;
+  color: $black !important;
+}
+
+.cbpUser{
+  height: 200px !important;
+}
+
+.activation-toggle {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+::ng-deep .theme-igot.day-mode .cbpUser {
+  .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: #1b4ca18a !important;
+  }
+
+  .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #1b4ca1;
+  }
+}

@@ -1,0 +1,81 @@
+<div class="strip-section-header" *ngIf="sectionData && sectionData.strips && sectionData.strips.length > 0">
+  <div class="section-title-container">
+    <span class="section-title" *ngIf="!isEditingTitle">{{ sectionData.strips[0].title || 'Add Section Name' }}</span>
+
+    <div class="title-edit-container" *ngIf="isEditingTitle">
+      <input type="text" class="title-input" [(ngModel)]="tempTitle" (keydown)="onTitleKeydown($event)"
+        (blur)="saveTitle()" placeholder="Enter section name" autofocus maxlength="75">
+      <span class="char-counter">{{tempTitle?.length || 0}}/75</span>
+    </div>
+
+    <button mat-icon-button class="edit-icon-btn" (click)="startEditTitle()" *ngIf="!isEditingTitle">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+    <div class="edit-actions" *ngIf="isEditingTitle">
+      <button mat-icon-button class="save-btn" (click)="saveTitle()" matTooltip="Save">
+        <mat-icon>check</mat-icon>
+      </button>
+      <button mat-icon-button class="cancel-btn" (click)="cancelEdit()" matTooltip="Cancel">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <button mat-button class="btn-common btn-secondary" (click)="openAddTabDialog()">
+      <mat-icon>add</mat-icon>
+      Add Tabs
+    </button>
+
+    <button mat-button class="btn-common btn-secondary" (click)="openAddContentDialog()"
+      [disabled]="sectionData?.strips[0]?.tabs?.length > 0">
+      <mat-icon>add</mat-icon>
+      Add content
+    </button>
+
+    <div class="hide-section-container">
+      <span class="hide-section-label">Enable section</span>
+      <mat-slide-toggle class="section-toggle" [(ngModel)]="tempEnabled"
+        (change)="onToggleSectionVisibility($event)"></mat-slide-toggle>
+    </div>
+
+    <button mat-icon-button class="delete-btn" (click)="onRemoveSection()" matTooltip="Delete Section">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>
+<!-- Tabs Section -->
+<div class="tabs-container" *ngIf="sectionData?.strips[0]?.tabs && sectionData?.strips[0]?.tabs.length > 0">
+  <mat-tab-group>
+    <mat-tab *ngFor="let tab of sectionData?.strips[0]?.tabs; let i = index">
+      <ng-template mat-tab-label>
+        <span class="tab-label-text">{{ tab.label }}</span>
+        <button mat-icon-button (click)="removeTab(i); $event.stopPropagation()" class="tab-remove-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </ng-template>
+      <div class="tab-content">
+        <!-- Show content strip if playlist has been created -->
+        <ng-container
+          *ngIf="sectionData?.strips[0]?.request?.apiUrl && sectionData?.strips[0]?.request?.playlistRead?.type">
+          <sb-uic-content-strip-with-tabs [emitViewAll]="false" [providerId]="providerId" [widgetData]="sectionData"
+            [channnelName]="channelName">
+          </sb-uic-content-strip-with-tabs>
+        </ng-container>
+
+        <!-- Show empty state with add content button if no playlist created yet -->
+        <ng-container
+          *ngIf="!sectionData?.strips[0]?.request?.apiUrl || !sectionData?.strips[0]?.request?.playlistRead?.type">
+          <div class="empty-state">
+            <p>{{ tab.nodataMsg }}</p>
+            <button mat-button class="btn-common btn-secondary" (click)="openAddContentDialog(tab)">
+              <mat-icon>add</mat-icon>
+              Add content to this tab
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

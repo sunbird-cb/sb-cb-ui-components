@@ -1,0 +1,31 @@
+<div class="block md:hidden">
+  <div *ngIf="myProgressData?.enabled">
+    <sb-uic-user-progress 
+      [layoutType]="'web'" 
+      [mobileHeight]="false"
+      [objectData]="myProgressData?.data"
+      [rootOrgId]="rootOrgId">
+    </sb-uic-user-progress>
+  </div>
+</div>
+
+<div class="block md:hidden">
+  <div *ngIf="speakersData?.enabled">
+    <sb-uic-speakers 
+      [layoutType]="'web'" 
+      [mobileHeight]="false"
+      [objectData]="speakersData?.data">
+    </sb-uic-speakers>
+  </div>
+</div>
+
+<div class="block md:hidden">
+  <div *ngIf="leaderboardData?.enabled">
+    <sb-uic-mdo-leaderboard 
+      [object]="leaderboardData?.data" 
+      [slwConfig]="slwConfig"
+      (tabClicked)="onTabClicked($event)" 
+      [orgId]="orgId">
+    </sb-uic-mdo-leaderboard>
+  </div>
+</div>

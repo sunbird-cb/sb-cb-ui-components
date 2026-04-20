@@ -1,0 +1,331 @@
+::ng-deep {
+  .assessment-basic-info {
+    .mat-form-field {
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .mat-form-field-subscript-wrapper {
+        position: relative;
+        margin-top: 4px;
+      }
+
+      .mat-form-field-outline {
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+.assessment-basic-info {
+  padding: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 10px;
+
+  .form-section {
+    margin-bottom: 15px;
+  }
+
+  .field-label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+
+    .required {
+      color: #f44336;
+    }
+
+    .duration-format {
+      font-weight: 400;
+      font-size: 12px;
+      color: #666;
+    }
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .hint-text {
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .field-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+
+    .char-count {
+      color: #666;
+      font-size: 12px;
+    }
+  }
+
+  .assessment-type-group {
+
+    mat-radio-button {
+      padding: 10px 20px;
+      border: 2px solid #ccc;
+      background: #fff;
+      border-radius: 30px;
+
+      &.mat-mdc-radio-checked {
+        border-color: #1B4CA1;
+        background-color: #f5f9ff;
+      }
+    }
+  }
+
+  .score-cutoff-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    .radio-option {
+      padding: 12px 0;
+
+      mat-radio-button {
+        .radio-label {
+          font-weight: 500;
+          font-size: 14px;
+          color: #333;
+        }
+      }
+
+      .radio-description {
+        color: #0009;
+        font-size: 12px;
+        line-height: 1.4;
+        margin: 5px 0 0 0;
+      }
+    }
+  }
+
+  .form-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    .flex-grow {
+      flex: 1;
+      min-width: 300px;
+    }
+  }
+
+  .duration-inputs {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+
+    .duration-field {
+      width: 65px;
+      position: relative;
+
+      .mat-form-field-subscript-wrapper {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+      }
+
+      input {
+        text-align: center;
+
+        /* Hide spinner buttons */
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+
+        &[type=number] {
+          appearance: textfield;
+          -moz-appearance: textfield;
+        }
+      }
+    }
+
+    .duration-separator {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      padding: 0 2px;
+      margin-top: 10px;
+    }
+  }
+
+  .info-icon {
+    font-size: 18px !important;
+    height: 18px !important;
+    width: 18px !important;
+    vertical-align: middle;
+    color: #666;
+    cursor: default;
+    margin-left: 4px;
+  }
+
+  .duration-error {
+    display: block;
+    color: #f44336;
+    font-size: 12px;
+    margin-top: -10px;
+  }
+
+  .section-detail-container{
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid rgba(0, 0, 0, 0.1607843137);
+    background: #F6F8FB;
+    border-radius: 4px;
+  }
+
+  .sections-container {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+
+    .section-tabs-row {
+      margin-bottom: 20px;
+    }
+
+    .section-tabs {
+      .section-tab {
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        background: #fff;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: #f0f0f0;
+        }
+
+        &.active {
+          background-color: #1b4ca129 !important;
+          border: 1px solid #1B4CA1;
+          color: #1b4ca1 !important;
+        }
+      }
+    }
+
+    .paragraph-toggle {
+      font-size: 14px;
+    }
+  }
+
+  .difficulty-table {
+    width: 100%;
+
+    .table-header {
+      display: flex;
+      width: 100%;
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .table-row {
+      display: flex;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .label-col {
+      width: 100px;
+      flex-shrink: 0;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .input-col {
+      flex: 1;
+    }
+
+    .multiply-col,
+    .equals-col {
+      width: 40px;
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-col {
+      width: 80px;
+      flex-shrink: 0;
+      text-align: center;
+
+      .result-value {
+        display: inline-block;
+        background: #e8eef3;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 500;
+        min-width: 40px;
+      }
+    }
+
+    .totals-row {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+
+      .total-badge {
+        background: #37474f;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 14px;
+
+        strong {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  .question-weightage-settings {
+    margin-top: 20px;
+
+    .settings-row {
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+
+      .setting-field {
+        flex: 1;
+        min-width: 200px;
+        margin-bottom: 0;
+      }
+    }
+
+    .yes-no-group {
+      mat-radio-button {
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        background: #fff;
+        border-radius: 30px;
+
+        &.mat-mdc-radio-checked {
+          border-color: #1B4CA1;
+          background-color: #f5f9ff;
+        }
+      }
+    }
+  }
+}

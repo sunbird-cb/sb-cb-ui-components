@@ -1,0 +1,22 @@
+<div class="flex justify-between dialog-heading items-center">
+  <h2 mat-dialog-title class="mb-0">Access Control Guide</h2>
+  <button mat-icon-button class="close-button" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+<div mat-dialog-content>
+  <div class="video-wrapper">
+    <video [src]="accessControlGuideConfig?.instructionVideoPath" class="w-full h-full" autoplay controls></video>
+  </div>
+
+  <div class="guide-information">
+    <mat-tab-group dynamicHeight mat-stretch-tabs="false" mat-align-tabs="start">
+      <mat-tab label="Summary" *ngIf="accessControlGuideConfig?.canShowSummaryTab">
+        <div class="about-guide text-xs text-dark py-4">
+          {{ accessControlGuideConfig?.summaryText || "" }}
+        </div>
+      </mat-tab>
+      <!-- <mat-tab label="Transcript" *ngIf="accessControlGuideConfig?.canShowTranscriptTab">No data yet </mat-tab> -->
+    </mat-tab-group>
+  </div>
+</div>

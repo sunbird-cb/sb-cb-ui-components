@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core'
-import { MatDialogRef } from '@angular/material'
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog'
 import { AuthKeycloakService } from '../../services/auth-keycloak.service'
 import { ConfigurationsService } from '../../services/configurations.service'
 import { UtilityService } from '../../services/utility.service'
@@ -29,7 +29,7 @@ export class LogoutComponent implements OnInit {
       const lang = localStorage.getItem('websiteLanguage') || null!
       this.translate.use(lang)
     }
-   }
+  }
 
   ngOnInit() {
     if (this.configSvc.restrictedFeatures) {
@@ -54,6 +54,7 @@ export class LogoutComponent implements OnInit {
       localStorage.removeItem('websiteLanguage')
     }
     // this.authSvc.logout()
+    this.clearCookies()
     this.authSvc.force_logout()
     if (localStorage.getItem('faq')) {
       localStorage.removeItem('faq')
@@ -67,6 +68,55 @@ export class LogoutComponent implements OnInit {
     if (localStorage.getItem('motivationalMessage')) {
       localStorage.removeItem('motivationalMessage')
     }
+    if (localStorage.getItem('microSiteRedirectionData')) {
+      localStorage.removeItem('microSiteRedirectionData')
+    }
+  }
+  clearCookies() {
+    if (!document) {
+      // document not available in some environments; do not break logout
+      // eslint-disable-next-line no-console
+      console.warn('Document is not available; skipping cookie clear')
+      return
+    }
+    if (!document.cookie) {
+      // no cookies to clear; silently continue so logout isn't blocked
+      return
+    }
+
+    const cookies = document.cookie.split(';')
+    const hostname = window.location.hostname || ''
+    const domainParts = hostname.split('.')
+    const expire = 'Thu, 01 Jan 1970 00:00:00 GMT'
+
+    cookies.forEach((c) => {
+      try {
+        const eqPos = c.indexOf('=')
+        const name = eqPos > -1 ? c.substr(0, eqPos).trim() : c.trim()
+        if (!name) {
+          return
+        }
+        // delete for path /
+        try {
+          document.cookie = `${name}=;expires=${expire};path=/`
+        } catch (e) {
+          // ignore and continue
+        }
+        // attempt deleting for parent domains as well
+        for (let i = 0; i < domainParts.length; i++) {
+          const domain = domainParts.slice(i).join('.')
+          try {
+            document.cookie = `${name}=;expires=${expire};path=/;domain=${domain}`
+          } catch (err) {
+            // ignore domain-specific failures and continue
+          }
+        }
+      } catch (err) {
+        // ignore per-cookie parsing errors and continue
+        // eslint-disable-next-line no-console
+        console.warn('Error clearing cookie', c, err)
+      }
+    })
   }
 
   get isDownloadable() {

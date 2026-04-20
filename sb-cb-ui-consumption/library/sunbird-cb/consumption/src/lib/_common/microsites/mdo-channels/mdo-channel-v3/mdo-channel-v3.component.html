@@ -1,0 +1,24 @@
+<ws-widget-btn-page-back [widgetData]="{ url: 'home', titles: navigationTitles }"></ws-widget-btn-page-back>
+
+<!-- Action Items Section -->
+<app-action-items [isEdit]="isEdit" [hasUnsavedChanges]="hasUnsavedChanges" [slwConfiguration]="slwConfiguration"
+  [isStateLearningWeekEnabled]="slwConfiguration?.enabled" [userRedirData]="userRedirectionData"
+  (toggleSLW)="handleToggleSLW()" (configureSLW)="handleConfigureSLW($event)" (saveChanges)="saveChanges()"
+  (publishChanges)="publishChanges()" (userRedirectionToggle)="handleUserRedirectionToggle($event)"></app-action-items>
+<div class="container-fluid" id="section-micro-sites">
+  <ng-container *ngFor="let section of activeSections; trackBy: trackByFn">
+    <section [id]="section.key" class="w-full grid grid-cols-12 gap-4 {{section.customClass}}"
+      [ngClass]="{'container': section.wrapperClass}">
+      <ng-container *ngFor="let column of section.column; trackBy: trackByFn">
+        <div [id]="column.key" class="col-span-{{column.colspan || 12}}">
+          <ng-container *ngIf="getSectionComponent(column.key)" [ngComponentOutlet]="getSectionComponent(column.key)"
+            [ngComponentOutletInjector]="createInjector(section, column)">
+          </ng-container>
+        </div>
+      </ng-container>
+    </section>
+  </ng-container>
+</div>
+<!-- <div *ngIf="isLoading" class="loader-overlay">
+  <mat-spinner></mat-spinner>
+</div> -->

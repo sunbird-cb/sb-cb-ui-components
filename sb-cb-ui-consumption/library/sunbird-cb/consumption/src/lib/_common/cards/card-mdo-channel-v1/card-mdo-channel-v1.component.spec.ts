@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CardMdoChannelV1Component } from './card-mdo-channel-v1.component';
 
@@ -6,7 +6,7 @@ describe('CardMdoChannelV1Component', () => {
   let component: CardMdoChannelV1Component;
   let fixture: ComponentFixture<CardMdoChannelV1Component>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CardMdoChannelV1Component ]
     })

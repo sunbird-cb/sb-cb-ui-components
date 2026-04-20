@@ -1,0 +1,38 @@
+<div class="topic-card-wrapper cursor-pointer flex flex-col items-start justify-start p-4 bg-white shadow-md rounded-lg"
+    *ngIf="!isLoading">
+    <div class="mb-4 topic-card-icon">
+        <img src="/assets/instances/eagle/app_logos/Karmayogi_logo_icon.svg" alt="">
+    </div>
+    <div class="flex-grow w-full topic-name">
+        <h3 class="text-blue-700 break-words font-medium text-lg mb-2 nodtranslate" dV2MultiLineElipsis>{{ topicTitle }}
+        </h3>
+    </div>
+    <div class="text-gray-600 text-sm topic-details self-end nodtranslate">
+        {{ topicCommunityCount }}
+        <span class="nodtranslate">{{ topicCommunityCount | plural:'community':'Communities' }}</span>
+    </div>
+</div>
+<div class="topic-card-wrapper flex flex-col items-start justify-start p-4 bg-white shadow-md rounded-lg"
+    *ngIf="isLoading">
+    <div class="mb-4 topic-card-icon">
+        <d-v2-widget-skeleton-loader [width]="'27px'" [height]="'24px'"
+            [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+    </div>
+    <div class="flex-grow w-full topic-name">
+        <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'12px'"
+            [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+
+        <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'12px'"
+            [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+
+        <d-v2-widget-skeleton-loader [width]="'100%'" [height]="'12px'"
+            [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+
+        <d-v2-widget-skeleton-loader [width]="'80%'" [height]="'12px'"
+            [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+    </div>
+    <div class="text-gray-600 text-sm topic-details self-end">
+        <d-v2-widget-skeleton-loader [width]="'66px'" [height]="'12px'"
+            [bindingClass]="'flex rounded mb-1'"></d-v2-widget-skeleton-loader>
+    </div>
+</div>

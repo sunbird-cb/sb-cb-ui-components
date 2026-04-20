@@ -19,6 +19,7 @@ export namespace NsInstanceConfig {
         allowIframe: boolean
       }[]
     }
+    eventBufferTimeInMinutes?: any
     appSetup: boolean
     chatBotUrl: string
     defaultFontsize: string
@@ -61,6 +62,15 @@ export namespace NsInstanceConfig {
     forgotPasswordConfig?: IForgotPassword
     hubs: IHubs[]
     courseContentPath?: string
+    competency: ICompetencyKeys
+  }
+
+  export interface ICompetencyKeys {
+    vKey: string
+    vCompetencyArea: string
+    vCompetencyAreaDescription: string
+    vCompetencyTheme: string
+    vCompetencySubTheme: string
   }
 
   export interface IForgotPassword {

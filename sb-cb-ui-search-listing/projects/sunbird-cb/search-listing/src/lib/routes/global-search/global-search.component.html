@@ -1,0 +1,17 @@
+<div class="container-balanced margin-top-l margin-bottom-xl">
+    <div [style.display]="!userId ? 'block' : 'none'">
+        <ng-container *ngIf="searchParam && searchParam.query">
+            <ws-app-learn-search [userValue]="userValue" [searchQuery]="searchParam" [paramFilters]="searchparamFilters"
+            [filtersPanel]="filtersPanel" (queryParamChange)="filterSelectcategory($event)" (updateUserEvent)="updateUserDetails($event)">
+            </ws-app-learn-search>
+        </ng-container>
+    </div>
+    <ng-container *ngIf="applicationName === 'CBP Portal' && userId">
+        <div class="cbp-user">
+            <ws-auth-add-users-form-meta [userId]="userId" (updateEvent)="updateUserStatus($event)"></ws-auth-add-users-form-meta>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="applicationName !== 'CBP Portal' && userId">
+        <ws-app-user-update [userId]="userId" (updateEvent)="updateUserStatus($event)"></ws-app-user-update>
+    </ng-container>
+</div>

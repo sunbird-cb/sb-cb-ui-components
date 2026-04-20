@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Subscription } from 'rxjs'
-import { NsContent, NsDiscussionForum, WidgetContentService } from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
+import { NsContent, NsDiscussionForum, WidgetContentService } from '@sunbird-cb/collection'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ActivatedRoute } from '@angular/router'
-import { EventService, WsEvents } from '@ws-widget/utils'
+import { EventService, WsEvents } from '@sunbird-cb/utils'
 import { ViewerUtilService } from '../../viewer-util.service'
 
 @Component({
@@ -18,7 +18,7 @@ export class WebModuleComponent implements OnInit, OnDestroy {
   forPreview = window.location.href.includes('/author/') || window.location.href.includes('?preview=true')
   isFetchingDataComplete = false
   isErrorOccured = false
-  webmoduleData: NsContent.IContent | null = null
+  webmoduleData: NsContent.IContent | any | null = null
   oldData: NsContent.IContent | null = null
   alreadyRaised = false
   webmoduleManifest: any
@@ -48,9 +48,9 @@ export class WebModuleComponent implements OnInit, OnDestroy {
           if (this.webmoduleData) {
             this.formDiscussionForumWidget(this.webmoduleData)
           }
-          if (!this.forPreview && this.webmoduleData && this.webmoduleData.artifactUrl.indexOf('content-store') >= 0) {
-            await this.setS3Cookie(this.webmoduleData.identifier)
-          }
+          // if (!this.forPreview && this.webmoduleData && this.webmoduleData.artifactUrl.indexOf('content-store') >= 0) {
+          //   await this.setS3Cookie(this.webmoduleData.identifier)
+          // }
           if (
             this.webmoduleData &&
             (this.webmoduleData.mimeType === NsContent.EMimeTypes.WEB_MODULE ||
@@ -166,13 +166,13 @@ export class WebModuleComponent implements OnInit, OnDestroy {
     })
   }
 
-  private async setS3Cookie(contentId: string) {
-    await this.contentSvc
-      .setS3Cookie(contentId)
-      .toPromise()
-      .catch(() => {
-        // throw new DataResponseError('COOKIE_SET_FAILURE')
-      })
-    return
-  }
+  // private async setS3Cookie(contentId: string) {
+  //   await this.contentSvc
+  //     .setS3Cookie(contentId)
+  //     .toPromise()
+  //     .catch(() => {
+  //       // throw new DataResponseError('COOKIE_SET_FAILURE')
+  //     })
+  //   return
+  // }
 }

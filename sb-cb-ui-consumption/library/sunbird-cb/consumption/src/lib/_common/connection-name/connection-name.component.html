@@ -1,0 +1,18 @@
+<div wsWidgetTooltipDirective>
+  <span class="connection-name-row">
+    <span class="mat-body-1 name">{{useravatarName}}</span>
+    <span class="flex items-center justify-center gap-1">
+      <ng-container *ngIf="showBadge">
+        <img class="profile-badge" src="fusion-assets/images/profile-badge.png" height="18" alt="badge">
+      </ng-container>
+      <ng-container *ngIf="showMentor">
+        <span class="mentor">Mentor</span>
+      </ng-container>
+    </span>
+  </span>
+  <ng-template #tooltipTemplate>
+    <div class="tooltip">
+      <sb-uic-connection-hover-card [hoverUser]="hoverUser"></sb-uic-connection-hover-card>
+    </div>
+  </ng-template>
+</div>

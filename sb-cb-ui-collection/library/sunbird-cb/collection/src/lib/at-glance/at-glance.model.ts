@@ -9,9 +9,11 @@ export namespace IAtGlanceComponentData {
     contentId: string,
     counts: ICounts
     customLink?: string
-    competencies?: any,
-    viewContentLink?: any,
-    userRole?: any,
+    primaryCategory: string
+    showCopyContent?: boolean
+    programDuration?: string
+    resourceCategory?: string
+    courseCategory?: string
   }
 
   export interface ICounts {
@@ -28,6 +30,8 @@ export namespace IAtGlanceComponentData {
     webModule: number
     webPage: number
     youtube: number
+    practiceAssessment: number
+    finalAssessment: number
     [key: string]: number
   }
 }

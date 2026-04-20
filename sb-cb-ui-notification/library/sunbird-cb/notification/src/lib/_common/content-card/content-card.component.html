@@ -1,0 +1,84 @@
+<ng-container *ngIf="!skeletonLoader">
+
+  <div class="card-container mat-focus-indicator mr-5 padding-remove cursor-pointer">
+    <div class="display-contents">
+      <a (click)="getRedirectUrlData(content); $event.stopPropagation()" role="link" i18n-aria-label>
+        <div class="min-top">
+          <div style="position: relative; z-index: 1;">
+            <ng-container>
+              <!-- <img mat-card-image [src]="content.posterImage | pipePublicURL" loading="lazy"
+                class="card-img ws-mat-primary-lite-background margin-remove"
+                [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="content.name" /> -->
+            </ng-container>
+            <div class="duration-box right-corner" *ngIf="content?.duration > 0 && !(content?.programDuration > 0)">
+              <mat-icon class="mat-icon main_icon mr-1 nodtranslate">access_time</mat-icon>
+              <!-- <span class=" ws-mat-white-text duration nodtranslate">
+                {{ (content?.duration || 120)| pipeDurationTransform: 'hms' }}
+              </span> -->
+            </div>
+          </div>
+          <div class="padding-m">
+            <div class="course_widget flex margin-remove">
+              <div class="flex flex-end course_v2">
+                <mat-icon
+                  class="mat-icon main_icon ws-mat-default-text margin-right-xs nodtranslate">video_library</mat-icon>
+                <div class="ws-mat-black60-text font-normal mat-caption ng-star-inserted">
+                  <span class="content-type-class nodtranslate ng-star-inserted">
+                    {{ content?.primaryCategory | titlecase }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div [id]="'m-c-'+ content?.identifier"
+              class="mat-subheading-1 title-text ws-mat-text-block-fade-gradient nodtranslate">
+              {{ content.name }}
+            </div>
+            <div class="flex w-full flex-wrap flex-middle">
+              <!-- <div class="course_logo_box" *ngIf="content?.creatorLogo">
+                <img [src]="content?.creatorLogo | pipePublicURL" loading="lazy" class="source-icon"
+                  [alt]="content?.sourceName + '_' + content?.identifier" />
+              </div> -->
+              <div class="course_logo_box" *ngIf="!content?.creatorLogo">
+                <img [src]="defaultSLogo" loading="lazy" class="source-icon"
+                  [alt]="content?.sourceName + '_' + content?.identifier" />
+              </div>
+              <span class="org-text nodtranslate">By&nbsp; {{ (content?.organisation &&
+                content?.organisation[0]) ? content?.organisation[0] : 'Karmayogi Bharat'
+                }}</span>
+            </div>
+            <div class="flex flex-middle rating-session margin-top-m">
+              <div class="flex flex-middle" *ngIf="content?.avgRating">
+                <mat-icon class="mr-1">star</mat-icon>
+                <span>{{content.avgRating}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</ng-container>
+
+<div *ngIf="skeletonLoader">
+  <div class="card-container mat-focus-indicator mr-5 padding-remove cursor-pointer">
+    <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'100%'"
+      [height]="'140px'"></sb-uic-skeleton-loader>
+    <div class="padding-m">
+      <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'100px'"
+        [height]="'26px'"></sb-uic-skeleton-loader>
+      <div class="my-4">
+        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'100%'"
+          [height]="'26px'"></sb-uic-skeleton-loader>
+      </div>
+      <div class="my-4">
+        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'100%'"
+          [height]="'48px'"></sb-uic-skeleton-loader>
+      </div>
+      <div class="my-2">
+        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'26px'"
+          [height]="'26px'"></sb-uic-skeleton-loader>
+      </div>
+    </div>
+  </div>
+</div>

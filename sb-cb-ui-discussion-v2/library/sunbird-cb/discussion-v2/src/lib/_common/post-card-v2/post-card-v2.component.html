@@ -1,0 +1,307 @@
+<div class="relative" *ngIf="post.status !== 'inactive'" [ngClass]="{ 'card-l1' : cardType=== 'topLevel',
+'suspended': post && post.status === 'suspended', 'disabled': !userJoinedCommunity}">
+    <div class="" [ngClass]="{
+    'card-l2 mb-3' : cardType=== 'reply',  'card-l3 mb-3' : cardType=== 'reply-l2'}">
+        <ng-container *ngIf="post?.isReported">
+            <ng-container [ngTemplateOutlet]="reportedMask" [ngTemplateOutletContext]="post"></ng-container>
+        </ng-container>
+        <ng-container *ngIf="post?.communityId && showCommunity">
+            <div class="community-name-wrapper inline-flex items-center max-w-full mb-3 cursor-pointer"
+                (click)="communityClick(post.communityId)">
+                <span class="whitespace-nowrap pl-3 flex-1 nodtranslate">Posted in</span>
+                <span
+                    class="community-name ml-1 pr-2 nodtranslate">@{{userJoinedCommunityObject[post?.communityId]}}</span>
+            </div>
+        </ng-container>
+        <div class="flex user-info">
+            <div>
+                <div class="mr-1 md:mr-4">
+                    <d-v2-avatar-photo [size]="levelConfig?.cardConfig?.avatarPhoto?.size"
+                        [name]="post?.createdBy?.first_name" [photoUrl]="post?.createdBy?.user_profile_img_url" [color]="
+                        post?.createdBy?.first_name === loogedInUserProfile?.firstName ?
+                        levelConfig?.cardConfig?.avatarPhoto?.color || '#006400' : '#000'
+                    ">
+                    </d-v2-avatar-photo>
+                </div>
+            </div>
+
+            <div class="flex flex-1 items-start justify-center  flex-col">
+                <div class="flex items-center">
+                    <span class="mat-body-1 bold mr-1 nodtranslate"> {{post?.createdBy?.first_name}} </span>
+                    <mat-icon class="icon verified mr-1"
+                        *ngIf="post?.createdBy?.userProfileStatus?.toLowerCase() === 'verified'" i18n-aria-label
+                        aria-label="verified">check_circle</mat-icon>
+                </div>
+                <div class="ws-mat-black60-text mat-body-2 nodtranslate"
+                    *ngIf="post?.createdBy?.designation && (post?.createdBy?.designation !== 'null') ">
+                    {{post?.createdBy?.designation}}
+                </div>
+            </div>
+            <span class="mat-body-2">
+                <span class="mr-1 nodtranslate">{{post?.createdOn === post?.updatedOn?'':'(Edited)'}}</span>
+                <span class="mat-body-2 nodtranslate">{{post?.updatedOn | pipeRelativeTime}}</span>
+            </span>
+
+            <div>
+                <mat-icon class="icon cursor-pointer" aria-hidden="false" i18n-aria-label [matMenuTriggerFor]="cardMenu"
+                    aria-label="more">more_vertical</mat-icon>
+            </div>
+        </div>
+        <div class="comment mb-1 mt-2 ">
+            <!-- <div class="flex mb-2">
+                <div class="ws-mat-black-text mat-body-1"
+                    [innerHTML]="post?.title">
+                </div>
+            </div> -->
+            <ng-container *ngIf="!editMode">
+                <ng-container *ngIf="post?.taggedUser && post?.taggedUser.length">
+                    <span class="mr-2 mb-2 font-semibold ws-mat-default-text nodtranslate">Replying to
+                        <span class="nodtranslate" *ngFor="let user of post?.taggedUser">{{user?.first_name}}</span>
+                    </span>
+                </ng-container>
+                <ng-container *ngIf="post?.parentDiscussionId">
+                    <div class="comment-txt mb-1 mat-body-1 ws-mat-black-text description {{getEditorTextLength(post?.description) > viewMoreLength && !post?.expanded ? 'expand' : 'un-expand'}}"
+                        [innerHTML]="post?.description | mentionHighlight">
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!post?.parentDiscussionId">
+                    <div class="comment-txt mb-1 mat-body-1 ws-mat-black-text description {{getEditorTextLength(post?.description) > viewMoreLength && !post?.expanded ? 'expand' : 'un-expand'}}"
+                        [innerHTML]="post?.description">
+                    </div>
+                </ng-container>
+
+                <div class="more-or-less text-right" *ngIf="getEditorTextLength(post?.description) > viewMoreLength">
+                    <div class="cursor-pointer nodtranslate" (click)="viewMoreOrLess(post)" *ngIf="!post?.expanded">View
+                        more</div>
+                    <div class="cursor-pointer nodtranslate" (click)="viewMoreOrLess(post)" *ngIf="post?.expanded">View
+                        less
+                    </div>
+                </div>
+
+
+                <!-- IF image  -->
+                <ng-container *ngIf="post?.categoryType?.includes('image')">
+                    <div class="media media-full-width nodtranslate"
+                        *ngIf="post?.mediaCategory && post?.mediaCategory?.image">
+                        <d-v2-image-sliders [title]="'Images'" [imageUrls]="post?.mediaCategory?.image"
+                            [styleData]="levelConfig?.cardConfig?.sliderData?.styleData"></d-v2-image-sliders>
+                    </div>
+                </ng-container>
+                <!-- IF Doc  -->
+                <ng-container *ngIf="post?.categoryType?.includes('document')">
+                    <div class="media nodtranslate" *ngIf="post?.mediaCategory && post?.mediaCategory?.document">
+                        <div *ngFor="let doc of post?.mediaCategory?.document"
+                            class="doc-item flex items-center gap-2 mb-2 nodtranslate">
+                            <mat-icon class="doc-icon" [ngClass]="{
+                                'pdf-icon': getFileExtension(doc) === 'pdf',
+                                'doc-icon': getFileExtension(doc) === 'doc',
+                                'docx-icon': getFileExtension(doc) === 'docx'
+                            }">
+                                {{getFileIcon(doc)}}
+                            </mat-icon>
+                            <a [href]="doc" target="_blank" rel="noopener noreferrer"
+                                class="doc-name doc-link nodtranslate" (click)="openDocument($event, doc)">
+                                {{getFileName(doc)}}
+                            </a>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="post?.categoryType?.includes('link')">
+                    <div class="media" *ngIf="post?.mediaCategory && post?.mediaCategory?.link">
+                        <div *ngFor="let linkUrl of post?.mediaCategory?.link"
+                            class="doc-item flex items-center gap-2 mb-2">
+                            <mat-icon class="doc-icon">link</mat-icon>
+                            <a [href]="linkUrl" target="_blank" rel="noopener noreferrer"
+                                class="doc-name doc-link nodtranslate">
+                                {{linkUrl}}
+                            </a>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="editMode">
+                <d-v2-new-post [type]="levelConfig?.type" [config]="levelConfig?.newPostSection"
+                    [postsListconfig]="cardConfig" (newReply)="updateRepliesData($event)"
+                    (newComment)="newCommentEvent($event)" [userJoinedCommunity]="userJoinedCommunity"
+                    (editEvents)="editEventsHandler($event)" [community]="community" [editMode]="true" [post]="post"
+                    [parentPost]="parentPost">
+                </d-v2-new-post>
+            </ng-container>
+        </div>
+        <div class="mt-2 mb-4  h-divider"></div>
+        <div class="actions" *ngIf="levelConfig?.cardConfig?.showActions">
+            <div class="flex">
+                <ng-container *ngIf="levelConfig?.cardConfig?.actions?.like?.show">
+                    <div class="mr-4 cursor-pointer circleBtn" (click)="likeUnlikeComment(post)">
+                        <mat-icon class="icon like-icon mr-2" aria-hidden="false" i18n-aria-label
+                            [ngClass]="{'user-liked': post.isLiked}"
+                            aria-label="Fail">{{levelConfig.cardConfig.actions.like.icon}}</mat-icon>
+                        <span class="nodtranslate" *ngIf="levelConfig?.cardConfig?.actions?.like?.showCount">
+                            {{(post?.upVoteCount && post?.upVoteCount) || 0}}
+                        </span>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="levelConfig?.cardConfig?.actions?.comments?.show && levelConfig.replyLevelRef">
+                    <div class="mr-4 cursor-pointer circleBtn" (click)="expandReplyComment()">
+                        <mat-icon *ngIf="!data.replyToggle" class="icon mr-1" aria-hidden="false" i18n-aria-label
+                            aria-label="Dropdown-open">arrow_drop_down</mat-icon>
+                        <mat-icon *ngIf="data.replyToggle" class="icon mr-1" aria-hidden="false" i18n-aria-label
+                            aria-label="Dropdown-close">arrow_drop_up</mat-icon>
+                        <mat-icon class="icon mr-2" aria-hidden="false" i18n-aria-label
+                            *ngIf="levelConfig?.cardConfig?.actions?.comments?.show"
+                            aria-label="Fail">{{levelConfig?.cardConfig?.actions?.comments?.icon}}</mat-icon>
+                        <span class="nodtranslate mr-1 mat-body-1 commentCount"
+                            *ngIf="levelConfig?.cardConfig?.actions?.comments?.showCount">
+                            ({{fetchedSearchData?.totalCount || (replyDataCopy?.length) || 0}})
+                        </span>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="levelConfig?.cardConfig?.actions?.comments?.show && !levelConfig.replyLevelRef">
+                    <div class="mr-4 cursor-pointer circleBtn" (click)="data.replyToggle = !data.replyToggle">
+                        <mat-icon class="icon mr-2 reply-icon" aria-hidden="false" color="#1B4CA1" i18n-aria-label
+                            *ngIf="levelConfig?.cardConfig?.actions?.comments?.iconDisplay"
+                            aria-label="Fail">{{levelConfig?.cardConfig?.actions?.comments?.icon}}</mat-icon>
+                        <span class="nodtranslate">
+                            Reply
+                        </span>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="levelConfig?.cardConfig?.actions?.bookmark?.show">
+                    <div class=" flex bookmarkDiv cursor-pointer" *ngIf="!post.isBookmarked"
+                        (click)="bookmark(true, post)">
+                        <mat-icon role="button" aria-hidden="false" aria-label="bookmark"
+                            class="mat-icon notranslate icon material-icons mat-ligature-font mat-icon-no-color">
+                            bookmark_outline
+                        </mat-icon>
+                    </div>
+                    <div class=" flex bookmarkDiv cursor-pointer" *ngIf="post.isBookmarked"
+                        (click)="bookmark(false, post)">
+                        <mat-icon role="button" aria-hidden="false" aria-label="bookmark"
+                            class="mat-icon notranslate icon material-icons mat-ligature-font mat-icon-no-color bookmarked-icon">
+                            bookmark
+                        </mat-icon>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <ng-container *ngIf="levelConfig?.cardConfig?.actions?.comments?.show">
+            <div *ngIf="data.replyToggle" class="mt-4 repliesSection">
+                <div class="mb-4">
+                    <d-v2-new-post [config]="nextLevelConfig?.newPostSection" [community]="community" [post]="post"
+                        [postsListconfig]="cardConfig" [type]="nextLevelConfig?.type"
+                        (newComment)="newCommentEvent($event)" [userJoinedCommunity]="userJoinedCommunity"
+                        [hierarchyPath]="[post?.discussionId]" [parentPost]="parentPost">
+                    </d-v2-new-post>
+                </div>
+            </div>
+        </ng-container>
+
+    </div>
+    <ng-container *ngIf="levelConfig?.cardConfig?.actions?.comments?.show">
+        <div class="repliesSection mt-4 flex flex-col gap-4" *ngIf="data.replyToggle"
+            [ngClass]="{'pl-6': levelConfig?.cardConfig?.childrenIndented}">
+            <ng-container *ngIf="replyDataCopy && replyDataCopy?.length > 0 && !loading; else noReplies">
+                <ng-container *ngIf="!loading">
+                    <ng-container *ngFor="let reply of fetchedReplyData">
+                        <d-v2-post-card-v2 [cardType]="nextLevelConfig?.cardConfig?.cardType" [community]="community"
+                            [hierarchyPath]="hierarchyPath" [cardConfig]="cardConfig"
+                            [id]="'post-' + post?.discussionId" [type]="nextLevelConfig?.type" [parentPost]="post"
+                            [post]="reply" [replyData]="reply[nextLevelConfig?.childrenKey]"
+                            [userJoinedCommunity]="userJoinedCommunity" (likeUnlikeData)="likeUnlikeEvent($event)"
+                            (newComment)="newCommentEvent($event, nextLevelConfig?.cardConfig?.cardType)"
+                            (newReply)="updateRepliesData($event)" [showCommunity]="false" [levelKey]="nextLevel"
+                            [currentLevel]="nextNestingLevel">
+                        </d-v2-post-card-v2>
+                    </ng-container>
+                </ng-container>
+                <ng-container *ngIf="fetchedSearchData?.totalCount > fetchedReplyData?.length && !loadingMore">
+                    <div class="load-more-comments  my-4">
+                        <button mat-flat-button class="w-full underline nodtranslate" (click)="loadMoreAnswers()">Load
+                            More</button>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="loading || loadingMore">
+                <ng-container [ngTemplateOutlet]="skeletonLoader"></ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
+
+
+
+</div>
+
+<ng-template #noReplies>
+    <ng-container *ngIf="!loading">
+        <div class="flex flex-1 items-center justify-center  justify-center nodtranslate">
+            No comments found!
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #skeletonLoader>
+    <div class="skeleton-loader mb-4">
+        <div class="flex flex-col gap-4 p-4 rounded-md bg-white">
+
+            <div class=" flex gap-4 items-center bg-white">
+                <d-v2-widget-skeleton-loader [width]="'48px'" [height]="'48px'"
+                    [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+                <div class="flex flex-1 flex-col gap-2">
+                    <d-v2-widget-skeleton-loader [width]="'50%'" [height]="'20px'"
+                        [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+                    <d-v2-widget-skeleton-loader [width]="'40%'" [height]="'18px'"
+                        [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+                </div>
+                <d-v2-widget-skeleton-loader [width]="'64px'" [height]="'20px'"
+                    [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+            </div>
+            <div>
+                <d-v2-widget-skeleton-loader class="w-full" [width]="'100%'" [height]="'48px'"
+                    [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+            </div>
+            <div>
+                <d-v2-widget-skeleton-loader class="w-full" [width]="'100%'" [height]="'260px'"
+                    [bindingClass]="'flex rounded'"></d-v2-widget-skeleton-loader>
+            </div>
+            <div class="flex">
+                <d-v2-widget-skeleton-loader class=" mr-4" [width]="'64px'" [height]="'48px'"
+                    [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+                <d-v2-widget-skeleton-loader class=" mr-4" [width]="'64px'" [height]="'48px'"
+                    [bindingClass]="'flex rounded-full'"></d-v2-widget-skeleton-loader>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #reportedMask let post="post">
+    <div class="reported-mask reported-mask flex items-center justify-center">
+        <div class="flex flex-col px-6 text-center items-center justify-center">
+            <mat-icon class="icon mask-icon green-color" aria-hidden="false">error</mat-icon>
+            <h2 class="green-color nodtranslate">Thanks for Reporting</h2>
+            <p class="mat-body-1 nodtranslate">You have reported this post, and you will be updated on any further
+                actions taken</p>
+            <button mat-stroked-button type="button" class="custom-blue-btn nodtranslate"
+                (click)="post.isReported = false">
+                Show post
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<mat-menu #cardMenu="matMenu" class="post-card-menu" xPosition="after">
+    <button mat-menu-item (click)="openFlagDialogue(post)"
+        *ngIf="post?.createdBy?.user_id !== loogedInUserProfile?.userId">
+        <mat-icon [ngStyle]="{'color': '#D13924'}">flag</mat-icon>
+        <span class="nodtranslate">Report</span>
+    </button>
+    <button mat-menu-item (click)="editHandler(post)" *ngIf="post?.createdBy?.user_id === loogedInUserProfile?.userId">
+        <mat-icon [ngStyle]="{'color': '#1B4CA1'}">edit</mat-icon>
+        <span class="nodtranslate">Edit</span>
+    </button>
+    <button mat-menu-item (click)="openDeleteDialogue(post)"
+        *ngIf="post?.createdBy?.user_id === loogedInUserProfile?.userId">
+        <mat-icon [ngStyle]="{'color': '#FF8268'}">delete</mat-icon>
+        <span class="nodtranslate">Delete</span>
+    </button>
+</mat-menu>

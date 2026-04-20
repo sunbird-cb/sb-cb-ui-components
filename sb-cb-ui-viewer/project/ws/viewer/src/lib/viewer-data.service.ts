@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core'
-import { NsContent } from '@ws-widget/collection'
-import { Subject, ReplaySubject } from 'rxjs'
+import { NsContent } from '@sunbird-cb/collection'
+import { Subject, ReplaySubject, BehaviorSubject } from 'rxjs'
+import { IViewerTocCard } from './components/viewer-toc/viewer-toc.component'
 
 export interface IViewerTocChangeEvent {
   tocAvailable: boolean
-  nextResource: string | null
-  prevResource: string | null
+  nextResource: IViewerTocCard | null
+  prevResource: IViewerTocCard | null
 }
 export interface IViewerResourceOptions {
   page?: {
@@ -35,6 +36,7 @@ export class ViewerDataService {
   changedSubject = new ReplaySubject(1)
   tocChangeSubject = new ReplaySubject<IViewerTocChangeEvent>(1)
   navSupportForResource = new ReplaySubject<IViewerResourceOptions>(1)
+  isSkipBtn = new BehaviorSubject<boolean>(false)
   constructor() { }
 
   reset(resourceId: string | null = null, status: TStatus = 'none') {
@@ -59,7 +61,7 @@ export class ViewerDataService {
     }
     this.changedSubject.next()
   }
-  updateNextPrevResource(isValid = true, prev: string | null = null, next: string | null = null) {
+  updateNextPrevResource(isValid = true, prev: IViewerTocCard | null = null, next: IViewerTocCard | null = null) {
     this.tocChangeSubject.next(
       {
         tocAvailable: isValid,

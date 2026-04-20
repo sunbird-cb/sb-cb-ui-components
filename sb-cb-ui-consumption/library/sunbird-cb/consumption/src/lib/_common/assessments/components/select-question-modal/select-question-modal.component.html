@@ -1,0 +1,60 @@
+<div class="select-question-modal">
+  <h2 mat-dialog-title class="text-center">Select the questions type</h2>
+
+  <mat-dialog-content class="select-container">
+    <div class="question-types-grid">
+      <!-- For Option Weightage: Show only Weightage Single Choice -->
+      <ng-container *ngIf="isOptionWeightage; else allQuestionTypes">
+        <div class="question-type-card" (click)="onQuestionTypeSelect('MCQ-MCA-W')">
+          <h3 class="question-type-title">Weightage Single Choice</h3>
+          <p class="question-type-description">
+            Add a question where learners can select multiple correct options with weighted scores for each choice.
+          </p>
+        </div>
+      </ng-container>
+
+      <!-- For other assessment types: Show all question types -->
+      <ng-template #allQuestionTypes>
+        <!-- Single Selection MCQs -->
+        <div class="question-type-card" (click)="onQuestionTypeSelect('MCQ-SCA')">
+          <h3 class="question-type-title">Single selection-MCQs</h3>
+          <p class="question-type-description">
+            Add a question where learners can select only one correct option from the choices provided.
+          </p>
+        </div>
+
+        <!-- Multiple Selection MCQs -->
+        <div class="question-type-card" (click)="onQuestionTypeSelect('MCQ-MCA')">
+          <h3 class="question-type-title">Multiple selection-MCQs</h3>
+          <p class="question-type-description">
+            Add a question where learners can select multiple correct options from the choices provided.
+          </p>
+        </div>
+
+        <!-- Fill in the Blanks -->
+        <div class="question-type-card" (click)="onQuestionTypeSelect('FTB')">
+          <h3 class="question-type-title">Fill in the blanks</h3>
+          <p class="question-type-description">
+            Add a question where learners can input the correct word or phrase to complete the statement.
+          </p>
+        </div>
+
+        <!-- Match the Following -->
+        <div class="question-type-card" (click)="onQuestionTypeSelect('MTF')">
+          <h3 class="question-type-title">Match the following</h3>
+          <p class="question-type-description">
+            Add a question where learners can pair items from two columns to form correct matches.
+          </p>
+        </div>
+
+        <!-- True and False -->
+        <div class="question-type-card" (click)="onQuestionTypeSelect('MCQ-SCA-TF')" *ngIf="!isBasicAssessment">
+          <h3 class="question-type-title">True and False</h3>
+          <p class="question-type-description">
+            True or False
+          </p>
+        </div>
+      </ng-template>
+    </div>
+  </mat-dialog-content>
+</div>

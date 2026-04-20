@@ -2,17 +2,8 @@ import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { IapComponent } from './iap.component'
 import { IapRoutingModule } from './iap-routing.module'
-import { WidgetResolverModule } from '@ws-widget/resolver'
+import { SbUiResolverModule } from '@sunbird-cb/resolver-v2'
 import { IapModule as IapPluginModule } from '../../plugins/iap/iap.module'
-
-import {
-  MatCardModule,
-  MatDividerModule,
-  MatButtonModule,
-  MatSnackBarModule,
-  MatChipsModule,
-  MatIconModule,
-} from '@angular/material'
 
 import {
   BtnContentDownloadModule,
@@ -26,20 +17,26 @@ import {
   UserContentRatingModule,
   BtnContentFeedbackV2Module,
   PlayerBriefModule,
-} from '@ws-widget/collection'
+} from '@sunbird-cb/collection'
 
 import {
   PipeDurationTransformModule,
   PipeLimitToModule,
   PipePartialContentModule,
-} from '@ws-widget/utils'
+} from '@sunbird-cb/utils-v2'
+import { MatDividerModule } from '@angular/material/divider'
+import { MatIconModule } from '@angular/material/icon'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
+import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips'
+import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
 @NgModule({
   declarations: [IapComponent],
   imports: [
     CommonModule,
     IapPluginModule,
     IapRoutingModule,
-    WidgetResolverModule,
+    SbUiResolverModule,
     PipeDurationTransformModule,
     PipeLimitToModule,
     PipePartialContentModule,

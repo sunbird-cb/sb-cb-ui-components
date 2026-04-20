@@ -1,0 +1,15 @@
+<div class="approval-container">
+    <mat-tab-group mat-align-tabs="start" animationDuration="0ms" [selectedIndex]="1">
+        <mat-tab label="{{app_strings.allFrac}}"> 
+            <h2>{{app_strings.allFrac}}</h2>
+        </mat-tab>
+        <mat-tab label="{{app_strings.pendingApproval}}" active> 
+            <ng-template matTabContent>
+                <lib-pending-approval></lib-pending-approval>
+            </ng-template>
+        </mat-tab>
+        <!-- <mat-tab label="Approved"> Approved </mat-tab>
+        <mat-tab label="Rejected"> Rejected </mat-tab> -->
+    </mat-tab-group>
+    <!-- <lib-pending-approval></lib-pending-approval> -->
+</div>

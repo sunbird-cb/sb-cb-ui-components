@@ -1,0 +1,63 @@
+<mat-card class="no-shadow px-6 py-4">
+    <button mat-icon-button class="close-button" (click)="dialogRef.close(false)">
+        <mat-icon class="close-icon">close</mat-icon>
+    </button>
+    <mat-card-title>
+        <div class="flex">
+            <h1 class="mat-heading flex items-center nodtranslate">
+                <mat-icon class="flag-icon mr-2" color="#D13924">flag</mat-icon>
+                Reporting
+            </h1>
+        </div>
+        <div class="divider mb-4"></div>
+    </mat-card-title>
+    <mat-card-content class="no-padding">
+        <section>
+            <h2 class="mat-heading nodtranslate">What happened?</h2>
+            <p class="mat-body-1 nodtranslate">We'll check for all Community Guidelines, so don't worry about making the
+                perfect
+                choice.</p>
+        </section>
+        <section class="flag-selection-list flex flex-col gap-2">
+            <ng-container *ngFor="let item of data?.flagSelectionList">
+                <ng-container *ngIf="item?.toLowerCase() !== 'others';else othersTemplate">
+                    <ng-container *ngIf="!(selectedFlags?.includes('others') || selectedFlags?.includes('Others') )">
+                        <mat-checkbox (change)="handleSelectedFlags($event, item)"
+                            [checked]="selectedFlags?.includes(item)"
+                            class="example-margin nodtranslate">{{item}}</mat-checkbox>
+                    </ng-container>
+                </ng-container>
+                <ng-template #othersTemplate>
+                    <mat-checkbox (change)="handleSelectedFlags($event, item)" #othersCheck
+                        class="example-margin nodtranslate">{{item}}</mat-checkbox>
+                    <ng-container *ngIf="othersCheck && othersCheck?.checked">
+                        <textarea matInput [(ngModel)]="othersTextData" [cdkTextareaAutosize] [cdkAutosizeMaxRows]="10"
+                            [cdkAutosizeMinRows]="3" #othersTextarea class="custom-textarea nodtranslate"
+                            placeholder="Tell us what happend?" i18n-placeholder maxlength="200"></textarea>
+                        <div class="w-100 mt-1 ws-mat-black60-text mat-body-2 text-right">
+                            <span id="current" class="nodtranslate">{{othersTextarea.value.length}}/ 200</span>
+                        </div>
+                    </ng-container>
+                </ng-template>
+            </ng-container>
+            <!-- <ng-container *ngIf="config?.otherOption"> -->
+            <!-- <ng-container>
+                <mat-checkbox #othersCheck class="example-margin">Others</mat-checkbox>
+                <ng-container *ngIf="othersCheck && othersCheck?.checked">
+                    <textarea matInput [cdkTextareaAutosize] [cdkAutosizeMaxRows]="10" [cdkAutosizeMinRows]="3"
+                        #othersTextarea class="custom-textarea" placeholder="Tell us what happend?" i18n-placeholder
+                        maxlength="200"></textarea>
+                    <div class="w-100 mt-1 ws-mat-black60-text mat-body-2 text-right">
+                        <span id="current">{{othersTextarea.value.length}}/ 200</span>
+                    </div>
+                </ng-container>
+            </ng-container> -->
+        </section>
+    </mat-card-content>
+    <mat-card-actions class="flex flex-row-reverse gap-4">
+        <button mat-flat-button color="secondary" (click)="submitFlag()" class="primary-button custom-rounded"
+            [disabled]="!selectedFlags?.length || ((selectedFlags?.includes('others') ||selectedFlags?.includes('Others')) && othersTextData?.length === 0)">
+            <span class="nodtranslate">Submit</span>
+        </button>
+    </mat-card-actions>
+</mat-card>

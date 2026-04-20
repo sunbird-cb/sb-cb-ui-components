@@ -1,0 +1,26 @@
+.community-search{
+    input {
+        border: 1px solid #00000029;
+    }
+}
+
+.info-text {
+    h2{
+        //styleName: Sub Heading 1;
+        font-family: Montserrat;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.5px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        span {
+            color: #1B4CA1;
+        }  
+
+    }
+
+    .arrow-back-btn {
+        color: #1B4CA1;
+    }
+}

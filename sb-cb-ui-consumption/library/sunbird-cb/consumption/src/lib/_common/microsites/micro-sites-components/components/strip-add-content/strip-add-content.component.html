@@ -1,0 +1,142 @@
+<div class="strip-add-content-dialog">
+  <div class="dialog-header">
+    <div class="header-title-container">
+      <span class="dialog-title" *ngIf="!isEditingTitle">{{ tempTitle || 'Add Section Name'
+        }}</span>
+
+      <div class="title-edit-container" *ngIf="isEditingTitle">
+        <input type="text" class="title-input" [(ngModel)]="tempTitle" (keydown)="onTitleKeydown($event)"
+          (blur)="saveTitle()" placeholder="Enter section name" autofocus>
+      </div>
+
+      <button mat-icon-button class="edit-icon" (click)="startEditTitle()" *ngIf="!isEditingTitle">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      <div class="edit-actions" *ngIf="isEditingTitle">
+        <button mat-icon-button class="save-btn" (click)="saveTitle()" matTooltip="Save">
+          <mat-icon>check</mat-icon>
+        </button>
+        <button mat-icon-button class="cancel-btn" (click)="cancelEdit()" matTooltip="Cancel">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-body">
+    <div class="search-container">
+      <div class="filter-dropdown">
+        <mat-form-field appearance="outline" class="program-select">
+          <mat-select placeholder="All Content" [(ngModel)]="selectedContents" name="selectedContents"
+            (selectionChange)="onContentTypeChange()">
+            <mat-option *ngFor="let content of contents" [value]="content.value">
+              {{ content.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="search-input-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix class="search-icon">search</mat-icon>
+          <input matInput placeholder="Select" [(ngModel)]="searchText" name="searchText" (keyup.enter)="onSearch()">
+        </mat-form-field>
+        <button mat-button class="btn-common btn-primary" type="button" (click)="onSearch()">Search</button>
+
+        <div class="org-content-toggle">
+          <span class="toggle-label">All Org Content</span>
+          <mat-slide-toggle [(ngModel)]="allOrgContent" name="allOrgContent" (change)="onOrgContentToggle()"
+            [disabled]="isAllOrgContentDisabled"></mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="selected-items-container" *ngIf="selectedContentItems.length > 0">
+      <span class="selected-label">Selected items :</span>
+      <div class="selected-chips">
+        <mat-chip *ngFor="let item of selectedContentItems.slice(0, 3)" class="selected-chip">
+          <span class="chip-text">{{item.name}}</span>
+          <mat-icon class="remove-icon" (click)="removeSelectedItem(item)">close</mat-icon>
+        </mat-chip>
+        <mat-chip *ngIf="selectedContentItems.length > 3" class="more-chip">
+          +{{ selectedContentItems.length - 3 }} more selected
+        </mat-chip>
+      </div>
+    </div>
+
+    <div class="preview-section" *ngIf="showPreview && selectedContentItems.length > 0">
+      <div class="preview-header">
+        <button mat-icon-button class="back-btn" (click)="onPreview()" matTooltip="Back to search">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h3 class="preview-title">Selected Content Preview</h3>
+      </div>
+      <div class="preview-grid">
+        <div class="preview-card" *ngFor="let item of selectedContentItems">
+          <mat-card class="course-list-card padding-xs">
+            <button mat-icon-button class="deselect-btn" (click)="removeSelectedItem(item)" matTooltip="Remove">
+              <mat-icon>close</mat-icon>
+            </button>
+            <div class="image-container mb-2">
+              <img [src]="item.posterImage || item.appIcon" [alt]="item.name" class="card-image">
+            </div>
+            <div class="course_v2">
+              <mat-icon class="mat-icon main_icon ws-mat-default-text">video_library</mat-icon>
+              {{(item?.secureSettings) ? 'Moderated course' : item?.primaryCategory}}
+            </div>
+            <div class="card-content mt-2">
+              <span class="title block font-bold text-sm">{{item.name}}</span>
+              <span class="date block text-xs mt-2">Published on: {{item.lastPublishedOn || item.createdOn | date:
+                'dd/MMM/yyyy'}}</span>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-cards-container" *ngIf="!showPreview">
+      <div class="content-grid" *ngIf="contentsList.length > 0">
+        <div class="flex course-card" *ngFor="let item of contentsList">
+          <mat-card class="course-list-card padding-xs" [ngClass]="isSelected(item) ? 'active-course':''">
+            <div class="image-container mb-2">
+              <img [src]="item.posterImage || item.appIcon" [alt]="item.name" class="card-image">
+              <mat-checkbox [checked]="isSelected(item)" (change)="toggleSelection(item)"
+                class="checkbox"></mat-checkbox>
+            </div>
+            <div class="course_v2">
+              <mat-icon class="mat-icon main_icon ws-mat-default-text">video_library</mat-icon>
+              {{(item?.secureSettings) ? 'Moderated course' : item?.primaryCategory}}
+            </div>
+            <div class="card-content mt-2">
+              <span class="title block font-bold text-sm">{{item.name}}</span>
+              <span class="date block text-xs mt-2">Published on: {{item.lastPublishedOn || item.createdOn | date:
+                'dd/MMM/yyyy'}}</span>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="no-results" *ngIf="contentsList.length === 0">
+        <p>No content found</p>
+      </div>
+
+      <mat-paginator *ngIf="totalCount > 0" [length]="totalCount" [pageSize]="pageSize" [pageIndex]="pageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]" (page)="onPageChange($event)" class="content-paginator">
+      </mat-paginator>
+    </div>
+  </div>
+
+  <div class="dialog-footer">
+    <button mat-button class="btn-common btn-secondary" type="button" (click)="onPreview()"
+      [disabled]="selectedContentItems.length === 0 || showPreview">
+      <mat-icon>visibility</mat-icon>
+      Preview
+    </button>
+    <div class="footer-right">
+      <button mat-button class="btn-common btn-secondary" (click)="onCancel()">Cancel</button>
+      <button mat-button class="btn-common btn-primary" (click)="onAdd()" *ngIf="!isEditMode">Add</button>
+      <button mat-button class="btn-common btn-primary" (click)="onUpdate()" *ngIf="isEditMode">Update</button>
+    </div>
+  </div>
+</div>

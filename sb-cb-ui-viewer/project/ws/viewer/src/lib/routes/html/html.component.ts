@@ -1,17 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { NsContent, NsDiscussionForum, WidgetContentService } from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
+import { NsDiscussionForum, WidgetContentService } from '@sunbird-cb/collection'
+import { NsContent } from '../../models/constant'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import {
   ConfigurationsService,
   EventService,
   SubapplicationRespondService,
   WsEvents,
-} from '@ws-widget/utils'
+} from '@sunbird-cb/utils-v2'
 import { fromEvent, Subscription } from 'rxjs'
 import { filter } from 'rxjs/operators'
-import { AccessControlService } from '../../access-control.service'
 import { ViewerUtilService } from '../../viewer-util.service'
+import { AccessControlService } from '@sunbird-cb/toc'
 @Component({
   selector: 'viewer-html',
   templateUrl: './html.component.html',
@@ -24,7 +25,7 @@ export class HtmlComponent implements OnInit, OnDestroy {
   forPreview = window.location.href.includes('/author/')
   isNotEmbed = true
   isFetchingDataComplete = false
-  htmlData: NsContent.IContent | null = null
+  htmlData: NsContent.IContent | any | null = null
   oldData: NsContent.IContent | null = null
   alreadyRaised = false
   subApp = false
@@ -50,6 +51,7 @@ export class HtmlComponent implements OnInit, OnDestroy {
     private configSvc: ConfigurationsService,
     private eventSvc: EventService,
     private accessControlSvc: AccessControlService,
+    @Inject('environment') private environment: any,
   ) { }
 
   ngOnInit() {
@@ -58,6 +60,89 @@ export class HtmlComponent implements OnInit, OnDestroy {
       window.location.href.includes('/embed/') ||
       this.activatedRoute.snapshot.queryParams.embed === 'true'
     )
+
+    // if (this.isPreviewMode) {
+    this.routeDataSubscription = this.activatedRoute.data.subscribe(
+      async data => {
+        // data.content.data.artifactUrl =
+        //   data.content.data.artifactUrl.startsWith('/scorm-player') ?
+        //     `/apis/proxies/v8${data.content.data.artifactUrl}` : data.content.data.artifactUrl
+        if (data && data.content && data.content.data) {
+          data.content.data.artifactUrl =
+            data.content.data?.artifactUrl.indexOf('ScormCoursePlayer') > -1
+              ? `${data.content.data.artifactUrl.replace(/%20/g, '')}&Param1=${this.uuid}`
+              : data.content.data?.artifactUrl.replace(/%20/g, '')
+        }
+
+        const tempHtmlData = data.content.data
+        if (this.alreadyRaised && this.oldData) {
+          this.raiseEvent(WsEvents.EnumTelemetrySubType.Unloaded, this.oldData)
+          if (!this.hasFiredRealTimeProgress) {
+            this.fireRealTimeProgress()
+            if (this.realTimeProgressTimer) {
+              clearTimeout(this.realTimeProgressTimer)
+            }
+          }
+          this.subApp = false
+        }
+        if (tempHtmlData) {
+          this.formDiscussionForumWidget(tempHtmlData)
+        }
+        if (tempHtmlData && tempHtmlData.artifactUrl.indexOf('content-store') >= 0) { // NOSONAR
+          // await this.setS3Cookie(tempHtmlData.identifier)
+          this.htmlData = tempHtmlData
+        } else {
+          this.htmlData = tempHtmlData
+        }
+        this.raiseRealTimeProgress()
+        if (this.htmlData) {
+          this.oldData = this.htmlData
+          this.alreadyRaised = true
+          this.raiseEvent(WsEvents.EnumTelemetrySubType.Loaded, this.htmlData)
+          this.responseSubscription = await fromEvent<MessageEvent>(window, 'message')
+            .pipe(
+              filter(
+                (event: MessageEvent) =>
+                  Boolean(event) &&
+                  Boolean(event.data) &&
+                  Boolean(event.source && typeof event.source.postMessage === 'function'),
+              ),
+            )
+            .subscribe(async (event: MessageEvent) => {
+              const contentWindow = event.source as Window
+              if (event.data.requestId && this.htmlData) {
+                switch (event.data.requestId) {
+                  case 'LOADED':
+                    await this.respondSvc.loadedRespond(
+                      contentWindow,
+                      event.data.subApplicationName,
+                      this.htmlData.identifier,
+                    )
+                    if (event.data.subApplicationName === 'RBCP') {
+                      this.subApp = true
+                    }
+                    break
+                  case 'CONTINUE_LEARNING':
+                    await this.respondSvc.continueLearningRespond(
+                      this.htmlData.identifier,
+                      event.data.data.continueLearning,
+                    )
+                    break
+                  case 'TELEMETRY':
+                    await this.respondSvc.telemetryEvents(event.data)
+                    break
+                  default:
+                    break
+                }
+              }
+            })
+        }
+        this.isFetchingDataComplete = true
+      },
+      () => { },
+    )
+    // }
+
     if (
       this.activatedRoute.snapshot.queryParamMap.get('preview') === 'true' &&
       !this.accessControlSvc.authoringConfig.newDesign
@@ -68,20 +153,20 @@ export class HtmlComponent implements OnInit, OnDestroy {
         .getContent(this.activatedRoute.snapshot.paramMap.get('resourceId') || '')
         .subscribe(
           async data => {
-            data.artifactUrl = (data.artifactUrl.startsWith('https://')
-              ? data.artifactUrl
-              : data.artifactUrl.startsWith('http://')
-                ? data.artifactUrl
-                : `https://${data.artifactUrl}`).replace(/ /ig, '').replace(/%20/ig, '').replace(/\n/ig, '')
-            if (this.accessControlSvc.hasAccess(data as any, true)) {
-              if (data && data.artifactUrl.indexOf('content-store') >= 0) {
-                await this.setS3Cookie(data.identifier)
-                this.htmlData = data
-              } else {
-                this.htmlData = data
-              }
-
+            // data.artifactUrl = (data.artifactUrl.startsWith('https://')
+            //   ? data.artifactUrl
+            //   : data.artifactUrl.startsWith('http://')
+            //     ? data.artifactUrl
+            //     : `https://${data.artifactUrl}`).replace(/ /ig, '').replace(/%20/ig, '').replace(/\n/ig, '')
+            // if (this.accessControlSvc.hasAccess(data as any, true)) {
+            if (data && data.artifactUrl && data.artifactUrl.indexOf('content-store') >= 0) { // NOSONAR
+              // await this.setS3Cookie(data.identifier)artifactUrl
+              this.htmlData = data
+            } else {
+              this.htmlData = data
             }
+
+            // }
             if (this.htmlData) {
               this.formDiscussionForumWidget(this.htmlData)
               if (this.discussionForumWidget) {
@@ -89,12 +174,14 @@ export class HtmlComponent implements OnInit, OnDestroy {
               }
             }
           })
+
     } else {
       this.routeDataSubscription = this.activatedRoute.data.subscribe(
         async data => {
           // data.content.data.artifactUrl =
           //   data.content.data.artifactUrl.startsWith('/scorm-player') ?
           //     `/apis/proxies/v8${data.content.data.artifactUrl}` : data.content.data.artifactUrl
+
           data.content.data.artifactUrl =
             data.content.data.artifactUrl.indexOf('ScormCoursePlayer') > -1
               ? `${data.content.data.artifactUrl.replace(/%20/g, '')}&Param1=${this.uuid}`
@@ -113,8 +200,8 @@ export class HtmlComponent implements OnInit, OnDestroy {
           if (tempHtmlData) {
             this.formDiscussionForumWidget(tempHtmlData)
           }
-          if (tempHtmlData && tempHtmlData.artifactUrl.indexOf('content-store') >= 0) {
-            await this.setS3Cookie(tempHtmlData.identifier)
+          if (tempHtmlData && tempHtmlData.artifactUrl.indexOf('content-store') >= 0) { // NOSONAR
+            // await this.setS3Cookie(tempHtmlData.identifier)
             this.htmlData = tempHtmlData
           } else {
             this.htmlData = tempHtmlData
@@ -210,11 +297,26 @@ export class HtmlComponent implements OnInit, OnDestroy {
       }
     })
   }
-
+  generateUrl(oldUrl: string) {
+    const chunk = oldUrl ? oldUrl.split('/') : []
+    const newChunk = this.environment.azureHost.split('/')
+    const newLink = []
+    for (let i = 0; i < chunk.length; i += 1) {
+      if (i === 2) {
+        newLink.push(newChunk[i])
+      } else if (i === 3) {
+        newLink.push(this.environment.azureBucket)
+      } else {
+        newLink.push(chunk[i])
+      }
+    }
+    const newUrl = newLink.join('/')
+    return newUrl
+  }
   async ngOnDestroy() {
     if (this.htmlData) {
       if (!this.subApp || this.activatedRoute.snapshot.queryParams.collectionId) {
-        await this.saveContinueLearning(this.htmlData)
+        // await this.saveContinueLearning(this.htmlData)
       }
     }
     if (this.htmlData) {
@@ -253,21 +355,21 @@ export class HtmlComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async setS3Cookie(contentId: string) {
-    await this.contentSvc
-      .setS3Cookie(contentId)
-      .toPromise()
-      .catch(() => {
-        // throw new DataResponseError('COOKIE_SET_FAILURE')
-      })
-    return
-  }
+  // private async setS3Cookie(contentId: string) {
+  //   await this.contentSvc
+  //     .setS3Cookie(contentId)
+  //     .toPromise()
+  //     .catch(() => {
+  //       // throw new DataResponseError('COOKIE_SET_FAILURE')
+  //     })
+  //   return
+  // }
 
   raiseEvent(state: WsEvents.EnumTelemetrySubType, data: NsContent.IContent) {
     if (this.forPreview) {
       return
     }
-    const event = {
+    const event: any = {
       eventType: WsEvents.WsEventType.Telemetry,
       eventLogLevel: WsEvents.WsEventLogLevel.Info,
       from: 'html',
@@ -315,7 +417,7 @@ export class HtmlComponent implements OnInit, OnDestroy {
     }
     if (this.htmlData) {
       if (
-        this.htmlData.contentType === NsContent.EContentTypes.COURSE &&
+        this.htmlData.primaryCategory === NsContent.EPrimaryCategory.COURSE &&
         this.htmlData.isExternal
       ) {
         return
@@ -327,7 +429,7 @@ export class HtmlComponent implements OnInit, OnDestroy {
         return
       }
     }
-    if ((this.htmlData || ({} as any)).isIframeSupported.toLowerCase() !== 'yes') {
+    if ((this.htmlData || ({} as any)).isIframeSupported && (this.htmlData || ({} as any)).isIframeSupported.toLowerCase() !== 'yes') {
       return
     }
     if (this.htmlData) {

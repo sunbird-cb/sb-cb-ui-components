@@ -1,0 +1,1 @@
+{"version":3,"file":"navigation.directive.d.ts","sourceRoot":"ng://@sunbird-cb/utils-v2/","sources":["lib/directives/navigation/navigation.directive.ts"],"names":[],"mappings":"AAAA,OAAO,EAAa,SAAS,EAAoC,MAAM,eAAe,CAAA;;AAEtF,qBAGa,mBAAoB,YAAW,SAAS;IAC1C,iBAAiB,SAAK;IACtB,YAAY,UAAQ;IAEG,QAAQ,SAAK;IACN,YAAY,CAAC,MAAM,EAAE,KAAK;;IAUjE,WAAW;yCAfA,mBAAmB;2CAAnB,mBAAmB;CAqB/B"}

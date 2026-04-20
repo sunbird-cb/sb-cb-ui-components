@@ -3,8 +3,8 @@ $secondary-color: #EF951E;
     border-radius: 12px;
     border: 1px solid rgba(0,0,0, 0.08);
     opacity: 1;
-    width: 318px;
-    min-height: 154px;
+    width: 322px;
+    min-height: 174px;
     padding: 16px;
     .img-block-portrait {
       line-height: 10px;
@@ -15,7 +15,7 @@ $secondary-color: #EF951E;
       background-size: 100%;
       width: 147px;
       height: 100px;
-  
+
     }
     .portrait-subheading {
       opacity: 1;
@@ -61,7 +61,7 @@ $secondary-color: #EF951E;
     .portrait_widget {
       align-items: center;
       margin-top: 0;
-  
+
       .course_port {
         border: 1px solid $secondary-color;
       padding: 4px 8px;
@@ -131,7 +131,7 @@ $secondary-color: #EF951E;
           border: none;
           width: 100%;
           cursor: pointer;
-  
+
           .textwrap {
             white-space: nowrap;
             overflow: hidden;
@@ -139,12 +139,16 @@ $secondary-color: #EF951E;
             max-width: 82px;
           }
         }
-  
+
         .resume-btn:hover {
           background-color: #253379;
         }
+
+        .takeSurveyBtn {
+          background-color: #d13924 !important;
+        }
       }
-  
+
     }
     .progress-bar-new {
       color: rgb(239, 149, 30) !important;
@@ -247,5 +251,133 @@ $secondary-color: #EF951E;
     display: inline-block;
     margin: 0;
     padding: 0;
+  }
+}
+.disable-btn {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+.knowledge-level-container {
+  // margin-left: auto;
+  flex-shrink: 0;
+}
+
+.level-badge {
+  display: inline-flex;
+  height: 24px;
+  padding: 2px 8px;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  max-width: 100px;
+
+  .level-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 76px;
+  }
+}
+
+.level-badge.beginner {
+  border: 1px solid #49C951;
+  background: linear-gradient(0deg, rgba(73, 201, 81, 0.20) 0%, rgba(73, 201, 81, 0.20) 100%), #FFF;
+  color: #2F8132;
+  border-radius: 16px;
+}
+
+.level-badge.intermediate {
+  border: 1px solid #1B4CA1;
+  background: linear-gradient(0deg, rgba(27, 76, 161, 0.20) 0%, rgba(27, 76, 161, 0.20) 100%), #FFF;
+  color: #1B4CA1;
+  border-radius: 16px;
+}
+
+.level-badge.advanced {
+  border: 1px solid #FF8268;
+  background: linear-gradient(0deg, rgba(255, 130, 104, 0.20) 0%, rgba(255, 130, 104, 0.20) 100%), #FFF;
+  color: #FF4B25;
+  border-radius: 16px;
+}
+
+.level-badge svg {
+  flex-shrink: 0;
+}
+.difficulty-main {
+  gap: 5px;
+  // flex-wrap: wr
+}
+
+.certificate-lock-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cert-btn {
+  z-index: 12;
+  position: relative;
+}
+
+.retired-course-card {
+  position: relative;
+  .retired-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-radius: inherit;
+    padding: 12px;
+    overflow: hidden;
+  }
+  .new-version-btn {
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    z-index: 100;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-style: normal;
+    letter-spacing: .5px;
+    text-align: left;
+    line-height: 20px;
+    background: #1a4ca1;
+    border-radius: 63px;
+    padding: 6px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  .retired-badge {
+    background: rgba(209, 57, 36, 1);
+    color: white;
+    padding: 2px 75px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transform: rotate(325deg);
+    position: relative;
+    top: 8px;
+    left: -69px;
+    overflow: hidden;
+    font-family: "Lato-Regular";
   }
 }

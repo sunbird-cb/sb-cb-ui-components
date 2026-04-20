@@ -1,0 +1,75 @@
+@use "../../../styles/variable" as *;
+
+.pending-approval {
+    padding:0 15px;
+    h2 {
+        font-weight:400;
+    }
+    .mat-tab-group {
+        ::ng-deep .mat-tab-header {
+            background-color:$white;
+            .mat-tab-label {
+            padding: 0 10px;
+                .mat-tab-label-content{
+                    color:$black;
+                }
+                &-active{
+                    background: $white;
+                    .mat-tab-label-content{
+                        color:$black
+                    }
+                }
+            }
+        }
+    }
+
+    .mat-card {
+        background: $white-smoke;
+        margin-top: 25px;
+        padding:5px 0;
+        box-shadow:none;
+    }
+    .mat-card-content{
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        align-items: center;
+        padding-left: 4%;
+        position: relative;
+        h4 {
+            text-transform: capitalize;
+            padding:0;
+            margin: 10px 0;
+        }
+        .approve-view-link{
+            position: absolute;
+            right: 4%;
+        }
+    }
+    .col {
+        display: flex;
+        flex-direction: column;
+        padding-right: 100px;
+        div {
+            cursor: pointer;
+            font-size: $font-size-20;
+        }
+    }
+
+}
+
+    ::ng-deep .custom-tooltip {
+        font-size: $font-size-16;
+        background: $white !important;
+        color:$black !important;
+        padding:10px 0;
+    }
+    ::ng-deep .mat-icon{
+        font-size: 40px;
+        color:$dark-grey;
+        cursor: pointer;
+    }
+.date {
+    padding:0 20px;
+    font-weight: 600;
+}

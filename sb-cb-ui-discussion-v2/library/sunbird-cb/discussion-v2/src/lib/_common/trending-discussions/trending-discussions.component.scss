@@ -1,0 +1,109 @@
+.trending-wrapper {
+    .headding {
+        font-family: Montserrat;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 17.07px;
+        letter-spacing: 0%;
+        text-align: center;
+
+    }
+    .trending-content-list {
+        padding-top: 16px;
+        .divider {
+            border: 1px solid #00000029;
+        }
+    }
+    .trending-data {
+        width: 100%;
+        .user-info{
+            .user-name {
+                //styleName: Sub heading 2;
+                font-family: Montserrat;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 17.07px;
+                text-align: center;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                color: #000000;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+            }
+            .post-time {
+                //styleName: Label;
+                font-family: Lato;
+                font-size: 10px;
+                font-weight: 400;
+                line-height: 12px;
+                text-align: center;
+                text-underline-position: from-font;
+                text-decoration-skip-ink: none;
+                color: #666666;
+            }
+
+        }
+        .post-data {
+            //styleName: Body 2;
+            font-family: Lato;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 16.8px;
+            text-align: left;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            color: #212121;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2em;
+        }
+        .post-details {
+            color: #00000099;
+            //styleName: Caption;
+            font-family: Lato;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 14.4px;
+            text-align: center;
+            text-underline-position: from-font;
+            text-decoration-skip-ink: none;
+            mat-icon {
+                width: 16px;
+                height: 16px;
+                font-size: 16px;
+            }
+        }
+        ::ng-deep .post-data .mention{
+           color: #1B4CA1;
+           background: none;
+        }
+    }
+    .community-name-wrapper {
+        background-color: rgba(217, 217, 217, 1);
+        color: rgba(0, 0, 0, 0.6);
+        // padding: 4px 8px;
+        height: 20px;
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 14px;
+        font-family: Lato;
+        border-radius: 24px;
+        letter-spacing: normal;
+        // width: 100%;
+        & .community-name {
+            color: rgba(27, 76, 161, 1);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+            overflow: hidden;
+        }
+    }
+
+}
+
+

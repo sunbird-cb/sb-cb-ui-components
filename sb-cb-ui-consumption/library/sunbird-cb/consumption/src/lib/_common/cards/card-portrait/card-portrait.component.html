@@ -1,172 +1,353 @@
 <ng-container *ngIf="!isCardLoading">
-  <mat-card class="card-standard-container mr-5 padding-remove cursor-pointer  {{widgetData?.cardCustomeClass}}" [ngClass]="{
+  <mat-card class="card-standard-container mr-5 padding-remove cursor-pointer  {{widgetData?.cardCustomeClass}}"
+    [ngClass]="{
     greyOut:
       widgetData.deletedMode === 'greyOut' && !isLiveOrMarkForDeletion
         ? true
         : widgetData?.intranetMode === 'greyOut' && showIntranetContent
   }" (click)="(showIntranetContent || !isLiveOrMarkForDeletion) && showSnackbar()">
-  <div class="display-contents" [ngClass]="{
+    <div class="display-contents" [ngClass]="{
       disableClick:
         widgetData.deletedMode === 'greyOut' && !isLiveOrMarkForDeletion
           ? true
           : widgetData?.intranetMode === 'greyOut' && showIntranetContent
     }">
-    <ng-container *ngIf="widgetData.content">
-      <a (click)="getRedirectUrlData(widgetData?.content); $event.stopPropagation()"
-          role="link" i18n-aria-label>
-    <ng-container *ngIf="!isCardFlipped">
-      <div class="status-danger" role="note" i18n-aria-label aria-label="Content expired or deleted" i18n-matTooltip
-        matTooltip="Content may be expired or deleted" *ngIf="!isLiveOrMarkForDeletion"></div>
-      <div class="status-danger" role="note" i18n-aria-label aria-label="Intranet content" i18n-matTooltip
-        matTooltip="Available only in Company's network"
-        *ngIf="widgetData?.intranetMode === 'greyOut' && showIntranetContent"></div>
-      <button *ngIf="showFlip" class="detail-button ws-mat-primary-lite-background-op30" mat-icon-button
-        (click)="isCardFlipped = true" aria-label="Details" i18n-aria-label="Details | Click to see details">
-        <mat-icon>flip_to_back</mat-icon>
-      </button>
-      <mat-card-content class="min-top">
-        <div style="position: relative; z-index: 1;">
-          <ng-container *ngIf="widgetData.content.posterImage">
-            <img mat-card-image [src]="widgetData.content.posterImage | pipePublicURL" loading="lazy"
-            class="card-img ws-mat-primary-lite-background margin-remove" [wsUtilsDefaultThumbnail]="defaultThumbnail"
-            [alt]="widgetData.content.name" />
-          </ng-container>
-          <ng-container *ngIf="!widgetData.content.posterImage">
-            <ng-container *ngIf="widgetData.content.appIcon; else defaultImg">
-              <img mat-card-image [src]="widgetData.content.appIcon | pipePublicURL" loading="lazy"
-              class="card-img ws-mat-primary-lite-background margin-remove"  [wsUtilsDefaultThumbnail]="defaultThumbnail"
-              [alt]="widgetData.content.name" />
-            </ng-container>
-            <ng-template #defaultImg>
-              <img mat-card-image [src]="defaultThumbnail" loading="lazy"
-              class="card-img ws-mat-primary-lite-background margin-remove"
-              [alt]="widgetData.content.name" />
-            </ng-template>
-          </ng-container>
-          <div class="source-div" style="display: none;">
-            <img [src]="widgetData.content.creatorLogo" class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
-              [alt]="(widgetData.content.sourceName + '_' + widgetData.content.identifier)" />
-          </div>
-          <ng-container *ngIf="widgetData?.content?.cbPlanEndDate">
-            <div class="cbp-mark">
-              <span>{{widgetData?.content?.cbPlanEndDate | date: 'd MMM, y'}}</span>
-            </div>
-          </ng-container>
-          <!-- <ng-container *ngIf="widgetData?.content?.endDate">
+      <ng-container *ngIf="widgetData.content">
+        <a (click)="getRedirectUrlData(widgetData?.content); $event.stopPropagation()" role="link" i18n-aria-label>
+          <ng-container *ngIf="!isCardFlipped">
+            <div class="status-danger" role="note" i18n-aria-label aria-label="Content expired or deleted"
+              i18n-matTooltip matTooltip="Content may be expired or deleted" *ngIf="!isLiveOrMarkForDeletion"></div>
+            <div class="status-danger" role="note" i18n-aria-label aria-label="Intranet content" i18n-matTooltip
+              matTooltip="Available only in Company's network"
+              *ngIf="widgetData?.intranetMode === 'greyOut' && showIntranetContent"></div>
+            <button *ngIf="showFlip" class="detail-button ws-mat-primary-lite-background-op30" mat-icon-button
+              (click)="isCardFlipped = true" aria-label="Details" i18n-aria-label="Details | Click to see details">
+              <mat-icon>flip_to_back</mat-icon>
+            </button>
+            <mat-card-content class="min-top">
+              <div style="position: relative; z-index: 1;">
+                <ng-container *ngIf="widgetData.content.posterImage && !widgetData?.sakshamAIGenerated">
+                  <img mat-card-image [src]="widgetData.content.posterImage | pipePublicURL" loading="lazy"
+                    class="card-img ws-mat-primary-lite-background margin-remove"
+                    [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="widgetData.content.name" />
+                </ng-container>
+                <ng-container *ngIf="widgetData.content.posterImage && widgetData?.sakshamAIGenerated">
+                  <img mat-card-image [src]="widgetData.content.posterImage" loading="lazy"
+                    class="card-img ws-mat-primary-lite-background margin-remove"
+                    [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="widgetData.content.name" />
+                </ng-container>
+                <ng-container *ngIf="!widgetData.content.posterImage">
+                  <ng-container *ngIf="widgetData.content.appIcon; else defaultImg">
+                    <img mat-card-image [src]="widgetData.content.appIcon | pipePublicURL" loading="lazy"
+                      class="card-img ws-mat-primary-lite-background margin-remove"
+                      [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="widgetData.content.name" />
+                  </ng-container>
+                  <ng-template #defaultImg>
+                    <img mat-card-image [src]="defaultThumbnail" loading="lazy"
+                      class="card-img ws-mat-primary-lite-background margin-remove" [alt]="widgetData.content.name" />
+                  </ng-template>
+                </ng-container>
+                <div class="source-div" style="display: none;">
+                  <img [src]="widgetData.content.creatorLogo | pipePublicURL" class="source-icon"
+                    [wsUtilsDefaultThumbnail]="defaultSLogo"
+                    [alt]="(widgetData.content.sourceName + '_' + widgetData.content.identifier)" />
+                </div>
+                <ng-container *ngIf="widgetData?.content?.cbPlanEndDate">
+                  <div class="cbp-mark">
+                    <span>{{widgetData?.content?.cbPlanEndDate | date: 'd MMM, y'}}</span>
+                  </div>
+                </ng-container>
+                <!-- <ng-container *ngIf="widgetData?.content?.endDate">
             <div class="cbp-mark">
               <p *ngIf="widgetData?.content?.planDuration === acbpConstants?.UPCOMING"  class="cbp-warning">{{widgetData?.content?.endDate | date: 'd MMM, y'}}</p>
               <p *ngIf="widgetData?.content?.planDuration === acbpConstants?.SUCCESS"  class="cbp-success">{{widgetData?.content?.endDate | date: 'd MMM, y'}}</p>
               <p *ngIf="widgetData?.content?.planDuration === acbpConstants?.OVERDUE" class="cbp-danger">Over due</p>
             </div>
           </ng-container> -->
-          <ng-container *ngIf="cbPlanMapData && cbPlanMapData[widgetData?.content?.identifier]  &&  cbPlanMapData[widgetData?.content?.identifier]?.contentStatus < 2">
-            <ng-container [ngTemplateOutlet]="cbpPlan" [ngTemplateOutletContext]="{data: {
+                <ng-container
+                  *ngIf="cbPlanMapData && cbPlanMapData[widgetData?.content?.identifier]  &&  cbPlanMapData[widgetData?.content?.identifier]?.contentStatus < 2">
+                  <ng-container [ngTemplateOutlet]="cbpPlan" [ngTemplateOutletContext]="{data: {
               cbpData: cbPlanMapData[widgetData?.content?.identifier]
             }}"></ng-container>
-          </ng-container>
-          <div class="duration-box right-corner" *ngIf="widgetData?.content?.duration > 0">
-            <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
-            <span class=" ws-mat-white-text duration">
-              {{ (widgetData?.content?.duration || 120)| pipeDurationTransform: 'hms' }}
-            </span>
-          </div>
-          <div class="duration-box right-corner" *ngIf="widgetData?.content?.programDuration > 0">
-            <mat-icon class="mat-icon main_icon mr-1">access_time</mat-icon>
-            <span class=" ws-mat-white-text duration">
-              {{widgetData?.content?.programDuration}} {{widgetData?.content?.programDuration === 1 ? 'day' : 'days'}}
-            </span>
-          </div>
-        </div>
-        <div class="padding-m">
-          <div class="course_widget flex margin-remove">
-            <div class="flex flex-end course_v2">
-              <mat-icon class="mat-icon main_icon ws-mat-default-text margin-right-xs">video_library</mat-icon>
-              <sb-uic-display-content-type i18n-title title="Content Type" *ngIf="widgetData.content?.primaryCategory"
-                class="ws-mat-black60-text font-normal mat-caption " [displayContentType]="widgetData.content?.primaryCategory==='Course Unit'
-                ?'Module'
-                :widgetData.content?.primaryCategory">
+                </ng-container>
+                <ng-container
+                  *ngIf="widgetData?.content?.isApar || CaCourseUnitIds?.includes(widgetData?.content?.identifier)">
+                  <div class="flex cbp-mark right-0 rounded-bottom">
+                    <ng-container *ngIf="widgetData?.content?.isApar">
+                      <p class="cbp-success apar-flag">APAR</p>
+                    </ng-container>
 
-              </sb-uic-display-content-type>
-            </div>
-          </div>
-          <div [id]="'m-c-'+ widgetData.content?.identifier"
-            class="mat-subheading-1 title-text ws-mat-text-block-fade-gradient">
-            {{ widgetData.content.name }}
-          </div>
-          <div class="flex w-full flex-wrap flex-middle">
-            <div class="course_logo_box">
-              <img [src]="widgetData.content.creatorLogo | pipePublicURL " class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
+                    <ng-container *ngIf="CaCourseUnitIds?.includes(widgetData?.content?.identifier)">
+                      <p class="cbp-primary apar-flag "
+                        [ngClass]="widgetData?.content?.isApar  ? 'margin-left-xs' : ''">CA</p>
+                    </ng-container>
+                  </div>
+                </ng-container>
+                <div class="mandetory-box left-corner">
+                  <ng-container
+                    *ngIf="widgetData?.content?.isApar && widgetData?.content?.identifier === 'do_1144773146063912961797'">
+                    <p class="cbp-mandetory apar-flag "
+                      [ngClass]="widgetData?.content?.isApar  ? 'margin-left-xs' : ''">Mandatory</p>
+                  </ng-container>
+                </div>
+                <div class="duration-box left-corner"
+                  *ngIf="widgetData?.isiGOTSpecialization && widgetData?.content?.additionalTags?.includes('iGOT Specialization')">
+                  <img class="approved-icon mr-1" src="./assets/icons/approved.svg" alt="approved">
+                  <span class=" ws-mat-white-text duration nodtranslate">
+                    {{ 'cardcontentv2.iGOTSpecializationProgram' | translate }}
+                  </span>
+                </div>
+                <ng-container
+                  *ngIf="!widgetData?.content?.resourceType && widgetData?.content?.resourceType !== 'Samuhik Charcha'">
+                  <div class="duration-box right-corner"
+                    *ngIf="widgetData?.content?.duration > 0 && !(widgetData?.content?.programDuration > 0)">
+                    <mat-icon class="mat-icon main_icon mr-1 nodtranslate">access_time</mat-icon>
+                    <span class=" ws-mat-white-text duration nodtranslate">
+                      {{ (widgetData?.content?.duration || 120)| pipeDurationTransform: 'hms' }}
+                    </span>
+                  </div>
+                </ng-container>
+                <ng-container
+                  *ngIf="widgetData?.content?.resourceType && widgetData?.content?.resourceType === 'Samuhik Charcha'">
+                  <div class="duration-box right-corner">
+                    <mat-icon class="mat-icon main_icon mr-1 nodtranslate">access_time</mat-icon>
+                    <span class=" ws-mat-white-text duration nodtranslate">
+                      {{ getTime(widgetData?.content?.duration) }}
+                    </span>
+                  </div>
+                </ng-container>
+                <div class="duration-box right-corner" *ngIf="widgetData?.content?.programDuration > 0">
+                  <mat-icon class="mat-icon main_icon mr-1 nodtranslate">access_time</mat-icon>
+                  <span class=" ws-mat-white-text duration nodtranslate">
+                    {{widgetData?.content?.programDuration}} {{widgetData?.content?.programDuration === 1 ? 'day' :
+                    'days'}}
+                  </span>
+                </div>
+                <ng-container *ngIf="widgetData?.content?.resourceType === 'Samuhik Charcha' && showStatus">
+                  <div class="fixed-live">
+                    {{widgetData?.content?.status}}</div>
+                </ng-container>
+              </div>
+              <div class="padding-m">
+                <!-- dynamically apply this class course_widget_tagging if widgetData.content?.difficultyLevel   -->
+                <div class="course_widget flex margin-remove"
+                  [ngClass]="{'course_widget_tagging': widgetData.content?.difficultyLevel}">
+                  <!-- conditionally apply ng class taggingClass if widgetData.content?.difficultyLevel true -->
+                  <div class="flex flex-end "
+                    [ngClass]="{'taggingClass': widgetData.content?.difficultyLevel, 'resource-type': widgetData.content?.resourceType === 'Samuhik Charcha', 'course_v2': !widgetData.content?.resourceType || widgetData.content?.resourceType !== 'Samuhik Charcha'}">
+                    <ng-container *ngIf="widgetData.content?.resourceType !== 'Samuhik Charcha'">
+                      <mat-icon
+                        class="mat-icon main_icon ws-mat-default-text margin-right-xs nodtranslate">video_library</mat-icon>
+                    </ng-container>
+                    <ng-container *ngIf="widgetData.content?.resourceType === 'Samuhik Charcha'">
+                      <img class="margin-right-xs" src="assets/icons/handshake.svg" />
+                    </ng-container>
+                    <ng-container *ngIf="widgetData.content?.primaryCategory">
+                      <sb-uic-display-content-type i18n-title
+                        [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
+                        [style.max-width]="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate' ? '58px' : (widgetData?.content?.difficultyLevel ? '79px' : 'auto')"
+                        class="ws-mat-black60-text font-normal mat-caption"
+                        [ngClass]="{'course-category-text': widgetData.content?.difficultyLevel}"
+                        [displayContentType]="widgetData.content?.primaryCategory==='Course Unit'
+                                      ?'Module'
+                                      :widgetData.content?.courseCategory ? widgetData.content?.courseCategory: widgetData.content?.primaryCategory">
+
+                      </sb-uic-display-content-type>
+                    </ng-container>
+                    <ng-container *ngIf="widgetData.content?.resourceType === 'Samuhik Charcha'">
+                      <sb-uic-display-content-type i18n-title [title]="widgetData.content?.resourceType"
+                        [style.max-width]="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate' ? '58px' : (widgetData?.content?.difficultyLevel ? '79px' : 'auto')"
+                        class="ws-mat-black60-text font-normal mat-caption"
+                        [ngClass]="{'white-text': widgetData.content?.resourceType === 'Samuhik Charcha'}"
+                        [displayContentType]="widgetData.content?.resourceType">
+                      </sb-uic-display-content-type>
+                    </ng-container>
+
+                  </div>
+                  <!-- Knowledge level block  home page section for blended program & for you section-->
+                  <!-- <div *ngIf="true" class="knowledge-level-container"> -->
+                  <div *ngIf="widgetData?.content?.difficultyLevel" class="knowledge-level-container">
+                    <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'beginner'"
+                      class="level-badge beginner">
+                      <!-- <span *ngIf="false" class="level-badge beginner" title="Beginner"> -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                        <rect width="16" height="16" fill="#DBF4DC" />
+                        <path
+                          d="M7.42267 5C7.67927 4.55555 8.32077 4.55556 8.57737 5L12.0415 11C12.2981 11.4444 11.9773 12 11.4641 12H4.53592C4.02272 12 3.70197 11.4444 3.95857 11L7.42267 5Z"
+                          fill="#49C951" />
+                      </svg>
+                      <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+                    </span>
+                    <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate'"
+                      class="level-badge intermediate">
+                      <!-- <span *ngIf="true" class="level-badge intermediate" title="Intermediate"> -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                        <rect width="16" height="16" fill="#D1DBEC" />
+                        <path
+                          d="M7.42267 2.66666C7.67927 2.22221 8.32077 2.22221 8.57737 2.66666L12.0415 8.66666C12.2981 9.1111 11.9773 9.66666 11.4641 9.66666H4.53592C4.02272 9.66666 3.70197 9.1111 3.95857 8.66666L7.42267 2.66666Z"
+                          fill="#1B4CA1" />
+                        <path
+                          d="M7.42267 5.66666C7.67927 5.22221 8.32077 5.22221 8.57737 5.66666L12.0415 11.6667C12.2981 12.1111 11.9773 12.6667 11.4641 12.6667H4.53592C4.02272 12.6667 3.70197 12.1111 3.95857 11.6667L7.42267 5.66666Z"
+                          fill="#1B4CA1" stroke="#D1DBEC" stroke-width="0.5" />
+                      </svg>
+                      <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+                    </span>
+                    <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'advanced'"
+                      class="level-badge advanced">
+                      <!-- <span *ngIf="false" class="level-badge advanced" title="Advanced"> -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+                        <g clip-path="url(#clip0)">
+                          <rect width="16" height="16" fill="#FFE6E1" />
+                          <path
+                            d="M7.42264 2.33334C7.67924 1.8889 8.32074 1.8889 8.57734 2.33334L12.0414 8.33334C12.298 8.77779 11.9773 9.33334 11.4641 9.33334H4.53589C4.02269 9.33334 3.70194 8.77779 3.95854 8.33334L7.42264 2.33334Z"
+                            fill="#FF8268" />
+                          <path
+                            d="M7.42264 5C7.67924 4.55555 8.32074 4.55556 8.57734 5L12.0414 11C12.298 11.4444 11.9773 12 11.4641 12H4.53589C4.02269 12 3.70194 11.4444 3.95854 11L7.42264 5Z"
+                            fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5" />
+                          <path
+                            d="M7.42264 7.66669C7.67924 7.22224 8.32074 7.22224 8.57734 7.66669L12.0414 13.6667C12.298 14.1111 11.9773 14.6667 11.4641 14.6667H4.53589C4.02269 14.6667 3.70194 14.1111 3.95854 13.6667L7.42264 7.66669Z"
+                            fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5" />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0">
+                            <rect width="16" height="16" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                      <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+                    </span>
+                  </div>
+                </div>
+                <div [id]="'m-c-'+ widgetData.content?.identifier"
+                  class="mat-subheading-1 title-text ws-mat-text-block-fade-gradient nodtranslate">
+                  {{ widgetData.content.name }}
+                </div>
+                <div class="flex w-full flex-wrap flex-middle">
+                  <!-- <div class="course_logo_box">
+              <img [src]="widgetData.content.creatorLogo | pipePublicURL" class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
               [alt]="(widgetData.content.sourceName + '_' + widgetData.content.identifier)" />
+            </div> -->
+                  <div class="course_logo_box">
+                    <img
+                      [src]="widgetData?.sakshamAIGenerated ? widgetData.content.creatorLogo : (widgetData.content.creatorLogo | pipePublicURL)"
+                      class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
+                      [alt]="widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier" />
+                  </div>
+                  <!-- <span class="org-text">{{'cardcontentv2.by' | translate}} -->
+                  <span class="org-text nodtranslate">By&nbsp; {{ (widgetData?.content?.organisation &&
+                    widgetData?.content?.organisation[0]) ? widgetData?.content?.organisation[0] :
+                    (widgetData?.content?.resourceType === 'Samuhik Charcha') ? widgetData?.content?.sourceName :
+                    'Karmayogi Bharat'
+                    }}</span>
+                </div>
+                <ng-container *ngIf="widgetData?.content?.startDate && widgetData?.content?.startTime">
+                  <div class="flex w-full flex-wrap gap-1 flex-middle pb-1 pt-1 opacity-75 mt-3">
+                    <mat-icon class="resource-type-icon">date_range</mat-icon>
+                    <span class="resource-text">{{getStartDate(widgetData?.content?.startDate,
+                      widgetData?.content?.startTime) | date: 'EEE, MMM d hh:mm a'}}</span>
+                  </div>
+                </ng-container>
+                <div class="mt-2">
+                  <sb-uic-available-languages [content]="widgetData?.content"></sb-uic-available-languages>
+                </div>
+                <div class="flex flex-middle rating-session margin-top-m" *ngIf="!widgetData?.sakshamAIGenerated">
+                  <div class="flex flex-middle" *ngIf="widgetData?.content?.avgRating">
+                    <mat-icon class="mr-1">star</mat-icon>
+                    <span>{{widgetData.content.avgRating}}</span>
+                  </div>
+                  <!-- <span class="most-enrolled-text margin-left-m">{{ 'cardcontentv2.mostEnrolled' | translate }}</span> -->
+                  <ng-container
+                    *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostEnrolled')">
+                    <span class="most-enrolled-text margin-left-xs">
+                      <!-- {{ 'cardcontentv2.mostEnrolled' | translate }} -->
+                    </span>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostTrending')">
+                    <span class="most-enrolled-text margin-left-xs">
+                      <!-- {{ 'cardcontentv2.mostTrending' | translate }} -->
+                    </span>
+                  </ng-container>
+                </div>
+
+                <div class="flex flex-middle margin-top-m" *ngIf="widgetData?.sakshamAIGenerated">
+
+                  <div class="flex flex-middle relevant-container" *ngIf="widgetData?.sakshamAIGenerated"
+                    [@toggleRelevance]="isRelevent ? 'center' : 'normal'">
+                    <div class="flex flex-middle relevent-btn py-2 px-4 relevant-box"
+                      [ngClass]="isRelevent ? 'relevent-success' : 'relevent-normal'" (mouseenter)="isHovered = true"
+                      (mouseleave)="isHovered = false" (click)="handleAcceptRelevent($event)">
+
+                      <img
+                        [src]="isHovered && !isRelevent ? SAKSHAMAI_ICON_LOADER : (isRelevent ? SAKSHAMAI_ICON_SUCCESS : SAKSHAMAI_ICON_NORMAL)"
+                        alt="loader" width="16" height="16" class="mr-2">
+                      <span class="text-relevent ff-lato text-sm font-bold">{{ 'home.relevent' | translate }}</span>
+                    </div>
+
+                    <div class="flex flex-middle no-button ml-8" *ngIf="!isRelevent"
+                      (click)="handleDeclineRelevent($event)">
+                      <mat-icon class="mat-icon text-no mr-1">thumb_down</mat-icon>
+                      <span class="text-no ff-lato text-sm font-bold">{{ 'home.no' | translate }}</span>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </mat-card-content>
+          </ng-container>
+          <ng-container *ngIf="isCardFlipped">
+            <div class="flex items-center">
+              <!-- <h2 class="mat-subheading-2 flex-1 min-w-0 margin-remove-bottom" i18n>{{'cardcontentv2.reason' | translate}}</h2> -->
+              <button mat-icon-button (click)="isCardFlipped = false">
+                <mat-icon>close</mat-icon>
+              </button>
             </div>
-            <!-- <span class="org-text">{{'cardcontentv2.by' | translate}} -->
-              <span class="org-text">By&nbsp; {{ (widgetData?.content?.organisation && widgetData?.content?.organisation[0]) ? widgetData?.content?.organisation[0] : 'Karmayogi Bharat' }}</span>
-          </div>
-          <div class="flex flex-middle rating-session margin-top-m">
-            <div class="flex flex-middle" *ngIf="widgetData?.content?.avgRating">
-              <mat-icon class="mr-1">star</mat-icon>
-              <span>{{widgetData.content.avgRating}}</span>
-            </div>
-            <!-- <span class="most-enrolled-text margin-left-m">{{ 'cardcontentv2.mostEnrolled' | translate }}</span> -->
-            <ng-container *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostEnrolled')">
-              <span class="most-enrolled-text margin-left-xs">
-                <!-- {{ 'cardcontentv2.mostEnrolled' | translate }} -->
-            </span>
-            </ng-container>
-            <ng-container *ngIf="widgetData?.content?.additionalTags && widgetData?.content?.additionalTags.includes('mostTrending')">
-              <span class="most-enrolled-text margin-left-xs">
-                <!-- {{ 'cardcontentv2.mostTrending' | translate }} -->
-            </span>
-            </ng-container>
-          </div>
-        </div>
-      </mat-card-content>
-    </ng-container>
-    <ng-container *ngIf="isCardFlipped">
-      <div class="flex items-center">
-        <!-- <h2 class="mat-subheading-2 flex-1 min-w-0 margin-remove-bottom" i18n>{{'cardcontentv2.reason' | translate}}</h2> -->
-        <button mat-icon-button (click)="isCardFlipped = false">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-      <p class="text-justify mat-body-1">
-        {{ widgetData.content.reason }}
-      </p>
-    </ng-container>
-      </a>
-    </ng-container>
-  </div>
-</mat-card>
+            <p class="text-justify mat-body-1">
+              {{ widgetData.content.reason }}
+            </p>
+          </ng-container>
+        </a>
+      </ng-container>
+    </div>
+  </mat-card>
 </ng-container>
 
 <ng-container *ngIf="isCardLoading">
-  <mat-card class="card-standard-container mr-5 padding-remove" >
-    <div class="display-contents" >
+  <mat-card class="card-standard-container mr-5 padding-remove">
+    <div class="display-contents">
       <ng-container *ngIf="!isCardFlipped">
         <mat-card-content class="min-top">
           <div style="position: relative; z-index: 1;">
             <ng-container>
-              <sb-uic-skeleton-loader [width]="'100%'" [height]="'140px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+              <sb-uic-skeleton-loader [width]="'100%'" [height]="'140px'"
+                [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
             </ng-container>
           </div>
           <div class="padding-m">
             <div class="course_widget flex margin-remove">
               <div class="flex flex-end">
-                <sb-uic-skeleton-loader [width]="'65px'" [height]="'16px'" [bindingClass]="'flex rounded br-8'"></sb-uic-skeleton-loader>
+                <sb-uic-skeleton-loader [width]="'65px'" [height]="'16px'"
+                  [bindingClass]="'flex rounded br-8'"></sb-uic-skeleton-loader>
               </div>
             </div>
             <div class="mat-subheading-1 title-text ws-mat-text-block-fade-gradient">
-              <sb-uic-skeleton-loader [width]="'100%'" [height]="'16px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
-              <sb-uic-skeleton-loader [width]="'111px'" [height]="'16px'" [bindingClass]="'flex rounded margin-top-s'"></sb-uic-skeleton-loader>
+              <sb-uic-skeleton-loader [width]="'100%'" [height]="'16px'"
+                [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+              <sb-uic-skeleton-loader [width]="'111px'" [height]="'16px'"
+                [bindingClass]="'flex rounded margin-top-s'"></sb-uic-skeleton-loader>
             </div>
             <div class="flex w-full flex-wrap flex-middle margin-top-m">
               <div class="">
-                <sb-uic-skeleton-loader [width]="'28px'" [height]="'28px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+                <sb-uic-skeleton-loader [width]="'28px'" [height]="'28px'"
+                  [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
               </div>
-              <span class="org-text"> <sb-uic-skeleton-loader [width]="'111px'" [height]="'16px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></span>
+              <span class="org-text"> <sb-uic-skeleton-loader [width]="'111px'" [height]="'16px'"
+                  [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></span>
             </div>
             <div class="flex flex-middle rating-session margin-top-m">
               <div class="flex flex-middle">
-                <sb-uic-skeleton-loader [width]="'45px'" [height]="'12px'" [bindingClass]="'flex rounded margin-top-m'"></sb-uic-skeleton-loader>
+                <sb-uic-skeleton-loader [width]="'45px'" [height]="'12px'"
+                  [bindingClass]="'flex rounded margin-top-m'"></sb-uic-skeleton-loader>
               </div>
             </div>
           </div>
@@ -176,10 +357,12 @@
   </mat-card>
 </ng-container>
 
-<ng-template #cbpPlan  let-data="data">
+<ng-template #cbpPlan let-data="data">
   <div class="cbp-mark left-0 border-top-radius">
-    <p *ngIf="data.cbpData.planDuration === acbpConstants?.UPCOMING"  class="cbp-warning">{{data.cbpData.endDate | date: 'd MMM, y'}}</p>
-    <p *ngIf="data.cbpData.planDuration === acbpConstants?.SUCCESS"  class="cbp-success">{{data.cbpData.endDate | date: 'd MMM, y'}}</p>
-    <p *ngIf="data.cbpData.planDuration === acbpConstants?.OVERDUE" class="cbp-danger">{{'OverDue' }}</p>
+    <p *ngIf="data.cbpData.planDuration === acbpConstants?.UPCOMING" class="cbp-warning nodtranslate">
+      {{data.cbpData.endDate | date: 'd MMM, y'}}</p>
+    <p *ngIf="data.cbpData.planDuration === acbpConstants?.SUCCESS" class="cbp-success nodtranslate">
+      {{data.cbpData.endDate | date: 'd MMM, y'}}</p>
+    <p *ngIf="data.cbpData.planDuration === acbpConstants?.OVERDUE" class="cbp-danger nodtranslate">{{'OverDue' }}</p>
   </div>
 </ng-template>

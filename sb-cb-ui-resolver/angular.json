@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "project",
   "projects": {
@@ -10,12 +13,17 @@
       "prefix": "ws-resolver",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "library/sunbird-cb/resolver/tsconfig.lib.json",
             "project": "library/sunbird-cb/resolver/ng-package.json"
           }
-        },
+        ,          "configurations": {
+            "production": {
+              "tsConfig": "library/sunbird-cb/resolver/tsconfig.lib.prod.json"
+            }
+          }
+},
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
@@ -23,26 +31,13 @@
             "tsConfig": "library/sunbird-cb/resolver/tsconfig.spec.json",
             "karmaConfig": "library/sunbird-cb/resolver/karma.conf.js"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "library/sunbird-cb/resolver/tsconfig.lib.json",
-              "library/sunbird-cb/resolver/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
         }
       }
     }
   },
-  "defaultProject": "@sunbird-cb/resolver",
   "schematics": {
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "style": "scss"
     }
   }
 }

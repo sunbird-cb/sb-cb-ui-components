@@ -1,17 +1,15 @@
 <ng-container *ngIf="!isCardLoading">
-	<mat-card
-		class="card-assessment card-scheduled-assessment card-users-container  padding-remove cursor-pointer mr-4">
+	<mat-card class="card-assessment card-scheduled-assessment card-users-container  padding-remove cursor-pointer mr-4">
 		<a (click)="getRedirectUrlData(widgetData?.content); $event.stopPropagation()">
 			<div class="display-contents">
 				<ng-container *ngIf="widgetData">
 					<mat-card-content>
 						<div class="flex flex-col h-full">
-							<div class="flex flex-1 flex-row padding-s">
+							<div class="flex flex-1 flex-row px-4 pt-4">
 								<div class="flex image-container">
 									<ng-container *ngIf="widgetData?.content?.posterImage">
 										<img mat-card-image class="margin-remove assess-img"
-											[src]="widgetData?.content?.posterImage | pipePublicURL"
-											[alt]="widgetData?.content?.name">
+											[src]="widgetData?.content?.posterImage | pipePublicURL" [alt]="widgetData?.content?.name">
 									</ng-container>
 									<ng-container *ngIf="!widgetData?.content?.posterImage">
 										<ng-template #defaultImg>
@@ -22,17 +20,88 @@
 									</ng-container>
 
 								</div>
-								<div class="flex title-container flex-col">
+							</div>
+							<div class="p-4 pb-6">
+								<div class="course_widget flex margin-remove "
+									[ngClass]="{'difficulty-main': widgetData.content?.difficultyLevel}">
+									<div class="flex flex-end course_v2">
+										<mat-icon
+											class="mat-icon main_icon ws-mat-default-text margin-right-xs nodtranslate">video_library</mat-icon>
+										<sb-uic-display-content-type i18n-title
+											[title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
+											*ngIf="widgetData.content?.courseCategory"
+											[style.max-width]="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate' ? '90px' : (widgetData?.content?.difficultyLevel ? '85px' : 'auto')"
+											class="ws-mat-black60-text font-normal mat-caption "
+											[displayContentType]="eCourseCategory?.COMPREHENSIVE_ASSESSMENT_PROGRAM !== widgetData?.content?.courseCategory? widgetData?.content?.primaryCategory:widgetData?.content?.courseCategory">
+
+										</sb-uic-display-content-type>
+									</div>
+									<!-- Knowledge level tagging for the comprehensive assessment strips -->
+									<!-- <div *ngIf="true" class="knowledge-level-container"> -->
+									<div *ngIf="widgetData?.content?.difficultyLevel" class="knowledge-level-container">
+										<span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'beginner'"
+											class="level-badge beginner">
+											<!-- <span *ngIf="false" class="level-badge beginner" title="Beginner"> -->
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+												<rect width="16" height="16" fill="#DBF4DC" />
+												<path
+													d="M7.42267 5C7.67927 4.55555 8.32077 4.55556 8.57737 5L12.0415 11C12.2981 11.4444 11.9773 12 11.4641 12H4.53592C4.02272 12 3.70197 11.4444 3.95857 11L7.42267 5Z"
+													fill="#49C951" />
+											</svg>
+											<span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+										</span>
+										<span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate'"
+											class="level-badge intermediate">
+											<!-- <span *ngIf="true" class="level-badge intermediate" title="Intermediate"> -->
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+												<rect width="16" height="16" fill="#D1DBEC" />
+												<path
+													d="M7.42267 2.66666C7.67927 2.22221 8.32077 2.22221 8.57737 2.66666L12.0415 8.66666C12.2981 9.1111 11.9773 9.66666 11.4641 9.66666H4.53592C4.02272 9.66666 3.70197 9.1111 3.95857 8.66666L7.42267 2.66666Z"
+													fill="#1B4CA1" />
+												<path
+													d="M7.42267 5.66666C7.67927 5.22221 8.32077 5.22221 8.57737 5.66666L12.0415 11.6667C12.2981 12.1111 11.9773 12.6667 11.4641 12.6667H4.53592C4.02272 12.6667 3.70197 12.1111 3.95857 11.6667L7.42267 5.66666Z"
+													fill="#1B4CA1" stroke="#D1DBEC" stroke-width="0.5" />
+											</svg>
+											<span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+										</span>
+										<span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'advanced'"
+											class="level-badge advanced">
+											<!-- <span *ngIf="true" class="level-badge advanced" title="Advanced"> -->
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
+												<g clip-path="url(#clip0)">
+													<rect width="16" height="16" fill="#FFE6E1" />
+													<path
+														d="M7.42264 2.33334C7.67924 1.8889 8.32074 1.8889 8.57734 2.33334L12.0414 8.33334C12.298 8.77779 11.9773 9.33334 11.4641 9.33334H4.53589C4.02269 9.33334 3.70194 8.77779 3.95854 8.33334L7.42264 2.33334Z"
+														fill="#FF8268" />
+													<path
+														d="M7.42264 5C7.67924 4.55555 8.32074 4.55556 8.57734 5L12.0414 11C12.298 11.4444 11.9773 12 11.4641 12H4.53589C4.02269 12 3.70194 11.4444 3.95854 11L7.42264 5Z"
+														fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5" />
+													<path
+														d="M7.42264 7.66669C7.67924 7.22224 8.32074 7.22224 8.57734 7.66669L12.0414 13.6667C12.298 14.1111 11.9773 14.6667 11.4641 14.6667H4.53589C4.02269 14.6667 3.70194 14.1111 3.95854 13.6667L7.42264 7.66669Z"
+														fill="#FF8268" stroke="#FFE6E1" stroke-width="0.5" />
+												</g>
+												<defs>
+													<clipPath id="clip0">
+														<rect width="16" height="16" fill="white" />
+													</clipPath>
+												</defs>
+											</svg>
+											<span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
+										</span>
+									</div>
+								</div>
+								<div class="flex title-container flex-col ">
 									<div class="flex title-text mat-subheading-1">
 										{{ widgetData?.content?.name }}
 									</div>
-									<div class="flex margin-remove margin-top-s font-normal mat-caption sub-title-text">
+									<div
+										class="flex items-center justify-start margin-remove margin-top-xs font-normal mat-caption sub-title-text">
 										<div class="course_logo_box">
-											<img [src]="widgetData?.content?.creatorLogo | pipePublicURL "
-												class="source-icon" [wsUtilsDefaultThumbnail]="defaultSLogo"
+											<img [src]="widgetData?.content?.creatorLogo | pipePublicURL " class="source-icon"
+												[wsUtilsDefaultThumbnail]="defaultSLogo"
 												[alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
 										</div>
-										<span class="sub-title-text">
+										<span class="sub-title-text ml-2"> By
 											{{ (widgetData?.content?.organisation &&
 											widgetData?.content?.organisation[0]) ?
 											widgetData?.content?.organisation[0] : 'Karmayogi Bharat' }}
@@ -40,41 +109,43 @@
 									</div>
 								</div>
 							</div>
-							
 							<mat-card-footer class="assessment-card-footer  padding-m">
 								<div class="flex flex-1 items-center justify-center col-row margin-top-m">
 									<div class="flex margin-right-m">
 										<span>{{ startCountdown(widgetData?.content?.batch) }}</span>
-										<div class="flex  flex-row" *ngIf="daysPending">
+										<div class="flex  flex-row"
+											*ngIf="daysPending && eCourseCategory?.COMPREHENSIVE_ASSESSMENT_PROGRAM !== widgetData?.content?.courseCategory">
 											<span class="start-span">Assessment starts in</span>
 											<div class="flex margin-right-s">
-												<span class="big-text"><b>{{ days }}</b> <span
-														class="small-text">days</span> </span> &nbsp; : &nbsp; <span
-													class="big-text"><b>{{ hours }} </b><span
-														class="small-text">hours</span>
+												<span class="big-text"><b>{{ days }}</b> <span class="small-text">days</span> </span> &nbsp; :
+												&nbsp; <span class="big-text"><b>{{ hours }} </b><span class="small-text">hours</span>
 												</span> &nbsp; : &nbsp; <span class="big-text"> <b>{{ minutes }}</b> <span
 														class="small-text">minutes</span>
 												</span>
 											</div>
 											<div class="flex">
-												<span
-													class="time-span flex items-center justify-center">{{widgetData?.content?.batch?.startDate
+												<span class="time-span flex items-center justify-center"
+													[ngClass]=" (eCourseCategory?.COMPREHENSIVE_ASSESSMENT_PROGRAM === widgetData?.content?.courseCategory) && !widgetData?.content?.isEnrolled ? 'not-started': ''">{{widgetData?.content?.batch?.startDate
 													| date: 'dd MMM yyy HH:mm' }}</span>
 											</div>
 										</div>
-										<div *ngIf="!daysPending" class="flex flex-row"> 
-											<span class="start-span">Assessment ends on </span>
+										<div *ngIf="!daysPending" class="flex flex-row">
+											<span class="start-span">{{eCourseCategory?.COMPREHENSIVE_ASSESSMENT_PROGRAM ===
+												widgetData?.content?.courseCategory ? 'Program':'Assessment'}} ends on </span>
 											<div class="flex margin-right-s">
-												<span class="start-btn">Start Assessment</span> 
+												<span class="start-btn">
+													{{(widgetData?.content?.isEnrolled && widgetData?.content?.completionPercentage >0) ?
+													'Resume':'Start'}} {{eCourseCategory?.COMPREHENSIVE_ASSESSMENT_PROGRAM ===
+													widgetData?.content?.courseCategory ? 'Program':'Assessment'}}</span>
 											</div>
 											<div class="flex">
-												<span
-													class="time-span flex items-center justify-center">{{widgetData?.content?.batch?.endDate
-													| date: 'dd MMM yyy HH:mm' }}</span>
+												<span class="time-span flex items-center justify-center"
+													[ngClass]=" (eCourseCategory?.COMPREHENSIVE_ASSESSMENT_PROGRAM === widgetData?.content?.courseCategory) && !widgetData?.content?.isEnrolled ? 'not-started': ''">{{widgetData?.content?.batch?.endDate
+													| date: 'dd MMM yyy' }}</span>
 											</div>
 										</div>
 									</div>
-									
+
 								</div>
 							</mat-card-footer>
 						</div>
@@ -90,8 +161,7 @@
 </ng-container>
 
 <ng-template #skeltonLoader>
-	<mat-card
-		class="card-assessment card-scheduled-assessment card-users-container  padding-remove cursor-pointer mr-4">
+	<mat-card class="card-assessment card-scheduled-assessment card-users-container  padding-remove cursor-pointer mr-4">
 		<a>
 			<div class="display-contents">
 				<ng-container>
@@ -100,19 +170,28 @@
 							<div class="flex flex-1 flex-row padding-s">
 								<div class="flex image-container">
 									<ng-container>
-										<sb-uic-skeleton-loader [width]="'300px'"
-											[height]="'155px'"></sb-uic-skeleton-loader>
+										<sb-uic-skeleton-loader [width]="'300px'" [height]="'155px'"></sb-uic-skeleton-loader>
 									</ng-container>
 
 								</div>
-								<div class="flex title-container flex-col margin-top-m">
+							</div>
+
+							<div class="p-4 pb-6">
+								<div class="flex title-container flex-col margin-remove">
 									<div class="flex">
-										<sb-uic-skeleton-loader [width]="'100px'" [height]="'16px'"
+										<sb-uic-skeleton-loader [width]="'200px'" [height]="'20px'"
 											[bindingClass]="'flex rounded br-8'"></sb-uic-skeleton-loader>
 									</div>
-									<div class="flex margin-remove margin-top-l font-normal">
-										<sb-uic-skeleton-loader [width]="'100px'" [height]="'16px'"
+									<div class="flex margin-top-m">
+										<sb-uic-skeleton-loader [width]="'250px'" [height]="'16px'"
 											[bindingClass]="'flex rounded br-8'"></sb-uic-skeleton-loader>
+									</div>
+									<div class="flex margin-remove margin-top-m items-center font-normal">
+
+										<sb-uic-skeleton-loader [width]="'24px'" [height]="'24px'"
+											[bindingClass]="'flex rounded br-8'"></sb-uic-skeleton-loader>
+										<sb-uic-skeleton-loader [width]="'150px'" [height]="'16px'"
+											[bindingClass]="'flex rounded br-8 ml-2'"></sb-uic-skeleton-loader>
 									</div>
 								</div>
 							</div>

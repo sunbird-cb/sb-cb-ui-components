@@ -1,0 +1,58 @@
+// @use "@sunbird-cb/design-system/src/styles/ws-vars";
+
+:host {
+  display: block;
+}
+.dialog-heading {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  padding: 0 16px;
+}
+
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__title {
+  margin-bottom: 8px !important;
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.87);
+  padding: 0 24px 9px 0px;
+}
+
+.close-button {
+  margin-right: -8px;
+}
+
+.user-dialog-body {
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+.search-button {
+  padding: 4px 24px;
+}
+
+.filter-options {
+  margin-bottom: 15px;
+
+  .mat-radio-button {
+    margin-right: 24px;
+  }
+}
+
+.no-data span {
+  font-family: Lato;
+  font-size: 8.98px;
+  color: #000000de;
+}
+
+.mt-4 {
+  margin-top: 1rem !important;
+}
+
+.spinner-loader {
+  height: 200px;
+}
+
+:host ::ng-deep .mat-mdc-dialog-content {
+  max-height: 75vh !important;
+}

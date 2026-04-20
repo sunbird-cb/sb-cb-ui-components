@@ -1,0 +1,13 @@
+{
+  "name": "@sunbird-cb/search-listing",
+  "version": "0.0.6-cbrelease-4.8.31",
+  "peerDependencies": {
+    "@angular/common": "^16.2.12",
+    "@angular/core": "^16.2.12",
+    "@sunbird-cb/consumption": "0.0.1-cbrelease-4.8.30"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

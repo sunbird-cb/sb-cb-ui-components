@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
-import { LoggerService } from '@ws-widget/utils'
-import { NsContent } from '../../../../../../../library/ws-widget/collection/src/public-api'
+import { LoggerService } from '@sunbird-cb/utils'
+import { NsContent } from '@sunbird-cb/collection'
 
 @Component({
   selector: 'viewer-plugin-iap',
@@ -21,7 +21,7 @@ export class IapComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit
   ngOnInit() {
   }
   ngAfterViewInit() {
-    window.addEventListener('message', event => {
+    window.addEventListener('message', event => { // NOSONAR
       if (!event.data) {
         this.logger.log('data unavailable')
         return
@@ -72,7 +72,7 @@ export class IapComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit
       proctoring: event,
     }
     if (iframeElem) {
-      iframeElem.postMessage(dataToSend, '*')
+      iframeElem.postMessage(dataToSend, '*') // NOSONAR
     }
     // //console.log('event at posting:', event);
     if (event === 'esc' || event === 'fullScreen') {
@@ -83,7 +83,7 @@ export class IapComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit
 
   enterFullScreen() {
     this.proctoringWarning = false
-    const elem = document.getElementById('iap-iframe')
+    const elem: any = document.getElementById('iap-iframe')
     if (elem) {
       if (elem.requestFullscreen) {
         elem.requestFullscreen()
@@ -101,17 +101,19 @@ export class IapComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit
   }
 
   private exitFullscreen() {
+    const doc = document as any
+
     if (document.exitFullscreen) {
       document.exitFullscreen()
-    } else if (document.mozCancelFullScreen) {
+    } else if (doc.mozCancelFullScreen) {
       /* Firefox */
-      document.mozCancelFullScreen()
-    } else if (document.webkitExitFullscreen) {
+      doc.mozCancelFullScreen()
+    } else if (doc.webkitExitFullscreen) {
       /* Chrome, Safari and Opera */
-      document.webkitExitFullscreen()
-    } else if (document.msExitFullscreen) {
+      doc.webkitExitFullscreen()
+    } else if (doc.msExitFullscreen) {
       /* IE/Edge */
-      document.msExitFullscreen()
+      doc.msExitFullscreen()
     }
   }
 

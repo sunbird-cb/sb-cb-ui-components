@@ -4,8 +4,8 @@ import {
   NsContent,
   // NsDiscussionForum,
   WidgetContentService,
-} from '@ws-widget/collection'
-// import { NsWidgetResolver } from '@ws-widget/resolver'
+} from '@sunbird-cb/collection'
+// import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ActivatedRoute } from '@angular/router'
 
 @Component({
@@ -22,7 +22,7 @@ export class CertificationComponent implements OnInit, OnDestroy {
   // discussionForumWidget: NsWidgetResolver.IRenderConfigWithTypedData<
   //   NsDiscussionForum.IDiscussionForumInput
   // > | null = null
-  constructor(private activatedRoute: ActivatedRoute, private contentSvc: WidgetContentService) {}
+  constructor(private activatedRoute: ActivatedRoute, private contentSvc: WidgetContentService) { }
 
   ngOnInit() {
     this.routeDataSubscription = this.activatedRoute.data.subscribe(
@@ -36,7 +36,7 @@ export class CertificationComponent implements OnInit, OnDestroy {
         }
         this.isFetchingDataComplete = true
       },
-      () => {},
+      () => { },
     )
   }
 

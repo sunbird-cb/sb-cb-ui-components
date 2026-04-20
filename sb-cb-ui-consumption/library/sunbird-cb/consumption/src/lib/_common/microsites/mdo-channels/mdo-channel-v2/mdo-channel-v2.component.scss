@@ -1,6 +1,6 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 .container-balanced {
     @extend %page-center;
@@ -33,7 +33,20 @@
     background-position: right;
     background-repeat: no-repeat;
 }
+.sub-title {
+    font-size: 24px;
+    font-weight: 400;
+}
+.sub-title-two {
+    font-size: 24px;
+    font-weight: 600;
+}
+.main-title {
+    font-size: 32px;
+    font-size: 48px;
+    font-weight: 700;
 
+}
 .sticky-logo-square {
     position: absolute;
     top: 215px;
@@ -50,7 +63,7 @@
 }
 
 .logo-square {
-    width: 112px;
+    width: fit-content;
     max-height: 73px;
     border-radius: 12px;
     background: #fff;
@@ -58,6 +71,7 @@
     align-items: center;
     justify-content: center;
     padding: 16px;
+    padding-left: 0;
     box-sizing: border-box;
 }
 
@@ -83,13 +97,6 @@
         position: absolute;
         top: -54px;
     }
-}
-
-.logo-img {
-    object-fit: contain;
-    max-height: 52px;
-    height: 96px;
-    z-index: 10;
 }
 
 .metrics {
@@ -146,7 +153,7 @@
     ::ng-deep.featuredCourses .mat-tab-header {
         padding-left: 20px;
     }
-    
+
     .metrics-section {
         margin-top: 0px;
     }
@@ -160,17 +167,17 @@
         //width: 8%;
     }
 }
-@media screen and (min-width: 1280px) { 
+@media screen and (min-width: 1280px) {
     .sticky-logo-square {
         //width: 10%;
     }
 }
-@media screen and (min-width: 1520px) { 
+@media screen and (min-width: 1520px) {
     .sticky-logo-square {
        // width: 15%;
     }
 }
-@media screen and (min-width: 1904px) { 
+@media screen and (min-width: 1904px) {
     .sticky-logo-square {
         //width: 20%;
     }
@@ -182,3 +189,34 @@
     color: black;
     opacity: 1;
   }
+
+.contact-us-wrapper {
+    background: linear-gradient(106.94deg, #3A70CF 3.96%, #1146A2 39.76%);
+}
+
+.logo-img {
+    object-fit: fill;
+    min-height: 52px;
+    min-width: 52px;
+    max-width: 52px;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    max-height: 52px;
+    background: #7a7a7a85;
+}
+
+.logo-img-mb{
+    max-height: unset;
+}
+
+.logo-separator {
+    width: 2px;
+    height: 40px;
+    background-color: #9d9d9d;
+}
+
+.logo-container-multiple {
+    display: flex;
+    align-items: center;
+}

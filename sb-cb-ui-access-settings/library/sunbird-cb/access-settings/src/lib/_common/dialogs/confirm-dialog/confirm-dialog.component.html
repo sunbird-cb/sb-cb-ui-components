@@ -1,0 +1,86 @@
+<div class="dialog-confirm p-4" *ngIf="data && data?.type !== 'confirm-reset-fields'">
+  <div class="flex items-center justify-center flex-column">
+    <div class="icon mb-6" [ngSwitch]="data?.type">
+      <mat-icon *ngSwitchCase="'delete'">delete</mat-icon>
+      <mat-icon *ngSwitchCase="'delete-live'">delete</mat-icon>
+      <mat-icon *ngSwitchCase="'confirm-access-type'" svgIcon="radio-on"></mat-icon>
+      <mat-icon *ngSwitchCase="'confirm-apply-accesscontrol-for-live'" svgIcon="radio-on"></mat-icon>
+    </div>
+
+    <div [ngSwitch]="data?.type">
+      <ng-container *ngSwitchCase="'delete'">
+        <div class="confirm-title text-center">Are you sure you want to delete {{ data?.additionalData || "" }} ?</div>
+        <div class="confirm-desc text-center">
+          Once deleted, it cannot be restored, and any access permissions associated with it will be removed. This action is irreversible.
+        </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="'delete-live'">
+        <div class="confirm-title text-center">Are you sure you want to delete {{ data?.additionalData || "" }} ?</div>
+        <div class="confirm-desc text-center">
+           Deleting the user group settings will impact users’ access to this content based on the revised criteria. These changes may take some time to reflect to the user. Please confirm if you would like to proceed ?
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'confirm-access-type'">
+        <div class="confirm-title text-center">Are you sure you want to opt for "Public" access?</div>
+        <div class="confirm-desc text-center">Or else please cancel and select <strong>"Custom"</strong> for the restricted content access.</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'confirm-save-without-user-group'">
+        <div class="confirm-title text-center">Are you sure you want to save without adding user group/s?</div>
+        <div class="confirm-desc text-center">Or please cancel and <strong>“Add User Group”</strong> for the restricted content access,</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'confirm-apply-accesscontrol-for-live'">
+        <div class="confirm-title text-center">
+          Are you sure you want to apply changes without any more modifications?
+        </div>
+        <div class="confirm-desc text-center">
+          <p><strong>These changes will go live immediately</strong> and affect <strong>all enrolled learners</strong>.</p>
+        </div>
+      </ng-container>
+    </div>
+
+    <ng-container *ngIf="data?.type === 'delete' || data?.type === 'delete-live'">
+      <div class="confirm-actions flex items-center gap-4 mt-4">
+        <button mat-flat-button class="mat-btn-outline mt-2 gap-2 border-radius-4" (click)="confirmNo()">No</button>
+        <button mat-flat-button class="new-bg-color text-white mt-2" (click)="confirmYes()">Yes</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="data?.type === 'confirm-access-type' || data?.type === 'confirm-save-without-user-group' || data?.type === 'confirm-apply-accesscontrol-for-live'">
+      <div class="confirm-actions flex items-center gap-4 mt-4">
+        <button mat-flat-button class="mat-btn-outline mt-2 gap-2 border-radius-4" (click)="confirmNo()">Cancel</button>
+        <button mat-flat-button class="new-bg-color text-white mt-2" (click)="confirmYes()">Yes</button>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div class="dialog-confirm p-4" *ngIf="data && data?.type === 'confirm-reset-fields'">
+  <div class="flex items-center justify-center flex-column">
+
+    <div class="icon mb-6" [ngSwitch]="data.type">
+      <mat-icon *ngSwitchCase="'confirm-reset-fields'" svgIcon="radio-on"></mat-icon>
+    </div>
+
+    <div [ngSwitch]="data?.type">
+      <ng-container *ngSwitchCase="'confirm-reset-fields'">
+        <div class="confirm-title text-center">
+          Any changes in this condition would reset the below AND conditions, do you still wish to continue?
+        </div>
+        <!-- Optional description div can go here -->
+      </ng-container>
+    </div>
+
+    <ng-container *ngIf="data?.type === 'confirm-reset-fields'">
+      <div class="confirm-actions flex items-center justify-center gap-4 mt-4">
+        <button mat-flat-button class="mat-btn-outline mt-2 gap-2" (click)="confirmNo()">Cancel</button>
+        <button mat-flat-button class="new-bg-color text-white mt-2" (click)="confirmYes()">Confirm</button>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
+
+

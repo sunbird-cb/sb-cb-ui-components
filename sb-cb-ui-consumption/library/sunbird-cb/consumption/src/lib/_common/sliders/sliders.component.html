@@ -1,41 +1,46 @@
-<div class="banner-container {{isMobile? styleData?.responsive?.bannerMetaClass : styleData?.bannerMetaClass}} {{type === 'atictitop' ? 'atictitopbanner' : ''}}"  (swipeleft)="slideTo(currentIndex + 1)" (swiperight)="slideTo(currentIndex - 1)"
-  *ngIf="widgetData?.length > 1" [style.height]="isMobile? styleData?.responsive?.customHeight : styleData?.customHeight"
+<div
+  class="banner-container {{isMobile? styleData?.responsive?.bannerMetaClass : styleData?.bannerMetaClass}} {{type === 'atictitop' ? 'atictitopbanner' : ''}}"
+  (swipeleft)="slideTo(currentIndex + 1)" (swiperight)="slideTo(currentIndex - 1)" *ngIf="widgetData?.length > 1"
+  [style.height]="isMobile? styleData?.responsive?.customHeight : styleData?.customHeight"
   [ngStyle]="{'border-radius': styleData?.borderRadius || '12px'}">
   <a (click)="raiseTelemetry(widgetData[currentIndex].redirectUrl)"
     class="banner-overlay {{widgetData[currentIndex] && widgetData[currentIndex].redirectUrl ? '' : 'pointer-events-none'}}"
     [routerLink]=" !isOpenInNewTab && widgetData[currentIndex].redirectUrl? widgetData[currentIndex].redirectUrl : null"
     [ngClass]="{'cursor-auto': !widgetData[currentIndex].redirectUrl}">
-    <div class="banner WidgetInstanceId" 
-    *ngFor="let slide of widgetData; let i = index" 
-    [hidden]="i !== currentIndex" 
-    [ngStyle]="{
+    <div class="banner WidgetInstanceId" *ngFor="let slide of widgetData; let i = index" [hidden]="i !== currentIndex"
+      [ngStyle]="{
         'border-width': isMobile?  styleData?.responsive?.imageBorderWidth : styleData?.imageBorderWidth,
         'border-color': isMobile? styleData?.responsive?.imageBorderColor : styleData?.imageBorderColor,
         'border-style': isMobile? styleData?.responsive?.imageBorderStyle: styleData?.imageBorderStyle}">
-      <img i18n-alt alt="Page Banner" [src]="slide.banners" wsUtilsImageResponsive class="{{type === 'atictitopbanner' ? 'banner-image' : 'bannerimage-mdo'}}"  />
+      <img i18n-alt alt="Page Banner" [src]="slide.banners" wsUtilsImageResponsive
+        class="{{type === 'atictitopbanner' ? 'banner-image' : 'bannerimage-mdo'}}" />
     </div>
   </a>
-  <ng-container *ngIf="isMobile && styleData?.responsive?.dots !== 'hidden' || !isMobile && styleData?.dots !== 'hidden'">
+  <ng-container
+    *ngIf="isMobile && styleData?.responsive?.dots !== 'hidden' || !isMobile && styleData?.dots !== 'hidden'">
     <div class="banner-meta {{isMobile? styleData?.responsive?.bannerMetaAlign : styleData?.bannerMetaAlign}}">
-      <a [routerLink]=" !isOpenInNewTab && widgetData[currentIndex].redirectUrl? widgetData[currentIndex].redirectUrl : null"
+      <!-- <a [routerLink]=" !isOpenInNewTab && widgetData[currentIndex].redirectUrl? widgetData[currentIndex].redirectUrl : null"
       class="banner-title text-truncate {{widgetData[currentIndex] && widgetData[currentIndex].redirectUrl ? '' : 'pointer-events-none'}}"
         *ngIf="widgetData[currentIndex].title" [title]="widgetData[currentIndex].title">
         {{ widgetData[currentIndex].title }}
-      </a>
+      </a> -->
       <div class="dots-container" *ngIf="widgetData?.length > 1">
         <span class="dot" [ngClass]="{ active: j === currentIndex }" *ngFor="let slide of widgetData; let j = index"
           (click)="slideTo(j)"></span>
       </div>
     </div>
   </ng-container>
-  <div class="navigation {{isMobile? styleData?.responsive?.arrowsPlacement : styleData?.arrowsPlacement}}" 
-  *ngIf="isMobile && styleData?.responsive?.navigationArrows !== 'hidden' || !isMobile && styleData?.navigationArrows !== 'hidden'">
+  <div class="navigation {{isMobile? styleData?.responsive?.arrowsPlacement : styleData?.arrowsPlacement}}"
+    *ngIf="isMobile && styleData?.responsive?.navigationArrows !== 'hidden' || !isMobile && styleData?.navigationArrows !== 'hidden'">
     <a *ngIf="widgetData?.length > 1" role="button" class="prev" (click)="slideTo(currentIndex - 1)">&#10094;</a>
     <a *ngIf="widgetData?.length > 1" role="button" class="next" (click)="slideTo(currentIndex + 1)">&#10095;</a>
   </div>
 </div>
-<div class="banner-container-solo {{type === 'atictitop' ? 'atictitopbanner' : ''}}" [style.height]="isMobile? styleData?.responsive?.customHeight : styleData?.customHeight" *ngIf="widgetData?.length == 1">
-  <img i18n-alt alt="Page Banner" width="100%" height="100%" [src]="widgetData[0].banners" wsUtilsImageResponsive class="banner-image-solo" />
+<div class="banner-container-solo {{type === 'atictitop' ? 'atictitopbanner' : ''}}"
+  [style.height]="isMobile? styleData?.responsive?.customHeight : styleData?.customHeight"
+  *ngIf="widgetData?.length == 1" [ngStyle]="{'border-radius': styleData?.borderRadius || '12px'}">
+  <img i18n-alt alt="Page Banner" width="100%" height="100%" [src]="widgetData[0].banners" wsUtilsImageResponsive
+    class="banner-image-solo" [ngStyle]="{'border-radius': styleData?.borderRadius || '12px'}" />
 </div>
 <!-- <div class="banner-container" (swipeleft)="slideTo(currentIndex + 1)" (swiperight)="slideTo(currentIndex - 1)"
   *ngIf="widgetData?.length">
@@ -67,10 +72,10 @@
 <ng-container *ngIf="!widgetData?.length">
   <div class="slider default-slider h-full">
     <div class="relative h-full">
-        <img class="h-full" src="assets/icons/home/default-slider-image.svg" alt="">
-        <div class="default-title rounded-full">
-            <p class="mat-h1">{{title}}</p>
-        </div>
+      <img class="h-full" src="assets/icons/home/default-slider-image.svg" alt="">
+      <div class="default-title rounded-full">
+        <p class="mat-h1">{{title}}</p>
+      </div>
     </div>
   </div>
 </ng-container>

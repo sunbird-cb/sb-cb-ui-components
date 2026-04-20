@@ -5,7 +5,8 @@
         <mat-card class="video-player-mobile">
           <mat-card-content class="video-player-mobile-container">
             <div id="fullScreenContainer" class="video-player">
-              <ng-container *ngIf="isFetchingDataComplete" [wsResolverWidget]="widgetResolverVideoData"></ng-container>
+              <ng-container *ngIf="isFetchingDataComplete"
+                [sbUiResolverWidget]="widgetResolverVideoData"></ng-container>
             </div>
             <ng-container *ngIf="!isScreenSizeSmall">
               <div class="flex justify-end mt-3">
@@ -14,7 +15,7 @@
                       | pipePartialContent
                         : [
                             'identifier',
-                            'contentType',
+                            'primaryCategory',
                             'resourceType',
                             'mimeType',
                             'downloadUrl',
@@ -23,7 +24,7 @@
                              'artifactUrl'
                           ]
                   "></ws-widget-btn-content-download>
-                <ws-widget-btn-content-like [forPreview]="forPreview"
+                <!-- <ws-widget-btn-content-like [forPreview]="forPreview"
                   [widgetData]="videoData | pipePartialContent: ['identifier']">
                 </ws-widget-btn-content-like>
                 <ws-widget-btn-content-share [forPreview]="forPreview"></ws-widget-btn-content-share>
@@ -32,13 +33,13 @@
                 <ws-widget-btn-content-feedback [forPreview]="forPreview"></ws-widget-btn-content-feedback>
                 <ws-widget-btn-content-feedback-v2 [forPreview]="forPreview"
                   [widgetData]="videoData | pipePartialContent: ['identifier', 'name']">
-                </ws-widget-btn-content-feedback-v2>
+                </ws-widget-btn-content-feedback-v2> -->
               </div>
             </ng-container>
           </mat-card-content>
         </mat-card>
       </div>
-      <div class="vidoe-title margin-top-m" *ngIf="videoData">
+      <div class="vidoe-title margin-top-m" *ngIf="videoData && !isMobile">
         <mat-card *ngIf="isScreenSizeSmall" class="unit-meta-item">
           <div class="flex flex-between flex-wrapped">
             <div>
@@ -47,7 +48,7 @@
                     | pipePartialContent
                       : [
                           'identifier',
-                          'contentType',
+                          'primaryCategory',
                           'resourceType',
                           'mimeType',
                           'downloadUrl',
@@ -68,17 +69,16 @@
       </div>
     </div>
   </div>
-  <div *ngIf="discussionForumWidget && isRestricted">
+  <!-- <div *ngIf="discussionForumWidget && isRestricted">
     <div class="padding-m video-discussion-forum-in margin-bottom-m">
       <h2 class="mat-toolbar discussion-head">Discussion Forum</h2>
-      <ng-container [wsResolverWidget]="discussionForumWidget"></ng-container>
-      <!-- <ng-container [wsResolverWidget]="''"></ng-container> -->
+      <ng-container [sbUiResolverWidget]="discussionForumWidget"></ng-container>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <div class="full-height-width-iframe" *ngIf="!isNotEmbed">
   <div class="video-player-embed">
-    <ng-container *ngIf="isFetchingDataComplete" [wsResolverWidget]="widgetResolverVideoData"></ng-container>
+    <ng-container *ngIf="isFetchingDataComplete" [sbUiResolverWidget]="widgetResolverVideoData"></ng-container>
   </div>
 </div>

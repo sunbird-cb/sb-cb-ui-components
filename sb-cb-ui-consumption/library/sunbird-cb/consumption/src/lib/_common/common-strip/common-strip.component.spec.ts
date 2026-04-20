@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CommonStripComponent } from './common-strip.component';
 
@@ -6,7 +6,7 @@ describe('CommonStripComponent', () => {
   let component: CommonStripComponent;
   let fixture: ComponentFixture<CommonStripComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ CommonStripComponent ]
     })

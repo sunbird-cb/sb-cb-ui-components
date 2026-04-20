@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-4">
+    <ng-container *ngFor="let post of bookmarkPosts">
+        <!-- <d-v2-post-card [cardType]="widgetData?.postsList?.cardType" [userJoinedCommunity]="userJoinedCommunity"
+            [hierarchyPath]="[post?.discussionId]" [cardConfig]="widgetData?.postsList" [post]="post"
+            [replyData]="post?.answerPosts" [community]="communityData" [parentPost]="post"
+            [id]="'post-' + post?.discussionId" [type]="widgetData?.newPostSection?.type"
+            (bookmarkEvent)="bookmarkEvent($event)" (newComment)="newCommentEvent($event)"
+            (likeUnlikeData)="likeUnlikeEvent($event)"></d-v2-post-card> -->
+        <d-v2-post-card-v2 [cardType]="widgetData?.levelConfigs?.level0?.cardConfig?.cardType" [userJoinedCommunity]="userJoinedCommunity"
+        [hierarchyPath]="[post?.discussionId]" [id]="'post-' + post?.discussionId"
+        [cardConfig]="widgetData" [post]="post" [replyData]="post?.answerPosts"
+        [community]="communityData" (newComment)="newCommentEvent($event)" [parentPost]="post"
+        (likeUnlikeData)="likeUnlikeEvent($event)" (bookmarkEvent)="bookmarkEvent($event)"
+        [type]="widgetData?.levelConfigs?.level0?.type" [showCommunity]="true"
+        [levelKey]="'level0'" [currentLevel]="0">
+        </d-v2-post-card-v2>
+    </ng-container>
+</div>
+
+<ng-container *ngIf="bookmarkPosts?.length === 0">
+    <div class="mt-8">
+        <d-v2-no-data [iconName]="'forum'" [noText]="'No Bookmarks found'"></d-v2-no-data>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="!(bookmarkPosts.length >= totalNumberOfBookmarksCount)">
+    <div class="load-more-posts my-4 mt-8">
+        <button mat-flat-button color="primary" class="w-full underline nodtranslate" (click)="loadMoreMembers()">Load
+            More</button>
+    </div>
+</ng-container>

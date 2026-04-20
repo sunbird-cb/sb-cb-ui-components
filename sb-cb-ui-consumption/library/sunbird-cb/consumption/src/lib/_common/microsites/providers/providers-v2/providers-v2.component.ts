@@ -88,7 +88,7 @@ export class ProvidersV2Component implements OnInit  {
   }
   hideContentStrip(event: any, contentStripData: any) {
     if (event) {
-      contentStripData['hideSection'] = true
+      contentStripData.contentStrip['hideSection'] = true
     }
   }
   hideLearnerReview(event: any, learnerReview: any) {
@@ -97,15 +97,14 @@ export class ProvidersV2Component implements OnInit  {
     }
   }
 
-  showAllContent(_stripData: any, contentStrip: any) {
-    if (contentStrip && contentStrip.strips && contentStrip.strips.length) {
-      const stripData: any = contentStrip.strips[0]
-      if (stripData && stripData.request) {
-        delete(stripData['loaderWidgets'])
+  showAllContent(_stripData: any, columnData: any) {
+    if (columnData && columnData.contentStrip && columnData.contentStrip.strips && columnData.contentStrip.strips.length) {
+      const stripData: any = _stripData
+        let tabSelected =  stripData.viewMoreUrl && stripData.viewMoreUrl.queryParams && stripData.viewMoreUrl.queryParams.tabSelected && stripData.viewMoreUrl.queryParams.tabSelected || ''
         this.router.navigate(
           [`/app/learn/browse-by/provider/${this.providerName}/${this.providerId}/all-content`],
-          { queryParams: { stripData: JSON.stringify(stripData), pageDetails: true } })
-      }
+          { queryParams: {  pageDetails: true, tabSelected, key: columnData.sectionKey  } })
+
     } else {
        this.router.navigate(
         [`/app/learn/browse-by/provider/${this.providerName}/${this.providerId}/all-CBP`],

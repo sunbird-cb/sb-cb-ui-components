@@ -3,27 +3,33 @@
         <img class="" [src]="objectData?.logoUrl">
     </div>
     <div class="flex item-center key-logo">
-        <div class="key-heading"
-            [style.backgroundColor]="objectData?.header?.background"
+        <div class="key-heading" [style.backgroundColor]="objectData?.header?.background"
             [style.color]="objectData?.header?.color">
             {{objectData?.title}}
         </div>
+        <button *ngIf="isEdit" mat-icon-button class="edit-icon" (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+        </button>
     </div>
-    <div class="key-list-container"
-        [style.borderColor]="objectData?.panelborder"
+    <div class="key-list-container" [style.borderColor]="objectData?.panelborder"
         [style.backgroundColor]="objectData?.panelBackground">
-        <div class="{{mobileHeight ? 'mob-key-list' : expand && expanded ? 'exp-key-list' : 'key-list'}}" *ngIf="objectData?.list?.length">
+        <div class="{{mobileHeight ? 'mob-key-list' : expand && expanded ? 'exp-key-list' : 'key-list'}}"
+            *ngIf="objectData?.list?.length">
             <div *ngFor="let item of objectData?.list; let i = index">
-                <div class="key-list-item mb-{{ objectData?.list?.length === (i+1) ? '' : '4'}}" 
+                <div class="key-list-item mb-{{ objectData?.list?.length === (i+1) ? '' : '4'}}"
                     [style.borderColor]="objectData?.listItem?.border"
                     [style.backgroundColor]="objectData?.listItem?.background">
-                    <div class="key-list-item-content {{item?.value?.length > 152 && !item?.expanded ? 'expand' : 'un-expand'}}" [innerHTML]="item?.value"></div>
-                    <div class="more-or-less" *ngIf="item?.value?.length > 152" [style.color]="objectData?.panelborder">
-                        <div class="cursor-pointer" (click)="viewMoreOrLess(item)" *ngIf="!item?.expanded">View more</div>
-                        <div class="cursor-pointer" (click)="viewMoreOrLess(item)" *ngIf="item?.expanded">View less</div>
+                    <div class="key-list-item-content {{item?.description?.length > 152 && !item?.expanded ? 'expand' : 'un-expand'}}"
+                        [innerHTML]="item?.description"></div>
+                    <div class="more-or-less" *ngIf="item?.description?.length > 152"
+                        [style.color]="objectData?.panelborder">
+                        <div class="cursor-pointer" (click)="viewMoreOrLess(item)" *ngIf="!item?.expanded">View more
+                        </div>
+                        <div class="cursor-pointer" (click)="viewMoreOrLess(item)" *ngIf="item?.expanded">View less
+                        </div>
                     </div>
                 </div>
-            </div>                        
+            </div>
         </div>
         <div class="{{mobileHeight ? 'mob-key-list' : 'key-list'}}" *ngIf="!objectData?.list?.length">
             <div class="text-center">No announcements yet!</div>
@@ -43,15 +49,14 @@
 <div class="w-full" *ngIf="layoutType === 'mobile'">
     <div class="flex item-center key-logo ">
         <div class="mob-key-heading" (click)="openAnnouncements()"
-            [style.backgroundColor]="objectData?.header?.background"
-            [style.color]="objectData?.header?.color">
+            [style.backgroundColor]="objectData?.header?.background" [style.color]="objectData?.header?.color">
             <div class="flex key-button gap-3">
                 <div>
                     <img [src]="objectData?.mobileIcon">
                 </div>
-                <div>{{objectData?.title}}</div>                
+                <div>{{objectData?.title}}</div>
                 <div><mat-icon class="key-mob-icon">arrow_forward_ios</mat-icon></div>
-            </div>            
+            </div>
         </div>
     </div>
 </div>
@@ -61,31 +66,30 @@
         <img class="" [src]="objectData?.logoUrl">
     </div>
     <div class="flex item-center key-logo pt-1">
-        <div class="key-heading"
-            [style.backgroundColor]="objectData?.header?.background"
+        <div class="key-heading" [style.backgroundColor]="objectData?.header?.background"
             [style.color]="objectData?.header?.color">
             {{objectData?.title}}
         </div>
     </div>
-    <div class="key-list-container"
-        [style.borderColor]="objectData?.panelborder"
+    <div class="key-list-container" [style.borderColor]="objectData?.panelborder"
         [style.backgroundColor]="objectData?.panelBackground">
-        <div class="{{mobileHeight ? 'mob-key-list' : 'key-list'}}" >            
-            <div class="key-list-item mb-4" 
-                *ngFor="let item of[0,1,2,3,4]; let i = index"
+        <div class="{{mobileHeight ? 'mob-key-list' : 'key-list'}}">
+            <div class="key-list-item mb-4" *ngFor="let item of[0,1,2,3,4]; let i = index"
                 [style.borderColor]="objectData?.listItem?.border"
                 [style.backgroundColor]="objectData?.listItem?.background">
                 <div class="key-list-item-content un-expand">
                     <div class="py-1">
-                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'350px'" [height]="'24px'">
+                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'350px'"
+                            [height]="'24px'">
                         </sb-uic-skeleton-loader>
                     </div>
                     <div class="py-1">
-                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'350px'" [height]="'24px'">
+                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'350px'"
+                            [height]="'24px'">
                         </sb-uic-skeleton-loader>
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 </div>

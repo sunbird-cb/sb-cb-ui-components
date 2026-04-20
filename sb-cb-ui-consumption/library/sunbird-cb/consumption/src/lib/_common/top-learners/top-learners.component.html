@@ -1,121 +1,146 @@
-<div class="flex flex-center">
-    <div>
-        <div class="title-border"></div>
-        <div class="title" [style.color]="objectData?.titleFontColor">{{objectData?.title}} ({{month}})</div>
-        <div class="title-border"></div>
-    </div>    
-</div>
-<div class="top-learners-container" *ngIf="!loading && results.length">
-    <div class="w-full margin-bottom-l margin-top-l">
-        <div class="flex gap-3">
-            <div *ngFor="let obj of results; let i=index" class="flex-container">
-                <div class="flex-item user-box">
-                    <div class="flex gap-3 img-name-sec">
-                        <div class="flex gap-3">
-                            <div class="profile-pic" *ngIf="obj?.profile_image">
-                                <img [src]="obj?.profile_image" class="user-image"/>
-                            </div>
-                            <div class="initial" *ngIf="!obj?.profile_image"
-                                [style.backgroundColor]="colors[i]"
-                                >
-                                {{createInititals(obj?.fullname)}}
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <div class="name-sec" *ngIf="obj?.fullname?.length >= 24"
-                                    #tooltip="matTooltip"
-                                    [matTooltipClass]="'below'"
-                                    matTooltip="{{obj?.fullname}}"
-                                    [matTooltipPosition]="'below'">
-                                        {{obj?.fullname}}
-                                </div>
-                                <div class="name-sec" *ngIf="obj?.fullname?.length < 24">
-                                    {{obj?.fullname}}
-                                </div>
-                                <div class="designation-sec" *ngIf="obj?.designation?.length >= 32"
-                                    #tooltip="matTooltip"
-                                    [matTooltipClass]="'below'"
-                                    matTooltip="{{obj?.designation}}"
-                                    [matTooltipPosition]="'below'">
-                                        {{obj?.designation}}
-                                </div>
-                                <div class="designation-sec"  *ngIf="obj?.designation?.length < 32">{{obj?.designation}}</div>
-                                <div class="designation-sec" *ngIf="obj?.org_name?.length >= 32"
-                                    #tooltip="matTooltip"
-                                    [matTooltipClass]="'below'"
-                                    matTooltip="{{obj?.org_name}}"
-                                    [matTooltipPosition]="'below'">
-                                        {{obj?.org_name}}
-                                </div>
-                                <div class="designation-sec" *ngIf="obj?.org_name?.length < 32">{{obj?.org_name}}</div>
-                            </div>
-                        </div>
-                        <div class="flex gap-3">                                                       
-                            <div class="rank-sec">{{getRank(+obj?.row_num)}}</div>
-                        </div>                        
-                    </div>
-                    <div class="flex gap-2 kp-section">
-                        <div class="kp-icon"><img [src]="objectData?.kpIcon" class="kp-image"/></div>
-                        <div class="points">{{obj?.total_points || 0}}</div>
-                    </div>
+<div class="top-learners-main-wrapper relative">
+    <!-- Always show the edit button even when component is disabled -->
+    <div class="edit-section" *ngIf="isEdit">
+        <button class="edit-icon" (click)="onEdit()" matTooltip="Edit Top Learners" aria-label="Edit Top Learners">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+
+    <!-- Only show the component content when enabled -->
+    <ng-container *ngIf="objectData?.enabled !== false">
+        <div class="top-section relative">
+            <div class="flex items-center flex-wrap justify-center">
+                <div class="title-border w-full"></div>
+                <div class="title w-full" [style.color]="objectData?.titleFontColor">{{objectData?.title}} ({{month}})
                 </div>
+                <div class="title-border w-full"></div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="top-learners-container" *ngIf="!loading && results.length === 0">
-    <div class="margin-top-l noData">
-        No data
-    </div>
-</div>
-
-<ng-container>
-    <div class="top-learners-container" *ngIf="loading">
-        <div class="w-full margin-bottom-l margin-top-l">
-            <div class="flex gap-3">
-                <div *ngFor="let obj of [1,2,3]" class="flex-container">
-                    <div class="flex-item user-box">
-                        <div class="flex gap-3 img-name-sec">
-                            <div class="flex gap-3">
-                                <div class="profile-pic">
-                                    <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'44px'"
-                        [height]="'44px'"></sb-uic-skeleton-loader>
+    </ng-container>
+    <!-- Only show content when component is enabled -->
+    <ng-container *ngIf="objectData?.enabled !== false">
+        <div class="top-learners-container" *ngIf="!loading && results.length">
+            <div class="w-full margin-bottom-l margin-top-l">
+                <div class="flex gap-3">
+                    <div *ngFor="let obj of results; let i=index" class="flex-container">
+                        <div class="flex-item user-box {{objectData?.customClass}}"
+                            [style.height]="objectData?.cardHeight" [style.minHeight]="objectData?.cardMinHeight">
+                            <div class="flex gap-3 img-name-sec">
+                                <div class="flex gap-3">
+                                    <div class="profile-pic" *ngIf="obj?.profile_image">
+                                        <img [src]="obj?.profile_image" class="user-image" />
+                                    </div>
+                                    <div class="initial" *ngIf="!obj?.profile_image"
+                                        [style.backgroundColor]="colors[i]">
+                                        {{createInititals(obj?.fullName || obj?.fullname)}}
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <div class="name-sec" *ngIf="(obj?.fullName || obj?.fullname)?.length >= 24"
+                                            #tooltip="matTooltip" [matTooltipClass]="'below'"
+                                            matTooltip="{{obj?.fullName || obj?.fullname}}"
+                                            [matTooltipPosition]="'below'">
+                                            {{obj?.fullName || obj?.fullname}}
+                                        </div>
+                                        <div class="name-sec" *ngIf="(obj?.fullName || obj?.fullname)?.length < 24">
+                                            {{obj?.fullName || obj?.fullname}}
+                                        </div>
+                                        <div class="designation-sec" *ngIf="obj?.designation?.length >= 32"
+                                            #tooltip="matTooltip" [matTooltipClass]="'below'"
+                                            matTooltip="{{obj?.designation}}" [matTooltipPosition]="'below'">
+                                            {{obj?.designation}}
+                                        </div>
+                                        <div class="designation-sec" *ngIf="obj?.designation?.length < 32">
+                                            {{obj?.designation}}</div>
+                                        <div class="designation-sec"
+                                            *ngIf="(obj?.orgName || obj?.org_name)?.length >= 32" #tooltip="matTooltip"
+                                            [matTooltipClass]="'below'" matTooltip="{{obj?.orgName || obj?.org_name}}"
+                                            [matTooltipPosition]="'below'">
+                                            {{obj?.orgName || obj?.org_name}}
+                                        </div>
+                                        <div class="designation-sec"
+                                            *ngIf="(obj?.orgName || obj?.org_name)?.length < 32">{{obj?.orgName ||
+                                            obj?.org_name}}</div>
+                                    </div>
                                 </div>
-                                <div class="flex flex-col gap-1">
-                                    <div class="name-sec">
-                                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'200px'"
-                                        [height]="'24px'"></sb-uic-skeleton-loader>
-                                    </div>
-                                    <div class="designation-sec">
-                                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'200px'"
-                                        [height]="'16px'"></sb-uic-skeleton-loader>
-                                    </div>
-                                    <div class="designation-sec">
-                                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'200px'"
-                                        [height]="'16px'"></sb-uic-skeleton-loader>
-                                    </div>
+                                <div class="flex gap-3">
+                                    <div class="rank-sec">{{getRank(+obj?.row_num)}}</div>
                                 </div>
                             </div>
-                            <div class="flex gap-3">                                                       
-                                <div class="rank-sec">
-                                    <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'44px'"
-                                        [height]="'44px'"></sb-uic-skeleton-loader>
+                            <div class="flex gap-2 kp-section" *ngIf="!objectData?.hideEle?.includes('karma-points')">
+                                <div class="kp-icon">
+                                    <img [src]="objectData?.data?.kpIcon" class="kp-image" />
                                 </div>
-                            </div>                        
-                        </div>
-                        <div class="flex gap-2 kp-section">
-                            <div class="kp-icon">
-                                <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
-                                [height]="'32px'"></sb-uic-skeleton-loader>   
-                            </div>
-                            <div class="points">
-                                <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
-                                        [height]="'32px'"></sb-uic-skeleton-loader>
+                                <div class="points">{{obj?.total_points || 0}}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="top-learners-container" *ngIf="!loading && results.length === 0">
+            <div class="margin-top-l noData">
+                No data
+            </div>
+        </div>
+
+        <ng-container>
+            <div class="top-learners-container" *ngIf="loading">
+                <div class="w-full margin-bottom-l margin-top-l">
+                    <div class="flex gap-3">
+                        <div *ngFor="let obj of [1,2,3]" class="flex-container">
+                            <div class="flex-item user-box">
+                                <div class="flex gap-3 img-name-sec">
+                                    <div class="flex gap-3">
+                                        <div class="profile-pic">
+                                            <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                                                [width]="'44px'" [height]="'44px'"></sb-uic-skeleton-loader>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <div class="name-sec">
+                                                <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                                                    [width]="'200px'" [height]="'24px'"></sb-uic-skeleton-loader>
+                                            </div>
+                                            <div class="designation-sec">
+                                                <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                                                    [width]="'200px'" [height]="'16px'"></sb-uic-skeleton-loader>
+                                            </div>
+                                            <div class="designation-sec">
+                                                <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                                                    [width]="'200px'" [height]="'16px'"></sb-uic-skeleton-loader>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="rank-sec">
+                                            <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'"
+                                                [width]="'44px'" [height]="'44px'"></sb-uic-skeleton-loader>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 kp-section">
+                                    <div class="kp-icon">
+                                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
+                                            [height]="'32px'"></sb-uic-skeleton-loader>
+                                    </div>
+                                    <div class="points">
+                                        <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon'" [width]="'32px'"
+                                            [height]="'32px'"></sb-uic-skeleton-loader>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+
+    <!-- Show disabled message when component is disabled -->
+    <div class="disabled-message" *ngIf="objectData?.enabled === false && (isEdit)">
+        <div class="message-content">
+            <mat-icon>visibility_off</mat-icon>
+            <span>Top Learners section is currently disabled</span>
+        </div>
     </div>
-</ng-container>
+</div> <!-- Close the top-learners-main-wrapper div -->

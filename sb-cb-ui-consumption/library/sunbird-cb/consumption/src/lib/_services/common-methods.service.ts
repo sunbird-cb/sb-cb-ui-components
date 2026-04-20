@@ -65,4 +65,30 @@ export class CommonMethodsService {
     }
     return returnValue
   }
+
+  transformContentsToWidgetsWithoutStrip(
+    contents: NsContent.IContent[]
+
+  ) {
+    return (contents || []).map((content, idx) => (
+      content ? {
+        widgetType: 'cardLib',
+        widgetSubType: 'cardContentLib',
+        widgetHostClass: 'mb-2',
+        widgetData: {
+          content,
+          ...(content.batch && { batch: content.batch }),
+        },
+      } : {
+        widgetType: 'card',
+        widgetSubType: 'cardContent',
+        widgetHostClass: 'mb-2',
+        widgetData: {},
+      }
+    ));
+  }
+
+  getCourseUnitIds() {
+    return localStorage.getItem('comprehensiveAssessmentCourseUnits')
+  }
 }

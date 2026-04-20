@@ -46,6 +46,7 @@ export const ROOT_WIDGET_CONFIG = {
     home_hubs: 'cardHomeHubs',
     home_course: 'cardCourse',
     home_carrier: 'cardHomeCarrier',
+    card_competency: 'competencyCard',
   },
   contentStrip: {
     _type: 'contentStrip',
@@ -78,6 +79,10 @@ export const ROOT_WIDGET_CONFIG = {
     _type: 'discussionForum',
     discussionForum: 'discussionForum',
   },
+  userDetailsForum: {
+    _type: 'userDetailsForum',
+    userDetailsForum: 'userDetailsForum',
+  },
   graph: {
     _type: 'graph',
     graphGeneral: 'graphGeneral',
@@ -88,16 +93,29 @@ export const ROOT_WIDGET_CONFIG = {
     linear: 'linearLayout',
     tab: 'tabLayout',
     grid: 'gridLayout',
+    newgrid: 'newGridLayout',
+  },
+  table: {
+    _type: 'table',
+    cardTable: 'cardTable',
+  },
+  menus: {
+    _type: 'menus',
+    leftMenu: 'leftMenu',
+    leftMenuV1: 'leftMenuV1',
+    leftMenuV2: 'leftMenuV2',
   },
   player: {
     _type: 'player',
     amp: 'playerAmp',
     audio: 'playerAudio',
     pdf: 'playerPDF',
+    survey: 'playerSurvey',
     slides: 'playerSlides',
     video: 'playerVideo',
     webPages: 'playerWebPages',
     youtube: 'playerYoutube',
+    offlineSession: 'playerOfflineSession',
   },
   slider: {
     _type: 'slider',
@@ -120,10 +138,10 @@ export const ROOT_WIDGET_CONFIG = {
     career: 'career',
     competencies: 'competencies',
     certifications: 'certifications',
-    certificationsV2: 'certificationsv2',
     departments: 'departments',
     // publications: 'publications',
     hobbies: 'hobbies',
+    certificationsV2: 'certificationsV2',
   },
   element: {
     _type: 'element',
@@ -153,13 +171,5 @@ export const ROOT_WIDGET_CONFIG = {
   wrapper: {
     _type: 'wrapper',
     videoWrapper: 'videoWrapper',
-  },
-  menus: {
-    _type: 'menus',
-    leftMenu: 'leftMenu',
-  },
-  table: {
-    _type: 'table',
-    cardTable: 'cardTable',
   },
 }

@@ -1,0 +1,149 @@
+@import '@ctrl/ngx-emoji-mart/picker';
+.start-comment-container {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background-color: white !important;
+}
+
+.new-post-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    color: #f69953;
+}
+
+.primary-button {
+    background: #1a4ca1 !important;
+    color: #fff !important;
+    height: 40px;
+}
+
+.primary-button:disabled {
+    opacity: 0.5;
+}
+
+.discuss-input {
+    border-radius: 48px;
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid #00000029;
+    padding-right: 40px; // for emoji icon at right
+}
+
+.custom-rounded {
+    height: 40px;
+    min-width: 72px;
+    border-radius: 30px;
+    line-height: normal;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.emoji-picker{
+    position: absolute;
+    right: 24px;
+    top: 8px;
+    color: #FF8400 !important;
+    cursor: pointer;
+}
+
+.emoji-mart {
+    top: 40px;
+    left: 16px;
+    max-width: 100%;
+    z-index: 1;
+}
+
+
+// mention styles
+.mention-dropdown {
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  width: auto;
+  top: 45px;
+}
+
+.mention-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  gap: 8px;
+}
+
+.mention-no-results {
+  padding: 10px;
+  text-align: center;
+  color: #666;
+}
+
+.mention-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mention-list-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mention-list-item:last-child {
+  border-bottom: none;
+}
+
+.mention-list-item.active,
+.mention-list-item:hover {
+  background-color: #f5f5f5;
+}
+
+.mention-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 12px;
+  overflow: hidden;
+}
+
+.mention-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mention-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #757575;
+}
+
+.mention-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mention-user-name {
+  font-weight: 500;
+}
+
+.mention-user-email {
+  font-size: 12px;
+  color: #666;
+}

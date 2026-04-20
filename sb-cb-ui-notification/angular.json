@@ -1,0 +1,46 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "notification": {
+      "projectType": "library",
+      "root": "library/sunbird-cb/notification",
+      "sourceRoot": "library/sunbird-cb/notification/src",
+      "prefix": "sb-uin",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "library/sunbird-cb/notification/tsconfig.lib.json",
+            "project": "library/sunbird-cb/notification/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "library/sunbird-cb/notification/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "library/sunbird-cb/notification/src/test.ts",
+            "tsConfig": "library/sunbird-cb/notification/tsconfig.spec.json",
+            "karmaConfig": "library/sunbird-cb/notification/karma.conf.js"
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "style": "scss"
+    }
+  },
+  "cli": {
+    "analytics": "ed11d5a4-411f-49e8-b228-59596e35616e",
+    "cache": {
+      "enabled": false
+    }
+  }
+}

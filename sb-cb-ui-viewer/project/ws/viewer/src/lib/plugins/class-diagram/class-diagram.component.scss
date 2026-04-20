@@ -1,8 +1,7 @@
-@import '~@ws-widget/design-system/src/styles/_ws-mixins.scss';
+@import 'ws-mixins';
 
 @mixin layout-width {
   // @include breakpoint-gt-sm {
-  //   width: 100%;
   // }
 }
 
@@ -64,32 +63,14 @@
   display: flex;
   justify-content: space-between;
 
-  // @include breakpoint-lt-sm {
-  //   flex-direction: column;
-  // }
   .sidebar {
     width: 20%;
     margin-top: 20px;
     margin-left: 10px;
-    // @include breakpoint-lt-sm {
-    //   width: 70%;
-    //   margin-left: 25px;
-    // }
-    // @include breakpoint-sm {
-    //   width: 30%;
-    //   margin-left: 25px;
-    // }
-    // @include breakpoint-md {
-    //   width: 30%;
-    //   margin-left: 25px;
-    // }
   }
 
   #wrapper {
     width: 80%;
-    // @include breakpoint-lt-sm {
-    //   width: 100%;
-    // }
   }
 }
 
@@ -111,7 +92,6 @@
 
 :host::ng-deep .class-container>div>ul {
   margin: 0;
-  padding-left: 0px;
   list-style-type: none;
   text-align: left;
   padding-left: 5px;

@@ -61,17 +61,18 @@ export class ClassDiagramComponent implements OnInit, OnChanges, OnDestroy, Afte
         event.preventDefault()
       })
     this.tmpListener = this.renderer.listen(
-      (this.classDiagramContainer ? this.classDiagramContainer.nativeElement : ''), 'drop', (event: any) => {
-        // tslint:disable-next-line:max-line-length
+      this.classDiagramContainer?.nativeElement,
+      'drop',
+      (event: any): void => {
         if (
           !['statemachine-class-diagram', 'card-pile'].includes(event.target.id) &&
           !event.target.classList.contains('new-class')
         ) {
           this.drop(event)
-          return false
         }
-        return
-      })
+      }
+    )
+
     this.tmpListener = this.renderer.listen(
       (this.classDiagramContainer ? this.classDiagramContainer.nativeElement : ''), 'click', (event: any) => {
         if (event.target.className === 'drag-icon') {

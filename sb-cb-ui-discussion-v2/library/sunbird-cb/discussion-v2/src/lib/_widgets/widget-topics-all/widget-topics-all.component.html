@@ -1,0 +1,56 @@
+<div class="container mx-auto ">
+   <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <!-- Column 1 -->
+      <div class=" p-2 rounded-lg md:col-span-3">
+
+         <ng-container>
+            <d-v2-similar-community-card (communityClick)="onCommunityClick($event)"></d-v2-similar-community-card>
+         </ng-container>
+      </div>
+
+      <!-- Column 2 (Double Width on Large Screens) -->
+      <div class=" p-2 rounded-lg md:col-span-6">
+         <div class="px-4 md:px-0 md:col-span-2">
+            <div class="mb-6">
+               <div class="relative flex community-search">
+                  <input #searchInput id="searchInput" type="text" [(ngModel)]="localSearchTextValue"
+                     placeholder="Search Topics" class="w-full px-4 py-2 pl-10  rounded-full nodtranslate" />
+                  <mat-icon class="absolute left-3 top-1.5 h-5 w-5 text-gray-400">
+                     search
+                  </mat-icon>
+               </div>
+            </div>
+         </div>
+         <div class="px-4 md:px-0 info-text flex items-center mb-6">
+            <mat-icon class=" cursor-pointer arrow-back-btn " (click)="goBackMethod()">arrow_back_ios</mat-icon>
+            <h2 class="margin-remove nodtranslate">All Topics <span
+                  class="ml-2 nodtranslate">({{topicDataList?.length}})</span></h2>
+
+         </div>
+         <ng-container *ngIf="!topicDataLoading">
+            <ng-container *ngIf="(topicDataList | filterSearch: localSearchTextValue).length;else noData">
+               <div class=" px-2 md:px-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <ng-container *ngFor="let topic of topicDataList  | filterSearch: localSearchTextValue">
+                     <d-v2-topic-card class="flex justify-center md:block" [topicCommunityCount]="topic?.count"
+                        [isLoading]="false" (click)="topicCardMethod(topic)" [topicTitle]="topic?.value">
+                     </d-v2-topic-card>
+                  </ng-container>
+               </div>
+            </ng-container>
+         </ng-container>
+      </div>
+
+      <!-- Column 3 -->
+      <div class=" p-2 rounded-lg md:col-span-3">
+         <div class="hidden md:block">
+            <d-v2-sort-by [sortData]="sortData" (sortOptionSelection)="sortOptionSelection($event)"></d-v2-sort-by>
+         </div>
+      </div>
+   </div>
+</div>
+
+<ng-template #noData>
+   <div class="flex justify-center w-full mt-8">
+      <d-v2-no-data [iconName]="'forum'" [noText]="'No data found'"></d-v2-no-data>
+   </div>
+</ng-template>

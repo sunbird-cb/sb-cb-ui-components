@@ -1,0 +1,97 @@
+.landing-page-container {
+    .tab-container-landing-page {   
+        background: #FFFFFF;
+    }
+}
+::ng-deep .tab-container-landing-page {
+    .mat-tab-header {
+        border-bottom:none !important;
+    }
+    // Tab label styles
+    .mat-tab-label {
+        opacity: 1;
+        font-family: Lato;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 16.8px;
+        letter-spacing: 0%;
+        
+        color: #00000099 !important;
+        transition: all 0.3s ease;
+        min-width: 10px; 
+        &:hover {
+            color: #000;
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+      
+      &.mat-tab-label-active {
+        font-family: Lato;
+        font-weight: 700 !important;
+        font-size: 14px;
+        line-height: 16.8px;
+        letter-spacing: 0%;
+        color: #000000DE !important;
+      }
+    }
+  }
+  .mat-label-block{
+
+  }
+
+  $text-primary: #1B4CA1;
+.community-search{
+    input {
+
+        border: 1px solid #00000029;
+    }
+  input:focus-visible{
+    border: 1px solid #00000029;
+  }
+}
+
+.community-groups {
+    .title {
+        //styleName: Sub heading 2;
+        font-family: Montserrat;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 17.07px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
+    .show-more {
+        color: #1B4CA1;
+        //styleName: Button;
+        font-family: Lato;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 16.8px;
+        text-align: center;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        mat-icon {
+            color: #1B4CA1;
+        }
+
+    }
+}
+
+
+  
+
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+
+  .greyscale-img {
+    fill: #666666;
+    filter: grayscale(100%);
+  }

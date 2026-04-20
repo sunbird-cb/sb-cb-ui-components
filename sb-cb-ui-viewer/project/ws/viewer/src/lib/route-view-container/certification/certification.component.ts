@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core'
-import { NsContent } from '@ws-widget/collection'
+import { NsContent } from '@sunbird-cb/collection'
 
 @Component({
   selector: 'viewer-certification-container',
@@ -10,5 +10,5 @@ export class CertificationComponent {
   @Input() isFetchingDataComplete = false
   @Input() forPreview = false
   @Input() certificationData: NsContent.IContent | null = null
-  constructor() {}
+  constructor() { }
 }

@@ -1,0 +1,37 @@
+.members-wrapper {
+    background: #FFFFFF;
+    border: 1px solid #00000033;
+    border-radius: 12px;
+    padding: 16px;
+    .community-search{
+        input {
+    
+            border: 1px solid #00000029;
+        }
+    }
+    .member-title {
+        //styleName: Heading 2;
+        font-family: Montserrat;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24.38px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+
+    }
+}
+
+.load-more-posts {
+    button {
+        color: #1B4CA1 !important;
+        font-family: Lato;
+        font-size: 14px;
+        font-weight: 700;
+        text-align: center;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
+        border: 1px solid #1B4CA1;
+        border-radius: 24px;
+    }
+}

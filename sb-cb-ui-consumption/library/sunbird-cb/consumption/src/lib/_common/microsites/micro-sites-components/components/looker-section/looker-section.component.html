@@ -1,0 +1,16 @@
+<div class="flex items-center justify-center flex-wrap">
+  <div class="w-full flex flex-col items-center justify-center">
+    <h2 *ngIf="data?.header?.headerText" class="pt-4">
+      {{data?.header?.headerText}}
+      <button *ngIf="isEdit" class="edit-icon" (click)="openEditor()" aria-label="Edit Looker Configuration">
+        <i class="material-icons">edit</i>
+      </button>
+    </h2>
+    <p *ngIf="data?.header?.description">{{data?.header?.description}}</p>
+  </div>
+  <div class="container mt-4 mb-4" *ngIf="lookerUrl">
+    <iframe class="w-full" height="{{iframeHeight}}" [src]="lookerUrl" frameborder="0" style="border:0" allowfullscreen
+      sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox">
+    </iframe>
+  </div>
+</div>

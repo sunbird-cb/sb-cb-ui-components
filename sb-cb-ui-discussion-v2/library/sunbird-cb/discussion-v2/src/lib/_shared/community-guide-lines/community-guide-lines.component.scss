@@ -1,0 +1,26 @@
+$text-primary: #1B4CA1;
+.community-guide-lines {
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.community-guide-lines-footer {
+    button {
+        background: $text-primary;
+        border-color: $text-primary;
+        border: none;
+        padding: 0px 16px;
+    }
+}
+
+.guide-lines-info {
+    color: $text-primary;
+}
+
+.close-icon {
+    color: #666666;
+    cursor: pointer;
+    margin-top: -5px;
+    margin-right: -5px;
+}

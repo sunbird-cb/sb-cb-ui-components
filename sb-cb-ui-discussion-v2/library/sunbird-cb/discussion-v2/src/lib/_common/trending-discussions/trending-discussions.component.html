@@ -1,0 +1,63 @@
+<div class="trending-wrapper">
+    <d-v2-card-toggle (hideCardBody)="hideCardBody = $event" [toggleViewBoolean]="expandCard">
+        <div headderBlock>
+            <div class="headding nodtranslate">Trending Discussions</div>
+        </div>
+        <div contentBodyBlock>
+            <div class="space-y-3 pt-4" *ngIf="posts?.length ;else noData">
+                <div *ngFor="let discussion of posts;let isFirst = first" class="flex flex-wrap items-start">
+                    <hr class="divider my-3 w-full" *ngIf="!isFirst">
+                    <div class="w-full" (click)="navigateToPost(discussion)">
+                        <div class="community-name-wrapper inline-flex items-center max-w-full mb-3 cursor-pointer"
+                            *ngIf="showCommunity">
+                            <span class="whitespace-nowrap pl-3 nodtranslate">Posted in</span>
+                            <span class="community-name ml-1 pr-2 nodtranslate">@{{discussion?.communityName}}</span>
+                        </div>
+                        <div class="trending-data margin-remove cursor-pointer">
+                            <div class="flex items-center justify-between mb-4 user-info w-full">
+                                <div class="flex items-center w-3/4">
+                                    <d-v2-avatar-photo [size]="'s'" [customeClass]="'margin-remove'"
+                                        [name]="discussion?.createdBy?.first_name"
+                                        [photoUrl]="discussion?.createdBy?.user_profile_img_url || ''"></d-v2-avatar-photo>
+                                    <div class="ml-2 user-name">
+                                        <span
+                                            class="font-medium text-start nodtranslate">{{discussion?.createdBy?.first_name}}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-end w-1/4 text-sm text-gray-600 post-time">
+                                    <span class="nodtranslate">{{discussion?.createdOn| pipeRelativeTime}}</span>
+                                </div>
+                            </div>
+                            <div class="post-data">
+                                <p class="nodtranslate" [innerHtml]="discussion?.description"></p>
+                            </div>
+                            <div
+                                class="mt-2 flex items-center justify-start space-x-4 text-sm text-gray-600 w-4/5 post-details">
+                                <span class="flex items-center">
+                                    <mat-icon class="mat-icon ">thumb_up</mat-icon>
+                                    <span class="ml-2 nodtranslate">{{discussion?.upVoteCount || 0}}</span>
+                                </span>
+                                <!-- <span class="mx-2">•</span>
+                                <span class="flex items-center">
+                                    <mat-icon class="mat-icon ">visibility</mat-icon>
+                                    <span class="ml-2">{{discussion?.downVoteCount || 0}}</span>
+                                </span> -->
+                                <span class="mx-2">•</span>
+                                <span class="flex items-center">
+                                    <mat-icon class="mat-icon ">chat_bubble</mat-icon>
+                                    <span class="ml-2 nodtranslate">{{discussion?.answerPostCount || 0}}</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-template #noData>
+                <div class="mt-8">
+                    <d-v2-no-data [iconName]="'forum'" [noText]="'No data'"></d-v2-no-data>
+                </div>
+            </ng-template>
+        </div>
+    </d-v2-card-toggle>
+</div>

@@ -1,0 +1,26 @@
+%page-center {
+  max-width: 1202px;
+  width: 100%;
+}
+
+.container-balanced {
+  @extend %page-center;
+  height: auto;
+  min-height: 400px;
+  margin-inline: auto;
+  --mat-sidenav-content-background-color: #eff3f9; 
+}
+
+.cbp-user {
+  background-color: #ffffff;
+}
+
+::ng-deep .container-balanced{
+  .mat-drawer-container {
+    background-color: unset !important;
+  }
+}
+
+::ng-deep .search-result-active.container-body-scroll {
+  background-color: #eff3f9 !important;
+}

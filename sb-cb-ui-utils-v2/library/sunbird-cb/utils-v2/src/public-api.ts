@@ -114,3 +114,30 @@ export * from './lib/services/widget-content.service'
 export * from './lib/services/subapplication-respond.service'
 export * from './lib/services/widget-content.model'
 export * from './lib/services/widget-resolver.model'
+
+export * from './lib/directives/class-change-on-scroll/class-change-on-scroll.directive'
+export * from './lib/directives/default-thumbnail/default-thumbnail.directive'
+export * from './lib/directives/image-responsive/image-responsive.directive'
+export * from './lib/directives/in-view-port/in-view-port.directive'
+export * from './lib/directives/navigation/navigation.directive'
+export * from './lib/directives/permission/permission.directive'
+export * from './lib/helpers/horizontal-scroller/horizontal-scroller.component'
+export * from './lib/helpers/horizontal-scroller-v2/horizontal-scroller-v2.component'
+
+
+//ENROLL SERVICES
+export * from './lib/services-new/widget-enroll.service'
+export * from './lib/services-new/data-transfer.service'
+
+export * from './lib/services/domain-conf.service'
+export * from './lib/services/notifications.service'
+
+// additional pipes
+export * from './lib/pipes/custumdate-sorting/custumdate-sorting.module'
+export * from './lib/pipes/custumdate-sorting/custum-date-sorting-pipe.pipe'
+
+export * from './lib/pipes/pipe-ascendingorder/pipe-ascendingorder.module'
+export * from './lib/pipes/pipe-ascendingorder/acsending-order.pipe'
+
+export * from './lib/pipes/pipe-content-type/pipe-content-type.module'
+export * from './lib/pipes/pipe-content-type/pipe-content-type.pipe'

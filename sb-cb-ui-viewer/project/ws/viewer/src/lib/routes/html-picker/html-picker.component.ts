@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Subscription } from 'rxjs'
-import { NsContent, WidgetContentService } from '@ws-widget/collection'
+import { NsContent, WidgetContentService } from '@sunbird-cb/collection'
 import { ActivatedRoute } from '@angular/router'
-import { EventService, WsEvents } from '@ws-widget/utils'
+import { EventService, WsEvents } from '@sunbird-cb/utils'
 import { ViewerUtilService } from '../../viewer-util.service'
 
 @Component({
@@ -26,7 +26,7 @@ export class HtmlPickerComponent implements OnInit, OnDestroy {
     private contentSvc: WidgetContentService,
     private eventSvc: EventService,
     private viewSvc: ViewerUtilService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.routeDataSubscription = this.activatedRoute.data.subscribe(
@@ -35,9 +35,9 @@ export class HtmlPickerComponent implements OnInit, OnDestroy {
         if (this.alreadyRaised && this.oldData) {
           this.raiseEvent(WsEvents.EnumTelemetrySubType.Unloaded, this.oldData)
         }
-        if (this.htmlPickerData && this.htmlPickerData.artifactUrl.indexOf('content-store') >= 0) {
-          await this.setS3Cookie(this.htmlPickerData.identifier)
-        }
+        // if (this.htmlPickerData && this.htmlPickerData.artifactUrl.indexOf('content-store') >= 0) {
+        // await this.setS3Cookie(this.htmlPickerData.identifier)
+        // }
         if (
           this.htmlPickerData &&
           this.htmlPickerData.mimeType === NsContent.EMimeTypes.HTML_PICKER
@@ -53,21 +53,22 @@ export class HtmlPickerComponent implements OnInit, OnDestroy {
           this.isErrorOccured = true
         }
       },
-      () => {},
+      () => { },
     )
   }
 
-   async ngOnDestroy() {
-     if (this.activatedRoute.snapshot.queryParams.collectionId &&
-       this.activatedRoute.snapshot.queryParams.collectionType
-       && this.htmlPickerData) {
-       await this.contentSvc.continueLearning(this.htmlPickerData.identifier,
-                                              this.activatedRoute.snapshot.queryParams.collectionId,
-                                              this.activatedRoute.snapshot.queryParams.collectionType,
-       )
-       } else if (this.htmlPickerData) {
-       await this.contentSvc.continueLearning(this.htmlPickerData.identifier)
-       }
+  async ngOnDestroy() {
+    if (this.activatedRoute.snapshot.queryParams.collectionId &&
+      this.activatedRoute.snapshot.queryParams.collectionType
+      && this.htmlPickerData) {
+      await this.contentSvc.continueLearning(
+        this.htmlPickerData.identifier,
+        this.activatedRoute.snapshot.queryParams.collectionId,
+        this.activatedRoute.snapshot.queryParams.collectionType,
+      )
+    } else if (this.htmlPickerData) {
+      await this.contentSvc.continueLearning(this.htmlPickerData.identifier)
+    }
     if (this.routeDataSubscription) {
       this.routeDataSubscription.unsubscribe()
     }
@@ -85,7 +86,7 @@ export class HtmlPickerComponent implements OnInit, OnDestroy {
       manifestFile = await this.http
         .get<any>(artifactUrl)
         .toPromise()
-        .catch((_err: any) => {})
+        .catch((_err: any) => { })
     }
     return manifestFile
   }
@@ -111,13 +112,13 @@ export class HtmlPickerComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async setS3Cookie(contentId: string) {
-    await this.contentSvc
-      .setS3Cookie(contentId)
-      .toPromise()
-      .catch(() => {
-        // throw new DataResponseError('COOKIE_SET_FAILURE')
-      })
-    return
-  }
+  // private async setS3Cookie(contentId: string) {
+  //   await this.contentSvc
+  //     .setS3Cookie(contentId)
+  //     .toPromise()
+  //     .catch(() => {
+  //       // throw new DataResponseError('COOKIE_SET_FAILURE')
+  //     })
+  //   return
+  // }
 }

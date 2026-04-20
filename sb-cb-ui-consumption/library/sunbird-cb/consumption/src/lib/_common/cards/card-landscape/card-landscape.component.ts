@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NsCardContent } from '../../../_models/card-content.model';
-import { MatSnackBar } from '@angular/material';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils-v2';
 import * as _ from "lodash";
 import { TranslateService } from '@ngx-translate/core';
@@ -56,6 +56,8 @@ export class CardLandscapeComponent implements OnInit {
       this.defaultThumbnail = '/assets/instances/eagle/app_logos/default.png'
       this.defaultSLogo =  '/assets/instances/eagle/app_logos/KarmayogiBharat_Logo.svg'
     }
+    this.defaultSLogo =  this.widgetData?.content?.contentPartner?.contentPartnerName ? '/assets/icons/content/provider.svg':this.defaultSLogo
+
     this.cbPlanInterval = setInterval(() => {
       this.getCbPlanData()
     },                                1000)
@@ -91,5 +93,11 @@ export class CardLandscapeComponent implements OnInit {
     }
   }
 
+  getProviderNames(providers: any[]): string {
+    if (!providers || !providers.length) {
+      return '';
+    }
+    return providers.map(p => p?.name).join(', ');
+  }
 
 }

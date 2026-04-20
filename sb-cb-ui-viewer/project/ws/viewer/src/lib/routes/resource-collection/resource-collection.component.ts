@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Subscription } from 'rxjs'
-import { NsContent, NsDiscussionForum, WidgetContentService } from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
+import { NsContent, NsDiscussionForum, WidgetContentService } from '@sunbird-cb/collection'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ActivatedRoute } from '@angular/router'
-import { EventService, WsEvents } from '@ws-widget/utils'
+import { EventService, WsEvents } from '@sunbird-cb/utils'
 import { ViewerUtilService } from '../../viewer-util.service'
 
 @Component({
@@ -30,7 +30,7 @@ export class ResourceCollectionComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private eventSvc: EventService,
     private viewSvc: ViewerUtilService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.dataSubscription = this.activatedRoute.data.subscribe(
@@ -65,7 +65,7 @@ export class ResourceCollectionComponent implements OnInit, OnDestroy {
           this.isErrorOccured = true
         }
       },
-      () => {},
+      () => { },
     )
   }
 
@@ -74,8 +74,8 @@ export class ResourceCollectionComponent implements OnInit, OnDestroy {
       this.activatedRoute.snapshot.queryParams.collectionType
       && this.resourceCollectionData) {
       await this.contentSvc.continueLearning(this.resourceCollectionData.identifier,
-                                             this.activatedRoute.snapshot.queryParams.collectionId,
-                                             this.activatedRoute.snapshot.queryParams.collectionType,
+        this.activatedRoute.snapshot.queryParams.collectionId,
+        this.activatedRoute.snapshot.queryParams.collectionType,
       )
     } else if (this.resourceCollectionData) {
       await this.contentSvc.continueLearning(this.resourceCollectionData.identifier)
@@ -97,7 +97,7 @@ export class ResourceCollectionComponent implements OnInit, OnDestroy {
       manifestFile = await this.http
         .get<any>(artifactUrl || '')
         .toPromise()
-        .catch((_err: any) => {})
+        .catch((_err: any) => { })
     }
     return manifestFile
   }
@@ -121,7 +121,7 @@ export class ResourceCollectionComponent implements OnInit, OnDestroy {
     if (this.forPreview) {
       return
     }
-    const event = {
+    const event: any = {
       eventType: WsEvents.WsEventType.Telemetry,
       eventLogLevel: WsEvents.WsEventLogLevel.Info,
       from: 'resource-collection',

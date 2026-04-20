@@ -4,17 +4,22 @@
 <div class="container-fluid" id="section-micro-sites">
     <div class="flex flex-col flex-1">
         <ng-container *ngIf="sectionList?.length">
-            <ng-container *ngFor="let section of sectionList">
+            <ng-container *ngFor="let section of sectionList  | orderBy: 'order'">
                 <ng-container *ngIf="section?.enabled">
-                    <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4" [ngClass]="{'container': section.wrapperClass}">
+                    <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4 {{section?.customClass}}"
+                        [ngClass]="{'container': section.wrapperClass}">
                         <ng-container *ngFor="let column of section.column">
                             <div id="{{column?.key}}" class="col-span-{{column.colspan || 12}} ">
                                 <ng-container *ngIf="column?.enabled" [ngSwitch]="column?.key">
                                     <ng-container *ngSwitchCase="'topSection'" [ngTemplateOutlet]="topSection"
                                         [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                    <ng-container *ngSwitchCase="'lookerSection'" [ngTemplateOutlet]="lookerproSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
                                     <ng-container *ngSwitchCase="'topLearners'" [ngTemplateOutlet]="topLearners"
                                         [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
                                     <ng-container *ngSwitchCase="'mainContent'" [ngTemplateOutlet]="mainContent"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                    <ng-container *ngSwitchCase="'supportSection'" [ngTemplateOutlet]="supportSection"
                                         [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
                                 </ng-container>
                             </div>
@@ -30,21 +35,43 @@
 <ng-template #topSection let-data="data">
     <!-- top section desktop layout -->
     <div class="hidden md:block">
-        <div class="web-banner-background">
+        <div class="web-banner-background" [ngStyle]="getBackgroundStyle(data?.background)">
             <div class="flex  items-center justify-center">
                 <div class="container">
-                    <div class="flex sticky-logo-square" [style.width]="stripWidth">
-                    </div>
                     <div class="grid grid-cols-12 gap-4 padding-top-xxxl mb-10">
                         <div class="col-span-12 md:col-span-6">
                             <div class="flex-1 flex flex-col mr-4 ws-mat-black-text">
                                 <div class="">
                                     <div class="flex items-center logo-square ">
-                                        <img alt="Application Logo" class="logo-img" [src]="data?.logo">
+                                        <!-- Multiple logos (array) -->
+                                        <ng-container *ngIf="data?.logo && isArray(data?.logo); else singleLogo">
+                                            <div class="flex items-center gap-3 logo-container-multiple">
+                                                <ng-container *ngFor="let logoUrl of data?.logo; let i = index">
+                                                    <img alt="Application Logo" class="logo-img" [src]="logoUrl.url">
+                                                    <div *ngIf="i < data?.logo.length - 1" class="logo-separator"></div>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
+                                        <!-- Single logo (string) -->
+                                        <ng-template #singleLogo>
+                                            <ng-container *ngIf="data?.logo">
+                                                <img alt="Application Logo" class="logo-img" [src]="data?.logo">
+                                            </ng-container>
+                                        </ng-template>
                                     </div>
-                                    <h1  class=" txt-ellipsis-2 break-words pt-10"
-                                        [style.color]="data.titleColor">{{data.title || channnelName}}</h1>
-                                    <p class="mat-body-1" [style.color]="data.descriptionColor">
+                                    <h1 class="  txt-ellipsis-2 break-words pt-10  mt-2 {{data?.titleClass}}"
+                                        [style.color]="data?.titleColor">
+                                        {{data.title || channnelName}}</h1>
+                                    <h4 *ngIf="data?.subTitle"
+                                        class="  txt-ellipsis-2 break-words {{data?.subTitleClass}}"
+                                        [style.color]="data?.subTitleColor">
+                                        {{data?.subTitle}}</h4>
+
+                                    <h4 *ngIf="data?.subTitleTwo"
+                                        class=" sub-title-two txt-ellipsis-2 break-words pt-4 mb-8"
+                                        [style.color]="data?.subTitleColorTwo">
+                                        {{data?.subTitleTwo}}</h4>
+                                    <p class="mat-body-1" [style.color]="data?.descriptionColor">
                                         {{data?.description | slice:0:descriptionMaxLength}}
                                         <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
                                     </p>
@@ -52,31 +79,54 @@
                             </div>
                         </div>
                         <div class="col-span-12 md:col-span-6">
-                            <div class="slider slider-box" *ngIf="data.sliderData && data.sliderData.sliders">
-                                <sb-uic-sliders [widgetData]="data.sliderData.sliders" [styleData]="data.sliderData.styleData" ></sb-uic-sliders>
+                            <div class="slider slider-box" *ngIf="data?.sliderData && data?.sliderData?.sliders">
+                                <sb-uic-sliders [widgetData]="data?.sliderData?.sliders"
+                                    [styleData]="data?.sliderData?.styleData"></sb-uic-sliders>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
     </div>
+
+
+    <div class="hidden md:block">
+        <div class="col-span-12 padding-left-m padding-right-m padding-top-m padding-bottom-m">
+            <div *ngIf="data?.stateLearningWeekSection?.speakerOftheDay?.enabled">
+                <sb-uic-speakers [layoutType]="'mobile'"
+                    [objectData]="data?.stateLearningWeekSection?.speakerOftheDay?.data">
+                </sb-uic-speakers>
+            </div>
+
+        </div>
+    </div>
+
     <!-- top section m-site layout -->
     <div class="block md:hidden">
         <div class="col-span-12">
-            <div class="slider slider-box" *ngIf="data.sliderData && data.sliderData.sliders">
-                <sb-uic-sliders [widgetData]="data.sliderData.sliders" [styleData]="data.sliderData.styleData" ></sb-uic-sliders>
+            <div class="slider slider-box" *ngIf="data?.sliderData && data?.sliderData?.sliders">
+                <sb-uic-sliders [widgetData]="data?.sliderData?.sliders"
+                    [styleData]="data?.sliderData?.styleData"></sb-uic-sliders>
             </div>
         </div>
         <div class="container px-4 flex flex-col mob-container">
             <div class="mr-4 logo-box-container">
                 <div class="flex logo-box-square top mr-4">
-                    <img alt="Application Logo" class="logo-img" [src]="data?.logo">
+                    <img alt="Application Logo" class="logo-img logo-img-mb {{data?.customMobileClass}}"
+                        [src]="data?.logoMobile || data?.logo">
                 </div>
             </div>
             <div class="w-full md:w-9/12 flex-1 flex flex-col">
                 <h1 class=" txt-ellipsis-2 break-words">{{data?.title || channnelName}}</h1>
+                <h4 *ngIf="data?.subTitle" class=" sub-title txt-ellipsis-2 break-words "
+                    [style.color]="data?.subTitleColorMobile">
+                    {{data?.subTitle}}</h4>
+
+                <h4 *ngIf="data?.subTitleTwo" class=" sub-title-two txt-ellipsis-2 break-words pt-4 mb-8"
+                    [style.color]="data?.subTitleColorTwoMobile">
+                    {{data?.subTitleTwo}}</h4>
                 <p class="mat-body-2">
                     {{data?.description | slice:0:descriptionMaxLength}}
                     <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
@@ -85,164 +135,297 @@
         </div>
     </div>
     <div class="flex items-center justify-center">
-        <div class="container metrics-section" >
-            <div class="hidden md:block">
-                <div class="metrics"
-                    [ngStyle]="{'background': data?.metrics?.background}">
-                    <sb-uic-data-points
-                        [providerId]="orgId"
-                        [fetchDataFromApi]="true"
-                        [objectData]="data?.metrics?.data"
-                        [layoutType]="'singleFlexeRow'"
-                        [pageLayout]="'mdo'">
+        <div class="container metrics-section">
+            <div class="hidden md:block" *ngIf="data?.metrics.enabled">
+                <div class="metrics" [ngStyle]="{'background': data?.metrics?.background}">
+                    <sb-uic-data-points [providerId]="orgId" [fetchDataFromApi]="true"
+                        [objectData]="data?.metrics?.data" [layoutType]="'singleFlexeRow'" [pageLayout]="'mdo'"
+                        [slwConfig]="slwConfiguration">
                     </sb-uic-data-points>
                 </div>
             </div>
-            <div class="block md:hidden  pt-14 px-4">
+            <div class="block md:hidden  pt-14 px-4" *ngIf="data?.metrics.enabled">
                 <div class="mob-metrics mob-metrics-sec">
-                    <sb-uic-data-points
-                        [providerId]="orgId"
-                        [fetchDataFromApi]="true"
-                        [objectData]="data?.metrics?.data"
-                        [layoutType]="'singleRow'"
-                        [pageLayout]="'mdo'">
+                    <sb-uic-data-points [providerId]="orgId" [fetchDataFromApi]="true"
+                        [objectData]="data?.metrics?.data" [layoutType]="'singleRow'" [pageLayout]="'mdo'"
+                        [slwConfig]="slwConfiguration">
                     </sb-uic-data-points>
                 </div>
-                
             </div>
         </div>
     </div>
 </ng-template>
 
+
 <ng-template #mainContent let-data="data">
     <div class="flex items-center justify-center" [ngStyle]="{'background': data.background}">
         <div class="container">
-            <div class="block md:hidden col-span-12 padding-left-m padding-right-m padding-top-m padding-bottom-m">
-                <sb-uic-cbp-plan
-                    [layoutType]="'web'"
-                    [mobileHeight]="false"
-                    [fetchDataFromApi]="true"
-                    [channelId]="orgId"
-                    [objectData]="data?.cbpPlanSection?.data">
-                </sb-uic-cbp-plan>
-            </div>
-            <div class="block md:hidden col-span-12 mt-6">
-                <sb-uic-announcements
-                    [layoutType]="'mobile'"
-                    (openDialog)="triggerOpenDialog($event)"
-                    [objectData]="data?.announcementSection?.data"
-                    [fetchDataFromApi]="false"
-                    [channelId]="orgId">
-                </sb-uic-announcements>
-                <div class="announcements-container" *ngIf="showModal">
-                    <div class="cursor-pointer close-share-dialog">
-                        <mat-icon (click)="onClose()" class="close-icon">close</mat-icon>
+            <ng-container *ngIf="isMobile">
+                <ng-container>
+                    <div class="block md:hidden mb-4" *ngIf="data?.stateLearningWeekSection?.keyHighlights?.enabled">
+                        <sb-uic-key-highlights
+                            (emptyResponse)="hideKeyHightlight($event, data?.stateLearningWeekSection?.keyHighlights)"
+                            [formData]="data?.stateLearningWeekSection?.keyHighlights" [providerId]="providerId"
+                            [mode]="'mobile'"></sb-uic-key-highlights>
                     </div>
-                    <div class="share-modal px-3 pt-8">
-                        <sb-uic-announcements
-                            [layoutType]="'web'"
-                            (openDialog)="triggerOpenDialog($event)"
-                            [objectData]="data?.announcementSection?.data"
-                            [mobileHeight]="true"
-                            [fetchDataFromApi]="true"
-                            [channelId]="orgId">
-                        </sb-uic-announcements>
+                    <div class="block md:hidden mb-4" *ngIf="data?.stateLearningWeekSection?.weekHighlights?.enabled">
+                        <sb-uic-highlights-of-week [objectData]="data?.stateLearningWeekSection?.weekHighlights?.data"
+                            [isEdit]="false">
+                        </sb-uic-highlights-of-week>
+                    </div>
+
+                    <div class="block md:hidden ">
+                        <div *ngIf="data?.stateLearningWeekSection?.myprogress?.enabled">
+                            <sb-uic-user-progress [layoutType]="'web'" [mobileHeight]="false"
+                                [objectData]="data?.stateLearningWeekSection?.myprogress?.data"
+                                [rootOrgId]="configSvc?.unMappedUser?.rootOrgId" [isEdit]="false">
+                            </sb-uic-user-progress>
+                        </div>
+                    </div>
+                    <div class="block md:hidden ">
+                        <div *ngIf="data?.stateLearningWeekSection?.speakerOftheDay?.enabled">
+                            <sb-uic-speakers [layoutType]="'web'" [mobileHeight]="false"
+                                [objectData]="data?.stateLearningWeekSection?.speakerOftheDay?.data" [isEdit]="false">
+                            </sb-uic-speakers>
+                        </div>
+                    </div>
+                    <div class="block md:hidden ">
+                        <div *ngIf="data?.stateLearningWeekSection?.mdoLeaderboard?.enabled">
+                            <sb-uic-mdo-leaderboard [object]="data?.stateLearningWeekSection?.mdoLeaderboard?.data"
+                                [slwConfig]="slwConfiguration" (tabClicked)="raiseTabClick($event)"
+                                [orgId]="orgId"></sb-uic-mdo-leaderboard>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="block md:hidden col-span-12 padding-left-m padding-right-m padding-top-m padding-bottom-m">
+                    <sb-uic-cbp-plan [layoutType]="'web'" [mobileHeight]="false" [fetchDataFromApi]="true"
+                        [channelId]="orgId" [objectData]="data?.cbpPlanSection?.data">
+                    </sb-uic-cbp-plan>
+                </div>
+                <div class="block md:hidden col-span-12 mt-6" *ngIf="data?.announcementSection?.data?.enabled">
+                    <sb-uic-announcements [layoutType]="'mobile'" (openDialog)="triggerOpenDialog($event)"
+                        [objectData]="data?.announcementSection?.data" [fetchDataFromApi]="false" [channelId]="orgId">
+                    </sb-uic-announcements>
+                    <div class="announcements-container" *ngIf="showModal">
+                        <div class="cursor-pointer close-share-dialog">
+                            <mat-icon (click)="onClose()" class="close-icon">close</mat-icon>
+                        </div>
+                        <div class="share-modal px-3 pt-8">
+                            <sb-uic-announcements [layoutType]="'web'" (openDialog)="triggerOpenDialog($event)"
+                                [objectData]="data?.announcementSection?.data" [mobileHeight]="true"
+                                [fetchDataFromApi]="true" [channelId]="orgId">
+                            </sb-uic-announcements>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div class="col-span-12">
+                <div class="flex items-center justify-center">
+                    <div class="container margin-top-xl">
+                        <div class="hidden md:block" *ngIf="data?.stateLearningWeekSection?.keyHighlights?.enabled">
+                            <sb-uic-key-highlights
+                                (emptyResponse)="hideKeyHightlight($event, data?.stateLearningWeekSection?.keyHighlights)"
+                                [formData]="data?.stateLearningWeekSection?.keyHighlights" [providerId]="providerId"
+                                [mode]="'desktop'" [isEdit]="false"></sb-uic-key-highlights>
+                        </div>
+
                     </div>
                 </div>
             </div>
             <div class="grid grid-cols-12 gap-4 padding-top-m mb-6">
                 <div class="col-span-12 md:col-span-{{data.tabSection.colspan}}">
-                    <!-- Tabs Section -->
-                    <mat-tab-group animationDuration="0ms" class="mat-tab-labels mytabs w-full "
-                        [selectedIndex]="selectedIndex" (selectedTabChange)="selectedIndex = $event.index; tabClicked($event)">
-                        <mat-tab label="Content" >
-                            <ng-template mat-tab-label i18n>
-                                Learn
-                            </ng-template>
-                            <ng-container *ngIf="data.tabSection.contentTab.length === contentTabEmptyResponseCount">
-                                <div class="flex justify-center w-full">
-                                    <div class="margin-xl text-center" >
-                                        <img src="/assets/common/error-pages/empty_search.svg" wsUtilsImageResponsive alt="No results"
-                                            class="margin-top-l margin-bottom-s">
-                                        <h2 class="mat-h2" i18n="search route no result">{{'learnsearch.noResults' | translate}}</h2>
-                                    </div>
+                    <ng-container>
+                        <div class="hidden md:block" *ngIf="data?.stateLearningWeekSection?.weekHighlights?.enabled">
+                            <sb-uic-highlights-of-week
+                                [objectData]="data?.stateLearningWeekSection?.weekHighlights?.data">
+                            </sb-uic-highlights-of-week>
+                        </div>
+
+                        <div>
+                            <div
+                                *ngIf="data?.stateLearningWeekSection?.mandatoryCourse?.enabled && data?.stateLearningWeekSection?.mandatoryCourse?.column[0]?.data">
+                                <div class="margin-top-l nlw-mandatoryCourse">
+                                    <sb-uic-content-strip-with-tabs [emitViewAll]="false"
+                                        (telemtryResponse)="raiseTelemetryInteratEvent($event)" [providerId]="orgId"
+                                        [widgetData]="data?.stateLearningWeekSection?.mandatoryCourse?.column[0]?.data"
+                                        [channnelName]="'channnelName'">
+                                    </sb-uic-content-strip-with-tabs>
                                 </div>
-                            </ng-container>
-                            <div class="padding-top-l ">
-                                <ng-container [ngTemplateOutlet]="columnSectionDisplay"
-                                    [ngTemplateOutletContext]="{data: data.tabSection.contentTab}"></ng-container>
                             </div>
-                        </mat-tab>
-                        <mat-tab label="Core Areas">
-                            <ng-template mat-tab-label i18n>
-                                Competency
-                            </ng-template>
-                            <div>
-                                <ng-container [ngTemplateOutlet]="columnSectionDisplay"
-                                    [ngTemplateOutletContext]="{data: data.tabSection.coreAreasTab}"></ng-container>
+                        </div>
+
+                        <div class="">
+                            <div *ngIf="data?.stateLearningWeekSection?.exploreLearningContent?.enabled
+                                && data?.stateLearningWeekSection?.exploreLearningContent?.strips[0]">
+                                <div class="margin-top-l nlw-mandatoryCourse">
+                                    <sb-uic-content-strip-with-tabs [emitViewAll]="false"
+                                        (telemtryResponse)="raiseTelemetryInteratEvent($event)" [providerId]="orgId"
+                                        [widgetData]="data?.stateLearningWeekSection?.exploreLearningContent"
+                                        [channnelName]="'channnelName'">
+                                    </sb-uic-content-strip-with-tabs>
+                                </div>
                             </div>
-                        </mat-tab>
-                    </mat-tab-group>
-                </div>
-                <div class="col-span-12 md:col-span-4">
-                    <div class="hidden md:block padding-top-xl padding-bottom-m"
-                        *ngIf="data?.cbpPlanSection?.data">
-                        <div class="pt-4">
-                            <sb-uic-cbp-plan
-                                [layoutType]="'web'"
-                                [mobileHeight]="false"
-                                [fetchDataFromApi]="true"
-                                [channelId]="orgId"
-                                [objectData]="data?.cbpPlanSection?.data">
-                            </sb-uic-cbp-plan>
-                        </div>                    
+                        </div>
+
+                        <div *ngIf="data?.stateLearningWeekSection?.events?.enabled && data?.stateLearningWeekSection?.events?.column?.length &&
+                            data?.stateLearningWeekSection?.events?.column[0]">
+                            <sb-uic-events [object]="data?.stateLearningWeekSection?.events?.column[0]"
+                                [nwlEventsConfig]="slwConfiguration"></sb-uic-events>
+                        </div>
+                    </ng-container>
+                    <!-- Tabs Section -->
+                    <ng-container *ngIf="data?.tabSection?.disable">
+
+                        <mat-tab-group animationDuration="0ms" class="mat-tab-labels mytabs w-full "
+                            [selectedIndex]="selectedIndex"
+                            (selectedTabChange)="selectedIndex = $event.index; tabClicked($event)">
+                            <mat-tab label="Content">
+                                <ng-template mat-tab-label i18n>
+                                    Learn
+                                </ng-template>
+                                <ng-container
+                                    *ngIf="data?.tabSection?.contentTab?.length === contentTabEmptyResponseCount">
+                                    <div class="flex justify-center w-full">
+                                        <div class="margin-xl text-center">
+                                            <img src="/assets/common/error-pages/empty_search.svg"
+                                                wsUtilsImageResponsive alt="No results"
+                                                class="margin-top-l margin-bottom-s">
+                                            <h2 class="mat-h2" i18n="search route no result">{{'learnsearch.noResults'}}
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="padding-top-l ">
+                                    <ng-container [ngTemplateOutlet]="columnSectionDisplay"
+                                        [ngTemplateOutletContext]="{data: data.tabSection.contentTab}"></ng-container>
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Core Areas">
+                                <ng-template mat-tab-label i18n>
+                                    Competency
+                                </ng-template>
+                                <div>
+                                    <ng-container [ngTemplateOutlet]="columnSectionDisplay"
+                                        [ngTemplateOutletContext]="{data: data.tabSection.coreAreasTab}"></ng-container>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </ng-container>
+
+                    <!-- strip arrays -->
+                    <div class="">
+                        <div *ngIf="data?.stripsArray?.length > 0">
+                            <div *ngFor="let item of data?.stripsArray">
+                                <ng-container *ngIf="item?.strips?.length > 0 && item?.enabled">
+                                    <div class="margin-top-l nlw-mandatoryCourse">
+                                        <sb-uic-content-strip-with-tabs [emitViewAll]="false"
+                                            (telemtryResponse)="raiseTelemetryInteratEvent($event)" [providerId]="orgId"
+                                            [widgetData]="item" [channnelName]="'channnelName'">
+                                        </sb-uic-content-strip-with-tabs>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
                     </div>
-                    <div class="hidden md:block" 
-                    *ngIf="data?.announcementSection?.data">
-                    <div class="pt-4">
-                        <sb-uic-announcements
-                            [layoutType]="'web'"
-                            [mobileHeight]="false"
-                            [fetchDataFromApi]="true"
-                            [channelId]="orgId"
-                            [objectData]="data?.announcementSection?.data">
-                        </sb-uic-announcements>
-                    </div>                    
                 </div>
-                </div>               
+                <!-- <div class="col-span-12 md:col-span-8">
+                    <div
+                        *ngIf="data?.stateLearningWeekSection?.events.enabled && data?.stateLearningWeekSection?.events.column[0]">
+                        <sb-uic-events [object]="data?.stateLearningWeekSection?.events.column[0]"
+                            [nwlEventsConfig]="nwlConfiguration"></sb-uic-events>
+                    </div>
+                </div> -->
+                <div class="col-span-12 md:col-span-4">
+                    <ng-container *ngIf="!isMobile">
+                        <ng-container>
+                            <div class="hidden md:block padding-top-xl padding-bottom-m">
+                                <div *ngIf="data?.stateLearningWeekSection?.myprogress?.enabled">
+                                    <sb-uic-user-progress [layoutType]="'web'" [mobileHeight]="false"
+                                        [objectData]="data?.stateLearningWeekSection?.myprogress?.data"
+                                        [rootOrgId]="configSvc?.unMappedUser?.rootOrgId">
+                                    </sb-uic-user-progress>
+                                </div>
+                            </div>
+                            <div class="hidden md:block padding-top-xl padding-bottom-m">
+                                <div *ngIf="data?.stateLearningWeekSection?.speakerOftheDay?.enabled">
+                                    <sb-uic-speakers [layoutType]="'web'" [mobileHeight]="false"
+                                        [objectData]="data?.stateLearningWeekSection?.speakerOftheDay?.data">
+                                    </sb-uic-speakers>
+                                </div>
+                            </div>
+                            <div class="hidden md:block padding-top-xl padding-bottom-m">
+                                <div *ngIf="data?.stateLearningWeekSection?.mdoLeaderboard?.enabled">
+                                    <sb-uic-mdo-leaderboard
+                                        [object]="data?.stateLearningWeekSection?.mdoLeaderboard?.data"
+                                        [slwConfig]="slwConfiguration" (tabClicked)="raiseTabClick($event)"
+                                        [orgId]="orgId"></sb-uic-mdo-leaderboard>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <div class="hidden md:block padding-top-xl padding-bottom-m" *ngIf="data?.cbpPlanSection?.data">
+                            <div class="pt-4">
+                                <sb-uic-cbp-plan [layoutType]="'web'" [mobileHeight]="false" [fetchDataFromApi]="true"
+                                    [channelId]="orgId" [objectData]="data?.cbpPlanSection?.data">
+                                </sb-uic-cbp-plan>
+                            </div>
+                        </div>
+                        <div class="hidden md:block" *ngIf="!data?.announcementSection?.disable">
+                            <div class="pt-4">
+                                <sb-uic-announcements [layoutType]="'web'" [mobileHeight]="false"
+                                    [fetchDataFromApi]="true" [channelId]="orgId"
+                                    [objectData]="data?.announcementSection?.data">
+                                </sb-uic-announcements>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+
             </div>
         </div>
     </div>
 </ng-template>
-<!-- 
+<!--
 <ng-template #announcement let-data="data">
     <div class="flex  items-center justify-center" [ngStyle]="{'background': data.background}">
         <div class="w-full">
             Announcement Section -->
-            <!-- <h1>Announcement</h1>
+<!-- <h1>Announcement</h1>
         </div>
     </div>
 </ng-template> -->
 
 
-<ng-template #columnSectionDisplay  let-data="data">
+<ng-template #columnSectionDisplay let-data="data">
     <ng-container *ngIf="data?.length">
         <ng-container *ngFor="let section of data">
             <ng-container *ngIf="section?.enabled">
-                <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4" [ngClass]="{'container': section.wrapperClass}">
+                <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4"
+                    [ngClass]="{'container': section.wrapperClass}">
                     <ng-container *ngFor="let column of section.column">
                         <div id="{{column?.key}}" class="col-span-{{column.colspan || 12}} ">
                             <ng-container *ngIf="column?.enabled" [ngSwitch]="column?.key">
                                 <ng-container *ngSwitchCase="'competency'" [ngTemplateOutlet]="competency"
-                                [ngTemplateOutletContext]="{competency: column}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentRecommendedProgramStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentRecommendedCoursesStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentFeaturedStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
-                                <ng-container *ngSwitchCase="'contentcertificationsOfWeekStrip'" [ngTemplateOutlet]="contentStrip"
-                                [ngTemplateOutletContext]="{contentStrip: column?.data}"></ng-container>
+                                    [ngTemplateOutletContext]="{competency: column}"></ng-container>
+                                <ng-container *ngSwitchCase="'contentRecommendedProgramStrip'"
+                                    [ngTemplateOutlet]="contentStripTemplate" [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                <ng-container *ngSwitchCase="'contentRecommendedCoursesStrip'"
+                                    [ngTemplateOutlet]="contentStripTemplate" [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                <ng-container *ngSwitchCase="'contentFeaturedStrip'"
+                                    [ngTemplateOutlet]="contentStripTemplate" [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
+                                <ng-container *ngSwitchCase="'contentcertificationsOfWeekStrip'"
+                                    [ngTemplateOutlet]="contentStripTemplate" [ngTemplateOutletContext]="{
+                                        data: {contentStrip: column?.data, sectionKey: section.key}
+                                        }"></ng-container>
                             </ng-container>
                         </div>
                     </ng-container>
@@ -255,19 +438,16 @@
 
 <!-- Start Competencies -->
 <ng-template #competency let-competency="competency">
-    <div class="padding-top-l padding-bottom-l relative"  [style.background]="competency?.background" *ngIf="!hideCompetencyBlock;else noData">
+    <div class="padding-top-l padding-bottom-l relative" [style.background]="competency?.background"
+        *ngIf="!hideCompetencyBlock;else noData">
         <div class="w-full container-balanced">
-            <p class="mat-body-1 pl-5 pr-4 md:pl-0 md:pr-0">This section shows the list of top competencies users in this MDO are learning, based on the courses they've completed and enrolled in.</p>
+            <p class="mat-body-1 pl-5 pr-4 md:pl-0 md:pr-0">This section shows the list of top competencies users in
+                this MDO are learning, based on the courses they've completed and enrolled in.</p>
             <div class="pl-4 pr-4 md:pl-0 md:pr-0">
-                <sb-uic-competency-passbook-mdo
-                    [dynamicColor]="'#999999'"
-                    [dynamicAlignPills]="'start'"
-                    [cardDisplayCount]="2"
-                    (emptyResponse)="hideCompetency($event)"
-                    (temeletryResponse)="raiseCompetencyTelemetry($event)"
-                    [objectData]="competency"
-                    [providerId]="orgId"
-                    >
+                <sb-uic-competency-passbook-mdo [dynamicColor]="'#999999'" [dynamicAlignPills]="'start'"
+                    [cardDisplayCount]="2" (emptyResponse)="hideCompetency($event)"
+                    (temeletryResponse)="raiseCompetencyTelemetry($event)" [objectData]="competency"
+                    [providerId]="orgId">
                 </sb-uic-competency-passbook-mdo>
             </div>
         </div>
@@ -275,20 +455,13 @@
     </div>
 </ng-template>
 <!-- End Competencies -->
-
-<ng-template #contentStrip let-contentStrip="contentStrip">
-    <ng-container *ngIf="!contentStrip?.hideSection">
+<ng-template #contentStripTemplate let-data="data">
+    <ng-container *ngIf="!data?.contentStrip?.hideSection">
         <div class="flex mb-8">
             <div class="w-full">
-                <sb-uic-content-strip-with-tabs
-                    [emitViewAll]="true"
-                    (viewAllResponse)="showAllContent($event, contentStrip)"
-                    (telemtryResponse)="raiseTelemetryInteratEvent($event)"
-                    (emptyResponse)="hideContentStrip($event, contentStrip)"
-                    [providerId]="orgId"
-                    [widgetData]="contentStrip"
-                    [channnelName]="channnelName"
-                    >
+                <sb-uic-content-strip-with-tabs [emitViewAll]="true" (viewAllResponse)="showAllContent($event, data)"
+                    (telemtryResponse)="raiseTelemetryInteratEvent($event)" [providerId]="orgId"
+                    [widgetData]="data?.contentStrip" [channnelName]="channnelName">
                 </sb-uic-content-strip-with-tabs>
             </div>
         </div>
@@ -296,23 +469,44 @@
 </ng-template>
 
 <ng-template #noData>
-        <div class="flex justify-center w-full">
-            <div class="margin-xl text-center" >
-                <img src="/assets/common/error-pages/empty_search.svg" wsUtilsImageResponsive alt="No results"
-                    class="margin-top-l margin-bottom-s">
-                <h2 class="mat-h2" i18n="search route no result">{{'learnsearch.noResults' | translate}}</h2>
-            </div>
+    <div class="flex justify-center w-full">
+        <div class="margin-xl text-center">
+            <img src="/assets/common/error-pages/empty_search.svg" wsUtilsImageResponsive alt="No results"
+                class="margin-top-l margin-bottom-s">
+            <h2 class="mat-h2" i18n="search route no result">{{'learnsearch.noResults'}}</h2>
         </div>
+    </div>
 </ng-template>
 
 <ng-template #topLearners let-data="data">
     <div class="flex items-center justify-center">
         <div class="container top-learners margin-bottom-l margin-top-l">
-            <sb-uic-top-learners
-                [objectData]="data"
-                [channnelName]="channnelName"
-                [channelId]="orgId">
+            <sb-uic-top-learners [objectData]="data" [channnelName]="channnelName" [channelId]="orgId"
+                [slwConfig]="slwConfiguration" [isEdit]="false">
             </sb-uic-top-learners>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #lookerproSection let-data="data">
+    <ng-container *ngIf="data?.enabled">
+        <div class="flex items-center justify-center flex-wrap">
+            <div class=" w-full flex flex-col items-center justify-center">
+                <h2 *ngIf="data?.header?.headerText" class="pt-4">{{data?.header?.headerText}}</h2>
+                <p *ngIf="data?.header?.description">{{data?.header?.description}}</p>
+            </div>
+            <div class="container mt-4 mb-4" *ngIf="lookerProUrl">
+                <iframe class="w-full " height="{{iframeHeight}}" [src]="lookerProUrl" frameborder="0" style="border:0"
+                    allowfullscreen
+                    sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #supportSection let-data="data">
+    <div class="flex items-center justify-center">
+        <div class="container support-section">
+            <sb-uic-video-conference [videoConf]="data"></sb-uic-video-conference>
         </div>
     </div>
 </ng-template>

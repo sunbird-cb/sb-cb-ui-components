@@ -1,10 +1,11 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, ViewChild, OnDestroy } from '@angular/core'
-import { MatSnackBar } from '@angular/material/snack-bar'
+import { Component, ElementRef, Inject, Input, OnChanges, OnInit, ViewChild, OnDestroy } from '@angular/core'
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
 import { Router } from '@angular/router'
-import { NsContent } from '@ws-widget/collection'
-import { ConfigurationsService, EventService, TFetchStatus } from '@ws-widget/utils'
-// import { MobileAppsService } from '../../../../../../../src/app/services/mobile-apps.service'
+import { NsContent } from '@sunbird-cb/collection'
+import { ConfigurationsService, EventService } from '@sunbird-cb/utils'
+import { TFetchStatus } from '@sunbird-cb/utils'
+import { MobileAppsService } from '../../services/mobile-apps.service'
 import { SCORMAdapterService } from './SCORMAdapter/scormAdapter'
 /* tslint:disable */
 import _ from 'lodash'
@@ -16,8 +17,8 @@ import _ from 'lodash'
   styleUrls: ['./html.component.scss'],
 })
 export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
-  @ViewChild('mobileOpenInNewTab', { read: ElementRef, static: false }) mobileOpenInNewTab !: ElementRef<HTMLAnchorElement>
-  @Input() htmlContent: NsContent.IContent | null = null
+  @ViewChild('mobileOpenInNewTab', { read: ElementRef }) mobileOpenInNewTab !: ElementRef<HTMLAnchorElement>
+  @Input() htmlContent: NsContent.IContent | any | null = null
   iframeUrl: SafeResourceUrl | null = null
   iframeName = `piframe_${Date.now()}`
   showIframeSupportWarning = false
@@ -30,12 +31,13 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
   progress = 100
   constructor(
     private domSanitizer: DomSanitizer,
-    // public mobAppSvc: MobileAppsService,
+    public mobAppSvc: MobileAppsService,
     private scormAdapterService: SCORMAdapterService,
     private router: Router,
     private configSvc: ConfigurationsService,
     private snackBar: MatSnackBar,
     private events: EventService,
+    @Inject('environment') private environment: any,
   ) {
     (window as any).API = this.scormAdapterService
     // if (window.addEventListener) {
@@ -57,7 +59,7 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
     if (this.htmlContent && this.htmlContent.identifier) {
       this.scormAdapterService.contentId = this.htmlContent.identifier
-      this.scormAdapterService.loadData()
+      // this.scormAdapterService.loadData()
     }
   }
   ngOnDestroy() {
@@ -76,12 +78,12 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
     // //console.log(this.htmlContent)
     let iframeSupport: boolean | string | null =
       this.htmlContent && this.htmlContent.isIframeSupported
-    if (this.htmlContent && this.htmlContent.artifactUrl) {
+    if (this.htmlContent && this.htmlContent?.artifactUrl) {
       if (this.htmlContent.artifactUrl.startsWith('http://')) {
         this.htmlContent.isIframeSupported = 'No'
       }
       if (typeof iframeSupport !== 'boolean') {
-        iframeSupport = this.htmlContent.isIframeSupported.toLowerCase()
+        iframeSupport = (this.htmlContent.isIframeSupported || 'Yes').toLowerCase()
         if (iframeSupport === 'no') {
           this.showIframeSupportWarning = true
           setTimeout(
@@ -129,15 +131,80 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
         setTimeout(
           () => {
             if (this.pageFetchStatus === 'fetching') {
-              this.showIsLoadingMessage = true
+              this.showIsLoadingMessage = false
             }
           },
           3000,
         )
       }
-      this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
-        `${this.htmlContent.artifactUrl}?timestamp='${new Date().getTime()}`
-      )
+      if (this.htmlContent &&
+        this.htmlContent.mimeType !== 'text/x-url' &&
+        this.htmlContent.mimeType !== 'video/x-youtube') {
+        // if (this.htmlContent.status === 'Live') {
+        //   this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+        //     // `https://igot.blob.core.windows.net/content/content/html/${this.htmlContent.identifier}-latest/index.html`
+        // tslint:disable-next-line: max-line-length
+        //     `${environment.azureHost}/${environment.azureBucket}/content/html/${this.htmlContent.identifier}-latest/index.html?timestamp='${new Date().getTime()}`
+        //   )
+        // } else {
+        //   this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+        //     // `https://igot.blob.core.windows.net/content/content/html/${this.htmlContent.identifier}-snapshot/index.html`
+        // tslint:disable-next-line: max-line-length
+        //     `${environment.azureHost}/${environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+        //   )
+        // }
+        if (this.htmlContent && this.htmlContent.streamingUrl) {
+          if (this.htmlContent.streamingUrl.includes(this.environment.azureHost)) {
+            this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.htmlContent.streamingUrl)
+          } else {
+            if (this.htmlContent.streamingUrl && this.htmlContent.initFile) {
+              this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                // tslint:disable-next-line:max-line-length
+                `${this.generateUrl(this.htmlContent.streamingUrl)}/${this.htmlContent.initFile}?timestamp='${new Date().getTime()}`
+              )
+            } else {
+              if (this.environment.production) {
+                this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                  // tslint:disable-next-line: max-line-length
+                  // `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+                  // tslint:disable-next-line: max-line-length
+                  `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+                )
+              } else {
+                this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+                  // tslint:disable-next-line: max-line-length
+                  // `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+                  // tslint:disable-next-line: max-line-length
+                  `/abcd/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+                )
+              }
+            }
+          }
+        } else {
+          if (this.htmlContent.initFile) {
+            this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+              // tslint:disable-next-line: max-line-length
+              `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/${this.htmlContent.initFile}?timestamp='${new Date().getTime()}`
+            )
+          } else {
+            this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
+              // tslint:disable-next-line: max-line-length
+              `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+            )
+
+          }
+        }
+      } else {
+        setTimeout(
+          () => {
+            if (this.htmlContent && this.htmlContent.artifactUrl) {
+              this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.htmlContent.artifactUrl)
+            }
+          },
+          1000,
+        )
+        // this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(this.htmlContent.artifactUrl)
+      }
       // testing purpose only
       // setTimeout(
       //   () => {
@@ -177,15 +244,14 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
   }
   openInNewTab() {
     if (this.htmlContent) {
-      if (false) {
-        // if (this.mobAppSvc && this.mobAppSvc.isMobile) {
+      if (this.mobAppSvc && this.mobAppSvc.isMobile) {
         // window.open(this.htmlContent.artifactUrl)
-        // setTimeout(
-        //   () => {
-        //     this.mobileOpenInNewTab.nativeElement.click()
-        //   },
-        //   0,
-        // )
+        setTimeout(
+          () => {
+            this.mobileOpenInNewTab.nativeElement.click()
+          },
+          0,
+        )
       } else {
         const width = window.outerWidth
         const height = window.outerHeight
@@ -210,6 +276,7 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
   }
+
   dismiss() {
     this.showIframeSupportWarning = false
     this.isIntranetUrl = false
@@ -235,11 +302,41 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
   raiseTelemetry(data: any) {
     if (this.htmlContent) {
       /* tslint:disable-next-line */
-      // console.log(this.htmlContent.identifier)
+      console.log(this.htmlContent.identifier)
       this.events.raiseInteractTelemetry(data.event, 'scrom', {
         contentId: this.htmlContent.identifier,
         ...data,
       })
     }
+  }
+
+  getUrl(url: string) {
+    if (url && url.length > 0) {
+      const tempData = url.split('content')
+      if (url.indexOf(`/collection`) > 0) {
+        return `${this.environment.mdoPath}${this.environment.contentBucket}${tempData[tempData.length - 1]}`
+      }
+      if (tempData.length > 1) {
+        return `${this.environment.mdoPath}${this.environment.contentBucket}/content${tempData[tempData.length - 1]}`
+      }
+    }
+    return url
+  }
+
+  generateUrl(oldUrl: string) {
+    const chunk = oldUrl.split('/')
+    const newChunk = this.environment.azureHost.split('/')
+    const newLink = []
+    for (let i = 0; i < chunk.length; i += 1) {
+      if (i === 2) {
+        newLink.push(newChunk[i])
+      } else if (i === 3) {
+        newLink.push(this.environment.azureBucket)
+      } else {
+        newLink.push(chunk[i])
+      }
+    }
+    const newUrl = newLink.join('/')
+    return newUrl
   }
 }

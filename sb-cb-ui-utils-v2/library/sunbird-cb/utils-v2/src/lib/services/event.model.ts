@@ -78,6 +78,7 @@ export namespace WsEvents {
     subType?: string
     id?: string
     pageid?: string
+    target?: string
   }
 
   export interface ITelemetryTabData {

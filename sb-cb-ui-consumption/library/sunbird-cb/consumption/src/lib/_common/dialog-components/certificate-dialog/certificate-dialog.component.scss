@@ -1,6 +1,5 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 $colorAccent: rgb(27, 76, 161); 
 $colorWhite: #ffffff;
@@ -109,7 +108,8 @@ a.download_btn {
     line-height: 30px;
     background: #000 !important;
     color: #fff !important;
-    border-radius: 50% !important;
+    border-radius: 60% !important;
+    min-width: 0 !important;
 }
 
 .ws-mat-accent-border {
@@ -172,6 +172,8 @@ a.download_btn {
 
 .close-icon {
     position: absolute !important;
-    top: 19px !important;
-    right: 18px !important;
+    top: 4px !important;
+    right: 4px !important;
+    color: #fff !important;
+    vertical-align: middle;
 }

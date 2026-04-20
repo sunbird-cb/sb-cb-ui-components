@@ -1,0 +1,133 @@
+<!-- Question Card View -->
+<div class="question-list-item" [class.expanded]="isExpanded">
+  <div class="question-header" (click)="onExpandQuestion()">
+    <div class="question-info">
+      <span class="question-number">Q{{ questionIndex }}</span>
+      <span class="question-type">{{ getQuestionTypeName() }}</span>
+    </div>
+    <div class="question-actions" (click)="$event.stopPropagation()" *ngIf="!isReadOnly">
+      <button mat-icon-button (click)="onEditQuestion()" class="edit-btn" matTooltip="Edit Question">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onDeleteQuestion()" class="delete-btn" matTooltip="Delete Question">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Expanded Editor View -->
+  <div class="question-editor-section" *ngIf="isExpanded">
+
+    <div class="question-content-expanded">
+      <sb-uic-assessment-rich-text
+        [specificToolBar]="questionData.qType === 'FTB' ? 'FTB' : (questionData.qType === 'MTF' ? 'mtf' : '')"
+        [textToBeShown]="questionText" (getContent)="getQuestionContent($event)"
+        [showAudioVideoToolBar]="questionData.qType === 'FTB' ? false : true" [ftbCount]="fitbCount"
+        [ftbMaxCount]="fitbConfig?.maxOptions" [readOnly]="isReadOnly">
+      </sb-uic-assessment-rich-text>
+    </div>
+
+    <!-- Difficulty Level Radio Buttons -->
+    <div class="difficulty-level-section" *ngIf="hasSectionLevelDefinition()">
+      <div class="radio-group">
+        <label class="radio-option" *ngFor="let level of difficultyLevels">
+          <input type="radio" [name]="'difficulty-' + questionIndex" [value]="level.value"
+            [(ngModel)]="selectedDifficultyLevel" (change)="onDifficultyLevelChange(level.value)"
+            [disabled]="isReadOnly">
+          <span class="radio-label">{{ level.name }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Marks Section -->
+    <div class="marks-section" *ngIf="hasSectionLevelDefinition()">
+      <div class="marks-display">
+        <span class="marks-label">Marks for {{ getSelectedLevelName() }}:</span>
+        <span class="marks-value">{{ getSelectedLevelMarks() }}</span>
+      </div>
+    </div>
+
+    <!-- Multiple Choice Question Options -->
+    <div class="mcq-options-section" *ngIf="isMCQQuestion()">
+      <div class="mb-5">
+        <label class="font-bold required">Answers</label>
+      </div>
+      <sb-uic-multiple-choice-question #mcqComponent [questionType]="questionData.qType" [options]="questionOptions"
+        [isReadOnly]="isReadOnly" (optionsUpdated)="onOptionsUpdated($event)">
+      </sb-uic-multiple-choice-question>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-middle flex-center gap-5" *ngIf="!isReadOnly">
+        <ng-container *ngIf="!isTrueFalseQuestion()">
+          <button mat-button class="btn-common btn-secondary" (click)="onAddOption()"
+            [ngClass]="{'btn-disable': !canAddMoreOptions()}" [disabled]="!canAddMoreOptions()">
+            Add Option
+          </button>
+        </ng-container>
+        <button mat-button class="btn-common btn-primary" (click)="saveQuestion()"
+          [ngClass]="{'btn-disable': !canSaveQuestion()}" [disabled]="!canSaveQuestion()">
+          {{ isUpdateMode() ? 'Update' : 'Save' }}
+        </button>
+      </div>
+      <div *ngIf="!canAddMoreOptions() && !isTrueFalseQuestion()" class="max-options-message">
+        Maximum 7 options allowed
+      </div>
+    </div>
+
+    <!-- Match The Following Section -->
+    <div class="mtf-options-section" *ngIf="isMTFQuestion()">
+      <div class="my-5">
+        <label class="font-bold required">Question-Answer Pairs</label>
+      </div>
+      <sb-uic-match-the-following #mtfComponent [options]="questionOptions" [isReadOnly]="isReadOnly"
+        (optionsUpdated)="onOptionsUpdated($event)">
+      </sb-uic-match-the-following>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-middle flex-center gap-5 mt-5" *ngIf="!isReadOnly">
+        <button mat-button class="btn-common btn-secondary" (click)="onAddPair()"
+          [ngClass]="{'btn-disable': !canAddMorePairs()}" [disabled]="!canAddMorePairs()">
+          Add Option
+        </button>
+        <button mat-button class="btn-common btn-primary" (click)="saveQuestion()"
+          [ngClass]="{'btn-disable': !canSaveMTFQuestion()}" [disabled]="!canSaveMTFQuestion()">
+          {{ isUpdateMode() ? 'Update' : 'Save' }}
+        </button>
+      </div>
+      <div *ngIf="!canAddMorePairs()" class="max-options-message">
+        Maximum 7 pairs allowed
+      </div>
+    </div>
+
+    <!-- Fill in the Blanks Section -->
+    <div class="ftb-options-section" *ngIf="isFTBQuestion()">
+      <div class="my-5">
+        <label class="font-bold required">Fill in the Blanks Options</label>
+      </div>
+      <sb-uic-fill-up-the-blanks #ftbComponent [options]="questionOptions" [ftbCount]="fitbCount"
+        [isReadOnly]="isReadOnly" [compatibilityLevel]="assessmentData?.compatibilityLevel"
+        (optionsUpdated)="onOptionsUpdated($event)">
+      </sb-uic-fill-up-the-blanks>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-middle flex-center gap-5 mt-5" *ngIf="!isReadOnly">
+        <button mat-button class="btn-common btn-secondary" (click)="onAddBlank()" *ngIf="!isBasicAssessment()"
+          [ngClass]="{'btn-disable': !canAddMoreBlanks()}" [disabled]="!canAddMoreBlanks()">
+          Add Option
+        </button>
+        <button mat-button class="btn-common btn-primary" (click)="saveQuestion()"
+          [ngClass]="{'btn-disable': !canSaveFTBQuestion()}" [disabled]="!canSaveFTBQuestion()">
+          {{ isUpdateMode() ? 'Update' : 'Save' }}
+        </button>
+      </div>
+      <div *ngIf="!canAddMoreBlanks() && !isBasicAssessment()" class="max-options-message">
+        Maximum 7 options allowed
+      </div>
+      <div *ngIf="isBasicAssessment() && fitbCount > 0" class="max-options-message">
+        Options are automatically managed based on blanks ({{ fitbCount }} blank{{ fitbCount > 1 ? 's' : '' }})
+      </div>
+    </div>
+
+
+  </div>
+</div>

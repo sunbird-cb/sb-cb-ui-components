@@ -1,0 +1,82 @@
+<div class="text-center mt-4">
+    <p mat-dialog-title class="ff-montserrat font-bold text-xl">Select skills which you want to learn.</p>
+    <p class="lato font-normal text-sm">Based on you choice, We will recommend best suitable content for you.</p>
+</div>
+<mat-dialog-content>
+    <div class="enrollment-list-wrapper">
+        <div class="flex iteams-center justify-between flex-col">
+            <div>
+                <div class="mat-full-radius">
+                    <mat-form-field appearance="outline" class="margin-top-xs stakeholders w-full">
+                        <mat-icon matPrefix>search</mat-icon>
+                        <input matInput #search maxlength="70" i18n-placeholder placeholder="Search"
+                            [formControl]="searchTextCtrl">
+                    </mat-form-field>
+                </div>
+                <div class="form_item_full">
+                    <div class="max-height-320" *ngIf="selectedList && selectedList?.length > 0">
+                        <div class="flex flex-row justify-between w-full">
+                            <div class="flex flex-row w-90">
+                                <div class="font-normal mt-5 w-17">Selected Items <span
+                                        *ngIf="selectedList && selectedList?.length">({{(selectedList) ?
+                                        (selectedList?.length) :
+                                        '0'}})</span>
+                                    :</div>
+                                <div class="flex flex-row flex-wrap" [ngClass]="showMore ? 'w-78':''">
+                                    <ng-container *ngFor="let org of selectedList | slice : 0:sliceCount">
+                                        <div class="flex items-center orgBoxChip margin-bottom-s px-4 py-3 mt-2 ml-4">
+                                            <div class="flex-col flex-1">
+                                                <h3
+                                                    class="mat-h2 margin-remove inline-block flex-1 long-text-wrap-new-ui">
+                                                    <span *ngIf="org?.orgName?.length > 25">{{org?.orgName | slice : 0 :
+                                                        25}}...</span>
+                                                    <span *ngIf="org?.orgName?.length < 25">{{org?.orgName}}</span>
+                                                </h3>
+                                            </div>
+                                            <mat-icon matPrefix
+                                                class="flex items-right justify-right margin-right-0 cursor-pointer close-rounded ml-6"
+                                                (click)="removeSelectedOrg(org)">close</mat-icon>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <div class="more mt-5 ml-2 w-10"
+                                    *ngIf="selectedList?.length > 0 && sliceCount < selectedList?.length">
+                                    <a href="javascript:void(0)" (click)="showMoreSelectedOrg()">+{{selectedList?.length
+                                        -
+                                        sliceCount}}
+                                        more</a>
+                                </div>
+                                <div class="more mt-5 ml-2"
+                                    *ngIf="showMore && selectedList?.length > 0 && selectedList?.length === sliceCount">
+                                    <a href="javascript:void(0)" (click)="showLessSelectedOrg()">Show less</a>
+                                </div>
+                            </div>
+                            <div class="flex flex-row mt-5 w-10 justify-end">
+                                <div class="more" *ngIf="selectedList?.length > 1 ">
+                                    <a href="javascript:void(0)" (click)="clearAll()">Clear all</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="max-height-320 padding-left-s mt-3 border-section">
+                    <div *ngFor="let value of orgList" class="custome-checkbox margin-bottom-s">
+                        <mat-checkbox (change)="selectedOrgChange($event.checked, value)" [checked]="value.checked">
+                            <div class="margin-left-sm">
+                                <h3 class="margin-remove inline-block flex-1 long-text-wrap">
+                                    {{value.orgName}}
+                                </h3>
+                            </div>
+                        </mat-checkbox>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions class="flex justify-center py-4 gap-4">
+    <button mat-button mat-dialog-close class="mat-btn-outline" (click)="cancelModal()">Cancel</button>
+    <button mat-button class="mat-btn-flat" (click)="submitCompetency()">Submit</button>
+</mat-dialog-actions>

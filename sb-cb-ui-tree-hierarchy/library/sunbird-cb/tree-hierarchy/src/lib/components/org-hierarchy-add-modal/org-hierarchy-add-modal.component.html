@@ -1,0 +1,116 @@
+<div class="org-hierarchy-modal">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <div class="header-title">
+      <h2 class="m-0">Update Organisation Hierarchy</h2>
+    </div>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Modal Content -->
+  <div class="modal-content">
+    <div class="content-container">
+        <div class="flex flex-col org-container">
+          <label class="orgTypeName">{{data?.selectedOrgData?.sbOrgType}}</label>
+          <label class="orgTypeSelected">{{data?.selectedOrgData?.orgName?.toLowerCase()}}</label>
+          <div class="dashed-line"></div>
+        </div>
+        <ng-container *ngIf="data?.previous?.length > 0">
+          <div class="flex flex-col org-container" *ngFor="let item of data?.previous;let i = index"
+            [ngStyle]="{'margin-left': 30 * (i+1) + 'px'}">
+            <ng-container *ngIf="data?.type === 'update' && i === (data?.previous?.length - 2)">
+              <label class="orgTypeName">{{item?.category?.toLowerCase()}}</label>
+              <label class="sub-label">Only the imported organisation will be listed.</label>
+              <div class="select-search-container">
+                  <mat-form-field appearance="outline" class="w-full custom-height-select">
+                      <mat-select [formControl]="parentSelectedOrgControl" placeholder="Select" #parentSelect
+                        [panelClass]="'mat-select-panel-below'" 
+                        disableOptionCentering 
+                        [disableOptionCentering]="true"
+                        (keydown)="handleKeydown($event)">
+                          <!-- Search container -->
+                          <div class="search-container flex gap-5 flex-middle" (click)="$event.stopPropagation()">
+                              <input type="text" [formControl]="parentSearchControl" placeholder="Search..."
+                              (keydown)="handleSearchKeydown($event)"
+                              class="search-input" #searchInput>
+                          </div>
+                          <mat-option class="no-checkbox" *ngFor="let organization of parentFilteredOptions" [value]="organization.code">
+                              {{organization.name}}
+                          </mat-option>
+                          <mat-option *ngIf="parentFilteredOptions.length === 0" disabled>
+                              No data found
+                          </mat-option>
+                      </mat-select>
+                  </mat-form-field>
+                  <div class="dashed-line"></div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!(data?.type === 'update' && i === (data?.previous?.length - 2))">
+              <label class="orgTypeName">{{item?.category?.toLowerCase()}}</label>
+              <label class="orgTypeSelected">{{item?.name?.toLowerCase()}}</label>
+              <div class="dashed-line"></div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="data?.currentData">
+            <div class="flex flex-col org-container" 
+            [ngStyle]="{'margin-left': 30 * (data?.previous?.length + 1) + 'px'}">
+                <label class="orgTypeName">{{data?.currentData?.code?.toLowerCase()}}</label>
+                <label class="sub-label">Organisations which are already in the hierarchy will not listed to add or in searchable dropdown</label>
+                <!-- Searchable multi-select -->
+                <div class="select-search-container">
+                    <mat-form-field appearance="outline" class="w-full custom-height-select">
+                        <mat-select [formControl]="selectedOrgsControl" placeholder="Select" #singleSelect
+                          [panelClass]="'mat-select-panel-below'" 
+                          disableOptionCentering 
+                          [disableOptionCentering]="true"
+                          (keydown)="handleKeydown($event)"
+                          multiple>
+                            <!-- Search container -->
+                            <div class="search-container flex gap-5 flex-middle" (click)="$event.stopPropagation()">
+                                <input type="text" [formControl]="searchControl" placeholder="Search..."
+                                (keydown)="handleSearchKeydown($event)"
+                                class="search-input" #searchInput>
+                                <button mat-button class="add-btn" (click)="checkAndClose(singleSelect); $event.stopPropagation()" type="button">
+                                    <span>Add</span>
+                                    <mat-icon class="margin-remove">add</mat-icon>
+                                </button>
+                            </div>
+                            <mat-option *ngFor="let organization of filteredOptions" [value]="organization.identifier">
+                                {{organization.orgName}}
+                            </mat-option>
+                            <mat-option *ngIf="filteredOptions.length === 0" disabled>
+                                No data found
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <ng-container *ngIf="selectedOrgsControl?.value?.length > 0">
+                      <mat-chip-list class="org-clip" aria-label="orgSelection">
+                        <mat-chip class="clip-option flex flex-middle" *ngFor="let item of selectedOrgsControl.value" [removable]="true" (removed)="removeOrg(item)">
+                          {{getNameOfOrg(item)}}
+                          <mat-icon matChipRemove class="margin-remove">close</mat-icon>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer">
+    <button mat-stroked-button class="btn-common btn-secondary" (click)="onClose()" type="button">
+      Cancel
+    </button>
+    <button 
+      mat-stroked-button 
+      class="btn-common btn-primary" 
+      (click)="onSave()" 
+      type="button">
+      Save
+    </button>
+  </div>
+</div>

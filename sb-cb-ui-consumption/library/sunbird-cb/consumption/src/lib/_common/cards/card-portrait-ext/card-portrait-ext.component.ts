@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NsCardContent } from '../../../_models/card-content.model';
-import { MatSnackBar } from '@angular/material';
+import { MatLegacySnackBar as MatSnackBar } from '@angular/material/legacy-snack-bar';
 import { ConfigurationsService, EventService } from '@sunbird-cb/utils-v2';
 import * as _ from "lodash";
 import { TranslateService } from '@ngx-translate/core';
 import { MultilingualTranslationsService } from '../../../_services/multilingual-translations.service';
-import { WidgetContentService } from '../../../_services/widget-content.service';
+import { WidgetContentLibService } from '../../../_services/widget-content-lib.service';
 
 @Component({
   selector: 'sb-uic-card-portrait-ext',
@@ -33,7 +33,7 @@ export class CardPortraitExtComponent implements OnInit {
     private translate: TranslateService,
     private langtranslations: MultilingualTranslationsService,
     private configSvc: ConfigurationsService,
-    private contSvc: WidgetContentService,) { 
+    private contSvc: WidgetContentLibService,) { 
       this.langtranslations.languageSelectedObservable.subscribe(() => {
         if (localStorage.getItem('websiteLanguage')) {
           this.translate.setDefaultLang('en')

@@ -1,0 +1,207 @@
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
+
+
+.ff-montserrat {
+    /* stylelint-disable */
+    font-family: Montserrat;
+  /* stylelint-enable */
+}
+
+.section-btn {
+  height: 32px;
+  width: 100px;
+  background-color: $white !important;
+  color: $darkerShadeBorder !important;
+  font: 700 14px "Lato";
+  border-radius: 16px;
+  border: 1px solid $darkerShadeBorder;
+
+  &.active-section-btn {
+    background-color: $brandAccentDarkShade !important;
+    border: 1px solid $brandAccentColor;
+    color: $brandAccentColor !important;
+  }
+}
+
+.subtite-color {
+  color: $darkColor;
+}
+
+.border-bottom-c {
+  border-bottom: 2px solid $borderGrey1 !important;
+}
+
+.long-text-wrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 14px;
+  font-family: Lato;
+  color: $darkColorText;
+}
+
+.long-text-wrap-new-ui {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 131px;
+  line-height: 14px;
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.custome-icon-font-size {
+  font-size: 12px;
+  line-height: 12px;
+}
+
+.subheading {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.custome-checkbox ::ng-deep .mat-checkbox-layout {
+  margin-bottom: 10px;
+}
+
+.orgBox {
+  background-color: $whiteSmoke;
+  border-radius: 5px;
+}
+
+.max-height-320 {
+  max-height: 230px;
+  overflow-y: auto;
+
+  /* width */
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  &::-webkit-scrollbar-track {
+    background: $whiteWhisper;
+  }
+
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: $scrollTumbBg;
+    border-radius: 100vw;
+  }
+
+  /* Handle on hover */
+  &::-webkit-scrollbar-thumb:hover {
+    background: $dimGray;
+  }
+}
+
+.custome-slide {
+  font-size: 14px;
+  font-weight: normal !important;
+  width: auto;
+}
+
+.disable {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: none;
+}
+
+::ng-deep .stakeholders {
+  .mat-form-field-wrapper {
+    padding: 0;
+  }
+}
+
+.border-section {
+  border-radius: 8px;
+  border: 1px solid $borderGrey1;
+  padding: 16px;
+  background-color: $white;
+  padding: 1.2rem;
+}
+
+.orgBoxChip {
+  border-radius: 27px;
+  background-color: $white;
+  border-radius: 27px;
+  border: 1px solid $borderGrey2;
+  height: 23px;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.more {
+  color: rgba(27, 76, 161, 1);
+  margin-left: 6px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.margin-right-0 {
+  margin-right: 0 !important;
+}
+
+.w-90 {
+  width: 90%;
+}
+
+.w-10 {
+  width: 10%;
+}
+
+.w-78 {
+  width: 78%;
+}
+
+.w-17 {
+  width: 15%;
+}
+
+.black-text {
+  color: #000 !important;
+}
+
+.enrollment-list-wrapper {
+  padding: 1rem;
+}
+
+.margin-left-sm {
+  margin-left: 4px;
+}
+
+::ng-deep .mat-full-radius {
+  .mat-form-field-appearance-outline .mat-form-field-outline {
+    border-radius: 30px;
+  }
+
+  .mat-form-field {
+    .mat-form-field-outline {
+      &-end {
+        border-radius: 0 30px 30px 0 !important;
+      }
+
+      &-start {
+        border-radius: 30px 0 0 30px !important;
+        flex-grow: 1;
+      }
+    }
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-infix {
+    padding: 6px 0 15px 0;
+  }
+
+  .mat-form-field-appearance-outline .mat-select-arrow-wrapper {
+    transform: translateY(5%);
+  }
+
+  .mat-form-field-appearance-outline .mat-form-field-flex {
+    padding: 0 16px 0 16px;
+  }
+}

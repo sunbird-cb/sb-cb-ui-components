@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core'
-import { NsContent, NsDiscussionForum } from '@ws-widget/collection'
-import { NsWidgetResolver } from '@ws-widget/resolver'
+import { NsContent, NsDiscussionForum } from '@sunbird-cb/collection'
+import { NsWidgetResolver } from '@sunbird-cb/resolver'
 import { ActivatedRoute } from '@angular/router'
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser'
-// import { PipeLimitToPipe } from '@ws-widget/utils'
-import { ValueService, ConfigurationsService } from '@ws-widget/utils'
+import { PipeLimitToPipe, ValueService, ConfigurationsService } from '@sunbird-cb/utils-v2'
 @Component({
   selector: 'viewer-html-container',
   templateUrl: './html.component.html',
@@ -26,11 +25,13 @@ export class HtmlComponent implements OnInit, OnChanges {
   isLtMedium = false
   isScormContent = false
   isRestricted = false
+  playScormContentFlag = false
+  isMobile = false
   constructor(
     private activatedRoute: ActivatedRoute,
     private domSanitizer: DomSanitizer,
     // private contentSvc: WidgetContentService,
-    // private pipeLimitTo: PipeLimitToPipe,
+    private pipeLimitTo: PipeLimitToPipe,
     private valueSvc: ValueService,
     private configSvc: ConfigurationsService,
 
@@ -52,6 +53,11 @@ export class HtmlComponent implements OnInit, OnChanges {
     this.valueSvc.isLtMedium$.subscribe(isLtMd => {
       this.isLtMedium = isLtMd
     })
+    // if (window.innerWidth <= 1200) {
+    //   this.isMobile = true
+    // } else {
+    //   this.isMobile = false
+    // }
     // }).catch((ex) => {
     //   console.warn("Please refresh Page", ex)
     // })
@@ -61,7 +67,7 @@ export class HtmlComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     for (const prop in changes) {
       if (prop === 'htmlData') {
-        if (this.htmlData && this.htmlData.artifactUrl.startsWith('https://scorm.')) {
+        if (this.htmlData && this.htmlData.artifactUrl && this.htmlData.artifactUrl.startsWith('https://scorm.')) {
           this.isScormContent = true
         } else {
           this.isScormContent = false
@@ -72,8 +78,7 @@ export class HtmlComponent implements OnInit, OnChanges {
           )
         }
         if (this.htmlData && this.htmlData.description) {
-          // const description = this.pipeLimitTo.transform(this.htmlData.description, 450)
-          const description = this.htmlData.description
+          const description = this.pipeLimitTo.transform(this.htmlData.description, 450)
           this.description = this.domSanitizer.bypassSecurityTrustHtml(description)
         }
 

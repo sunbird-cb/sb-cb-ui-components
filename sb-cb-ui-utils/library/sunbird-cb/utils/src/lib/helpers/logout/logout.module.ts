@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { MatButtonModule, MatDialogModule } from '@angular/material'
+import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button'
+import { MatLegacyDialogModule as MatDialogModule } from '@angular/material/legacy-dialog'
 
 import { LogoutComponent } from './logout.component'
 
 @NgModule({
-  declarations: [LogoutComponent],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-  ],
-  entryComponents: [LogoutComponent],
+    declarations: [LogoutComponent],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatDialogModule,
+    ]
 })
 export class LogoutModule { }

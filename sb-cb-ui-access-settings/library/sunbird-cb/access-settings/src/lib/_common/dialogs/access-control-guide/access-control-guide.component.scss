@@ -1,0 +1,44 @@
+.dialog-heading {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  padding: 0 16px;
+  h2 {
+    font-family: Montserrat;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 12px;
+    padding-left: 16px;
+  }
+}
+
+:host ::ng-deep .mat-mdc-dialog-content {
+  max-height: 79vh !important;
+}
+
+::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+  color: #241c15a6;
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+::ng-deep .mat-mdc-tab.mdc-tab--active:hover .mdc-tab-indicator__content--underline {
+  border-color: #1b4ca1;
+  --mat-tab-header-active-label-text-color: #1b4ca1 !important;
+  //   border-top-width: 2.5px !important;
+}
+
+:host ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  font-family: Lato;
+  font-weight: 700;
+  font-size: 14px;
+  color: #000000de;
+}
+
+.mat-mdc-tab-header {
+  --mdc-tab-indicator-active-indicator-height: 2.5px !important;
+}
+
+.about-guide {
+  font-family: Lato;
+  font-weight: 400;
+}

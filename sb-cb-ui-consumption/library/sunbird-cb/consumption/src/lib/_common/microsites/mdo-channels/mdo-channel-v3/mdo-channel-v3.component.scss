@@ -1,0 +1,216 @@
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
+
+.container-balanced {
+    @extend %page-center;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.padding-top-xxxl {
+    padding-top: 47px;
+}
+
+.banner-container {
+    align-items: center;
+    background: #eee;
+    padding: 16px;
+    gap: 2.5rem;
+    justify-content: center;
+}
+
+.web-banner-background {
+    background-image: url('/assets/icons/microsite/MDO-channel-banner.png');
+    background-size: cover;
+    min-height: 464px;
+}
+
+.mob-container {
+    background-image: url('/assets/icons/microsite/MDOChannel_RightGraphic.svg');
+    background-position: right;
+    background-repeat: no-repeat;
+}
+.sub-title {
+    font-size: 24px;
+    font-weight: 400;
+}
+.sub-title-two {
+    font-size: 24px;
+    font-weight: 600;
+}
+.main-title {
+    font-size: 32px;
+    font-size: 48px;
+    font-weight: 700;
+
+}
+.sticky-logo-square {
+    position: absolute;
+    top: 215px;
+    justify-content: end;
+    // width: 20.5%;
+    border-bottom-right-radius: 12px;
+    border-top-right-radius: 12px;
+    background: #fff;
+    display: flex;
+    padding: 10px;
+    justify-content: end;
+    height: 53px;
+    left: 0;
+}
+
+.logo-square {
+    width: fit-content;
+    max-height: 73px;
+    border-radius: 12px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    padding-left: 0;
+    box-sizing: border-box;
+}
+
+.logo-box-container {
+    width: 157px;
+    position: relative;
+    height: 64px;
+}
+
+.logo-box-square {
+    height: 99px;
+    width: 157px;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.06);
+    .logo-img{
+        max-width: 122px;
+    }
+    &.top{
+        position: absolute;
+        top: -54px;
+    }
+}
+
+.logo-img {
+    object-fit: contain;
+    max-height: 52px;
+    height: 96px;
+    z-index: 10;
+}
+
+.logo-img-mb{
+    max-height: unset;
+}
+
+.metrics {
+    border: 3px solid #fff;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.mob-metrics {
+    overflow: auto;
+}
+
+.metrics-section {
+    margin-top: -30px;
+}
+.empty-div {
+    height: 15px;
+}
+.mob-metrics-sec {
+    padding-top: 1rem;
+}
+
+
+// Announcement modal
+
+.announcements-container {
+    position: fixed;
+    height: calc(100vh - 67px);
+    background: #131313a3;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+.close-announcements-dialog {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+}
+.close-icon {
+    color: #fff;
+    border-radius: 15px;
+    float: right;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255,255,255,0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media screen and (max-width: 768px) {
+
+    ::ng-deep.recommendedProgram .mat-tab-header {
+        padding-left: 20px;
+    }
+    ::ng-deep.featuredCourses .mat-tab-header {
+        padding-left: 20px;
+    }
+    
+    .metrics-section {
+        margin-top: 0px;
+    }
+    .top-learners {
+        padding-left: 30px;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .sticky-logo-square {
+        //width: 8%;
+    }
+}
+@media screen and (min-width: 1280px) { 
+    .sticky-logo-square {
+        //width: 10%;
+    }
+}
+@media screen and (min-width: 1520px) { 
+    .sticky-logo-square {
+       // width: 15%;
+    }
+}
+@media screen and (min-width: 1904px) { 
+    .sticky-logo-square {
+        //width: 20%;
+    }
+}
+
+  ::ng-deep .mytabs .mat-tab-label.mat-tab-label-active:not(.mat-tab-disabled),
+  ::ng-deep .mytabs .mat-tab-label.mat-tab-label-active.cdk-keyboard-focused:not(.mat-tab-disabled) {
+    font-weight: 700;
+    color: black;
+    opacity: 1;
+  }
+
+.contact-us-wrapper {
+    background: linear-gradient(106.94deg, #3A70CF 3.96%, #1146A2 39.76%);
+}

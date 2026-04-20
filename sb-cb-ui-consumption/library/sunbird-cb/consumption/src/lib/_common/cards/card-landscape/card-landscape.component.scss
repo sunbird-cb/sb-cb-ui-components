@@ -1,6 +1,6 @@
-@import '~@sunbird-cb/design-system/src/styles/ws-common';
-@import '~@sunbird-cb/design-system/src/styles/ws-vars';
-@import '~@sunbird-cb/design-system/src/styles/ws-mixins';
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
 
 $secondary-color: #EF951E;
 
@@ -11,6 +11,7 @@ opacity: 1;
 width: 350px;
 min-height: 154px;
 padding: 16px;
+  overflow: hidden;
 .img-block-portrait {
     line-height: 10px;
 }
@@ -21,6 +22,9 @@ padding: 16px;
     width: 147px;
     height: 100px;
 
+}
+.width-1-1 {
+  min-width: 0;
 }
 .portrait-subheading {
     opacity: 1;
@@ -62,6 +66,45 @@ span.portrait-org-name {
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+}
+
+.provider-wrapper {
+    width: 75%;
+    min-width: 0;
+    flex-wrap: nowrap !important;
+
+    .provider-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .provider-count {
+        margin-left: 0;
+        font-weight: 600;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+}
+
+.provider-container {
+    width: 75%;
+    min-width: 0;
+
+    .provider-name {
+        max-width: calc(100% - 30px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .provider-count {
+        margin-left: 4px;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
 }
 .portrait_widget {
     align-items: center;

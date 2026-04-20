@@ -1,0 +1,81 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+  gap: 16px;
+}
+
+.content-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+/* Mobile-specific styling with vertical scroll */
+@media screen and (max-width: 767px) {
+  .mobile-scroll {
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding-right: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scroll-snap-type: y mandatory;
+    width: 100%;
+
+    >ng-container {
+      margin-bottom: 12px;
+    }
+
+    >ng-container {
+      scroll-snap-align: start;
+    }
+
+    ::ng-deep sb-uin-content-card {
+      .card-container {
+        max-width: none;
+      }
+    }
+  }
+
+  .mobile-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .mobile-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .mobile-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+  }
+}
+
+/* Maintain horizontal layout for tablets and desktops */
+@media screen and (min-width: 768px) {
+  .content-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: visible;
+    max-height: none;
+
+    >ng-container {
+      width: calc(50% - 12px);
+    }
+  }
+}
+
+/* Larger screens - 3 or more cards per row */
+@media screen and (min-width: 992px) {
+  .content-container>ng-container {
+    width: calc(33.333% - 12px);
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .content-container>ng-container {
+    width: calc(25% - 12px);
+  }
+}
